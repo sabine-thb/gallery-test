@@ -1,201 +1,196 @@
 import * as THREE from 'three'
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 
 export default class Room1 {
     constructor(scene, materials, experience) {
-        this.scene = scene
+        this.scene = new THREE.Group()
         this.experience = experience
-        this.createRoom()
+        
+        // Dimensions
+        this.config = {
+            width: 15,
+            length: 15,
+            height: 4,
+            wallThickness: 0.2,
+            doorWidth: 3
+        }
+        
+        // Création de la texture vidéo
+        this.video = document.createElement('video')
+        this.video.src = '/video/video.mp4'
+        this.video.loop = true
+        this.video.muted = true
+        this.video.playsInline = true
+        this.video.crossOrigin = 'anonymous'
+        
+        // Créer la texture vidéo
+        this.videoTexture = new THREE.VideoTexture(this.video)
+        this.videoTexture.minFilter = THREE.LinearFilter
+        this.videoTexture.magFilter = THREE.LinearFilter
+        this.videoTexture.format = THREE.RGBFormat
+        this.videoTexture.colorSpace = THREE.SRGBColorSpace
+
+        // Shader personnalisé pour le blur sur les bords
+        this.videoMaterial = new THREE.ShaderMaterial({
+            uniforms: {
+                videoTexture: { value: this.videoTexture },
+                time: { value: 0 },
+                resolution: { value: new THREE.Vector2(1024, 512) }
+            },
+            vertexShader: `
+                varying vec2 vUv;
+                void main() {
+                    vUv = uv;
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                uniform sampler2D videoTexture;
+                varying vec2 vUv;
+
+                void main() {
+                    vec2 center = vec2(0.5, 0.5);
+                    float dist = distance(vUv, center);
+                    
+                    // Effet de blur sur les bords
+                    float blur = smoothstep(0.3, 0.7, dist);
+                    
+                    vec4 videoColor = texture2D(videoTexture, vUv);
+                    gl_FragColor = mix(videoColor, vec4(0.0, 0.0, 0.0, 1.0), blur);
+                }
+            `
+        });
+
+        // Démarrer la vidéo quand l'expérience commence
+        document.addEventListener('click', () => {
+            this.video.play()
+        }, { once: true })
+        
+        this.createStructure(materials)
+        scene.add(this.scene)
     }
 
-    createRoom() {
-        const radius = 6
-        const height = 6
-        const segments = 64
+    createStructure(materials) {
+        // Création du sol
+        this.createFloor(materials.items.floor)
+        
+        // Création du plafond
+        this.createCeiling(materials.items.ceiling)
+        
+        // Création des murs
+        this.createWalls(materials.items.wall)
+    }
 
-        // Chargeur de textures
-        const textureLoader = new THREE.TextureLoader()
-
-        // Charger les textures du sol
-        const floorBaseTexture = textureLoader.load('/textures/floor/wooden_floor.jpg')
-        const floorNormalMap = textureLoader.load('/textures/floor/wooden_floor_normal.jpg')
-        const floorRoughnessMap = textureLoader.load('/textures/floor/wooden_floor_roughness.jpg')
-
-        // Configurer la répétition des textures
-        const repeat = 4 // Ajustez ce nombre pour la taille de répétition
-        floorBaseTexture.wrapS = floorBaseTexture.wrapT = THREE.RepeatWrapping
-        floorBaseTexture.repeat.set(repeat, repeat)
-        floorNormalMap.wrapS = floorNormalMap.wrapT = THREE.RepeatWrapping
-        floorNormalMap.repeat.set(repeat, repeat)
-        floorRoughnessMap.wrapS = floorRoughnessMap.wrapT = THREE.RepeatWrapping
-        floorRoughnessMap.repeat.set(repeat, repeat)
-
-        // Matériau du sol avec texture
-        const floorMaterial = new THREE.MeshStandardMaterial({
-            map: floorBaseTexture,
-            normalMap: floorNormalMap,
-            roughnessMap: floorRoughnessMap,
-            normalScale: new THREE.Vector2(1, 1),
-            roughness: 0.8,
-            metalness: 0.1,
-            side: THREE.FrontSide
-        })
-
-
-        const ceilingMaterial = new THREE.MeshStandardMaterial({
-            color: 0x1a1a1a,
-            metalness: 0.0,
-            roughness: 0.7,
-            side: THREE.BackSide
-        })
-
-        const wallMaterial = new THREE.MeshStandardMaterial({
-            color: 0x1a1a1a,
-            metalness: 0.0,
-            roughness: 0.5,
-            side: THREE.BackSide
-        })
-
-        // Sol
+    createFloor(material) {
         const floor = new THREE.Mesh(
-            new THREE.CircleGeometry(radius, segments),
-            floorMaterial
+            new THREE.BoxGeometry(
+                this.config.width, 
+                this.config.wallThickness, 
+                this.config.length
+            ),
+            material
         )
-        floor.rotation.x = -Math.PI / 2
-        floor.position.y = 0.001
+        floor.position.y = -this.config.wallThickness / 2
         floor.receiveShadow = true
         this.scene.add(floor)
+    }
 
-        // Plafond
+    createCeiling(material) {
         const ceiling = new THREE.Mesh(
-            new THREE.CircleGeometry(radius, segments),
-            ceilingMaterial
+            new THREE.BoxGeometry(
+                this.config.width, 
+                this.config.wallThickness, 
+                this.config.length
+            ),
+            material
         )
-        ceiling.rotation.x = Math.PI / 2
-        ceiling.position.y = height - 0.001
+        ceiling.position.y = this.config.height + this.config.wallThickness / 2
         ceiling.receiveShadow = true
         this.scene.add(ceiling)
+    }
 
-        // Mur cylindrique
-        const wallGeometry = new THREE.CylinderGeometry(
-            radius,
-            radius,
-            height,
-            segments,
-            2,
-            false
+    createWalls(material) {
+        // Mur arrière (avec la vidéo)
+        const backWall = new THREE.Mesh(
+            new THREE.BoxGeometry(
+                this.config.width,
+                this.config.height,
+                this.config.wallThickness
+            ),
+            material
         )
-        const wall = new THREE.Mesh(wallGeometry, wallMaterial)
-        wall.position.y = height / 2
-        wall.receiveShadow = true
-        this.scene.add(wall)
+        backWall.position.set(0, this.config.height/2, this.config.length/2)
+        backWall.castShadow = true
+        backWall.receiveShadow = true
+        this.scene.add(backWall)
+        this.experience.walls.push(backWall)
 
-        // Éclairage
-        // Lumière ambiante faible
-        const ambientLight = new THREE.AmbientLight(0xfff0e0, 0.2)
-        this.scene.add(ambientLight)
+        // Mur avec vidéo (75% de la taille du mur)
+        const videoWidth = this.config.width * 0.75
+        const videoHeight = (videoWidth / 16) * 9 // Ratio 16:9
+        const videoWall = new THREE.Mesh(
+            new THREE.PlaneGeometry(videoWidth, videoHeight),
+            this.videoMaterial
+        )
+        videoWall.position.set(
+            0, 
+            this.config.height/2, 
+            this.config.length/2 - this.config.wallThickness - 0.01
+        )
+        videoWall.rotation.y = Math.PI
+        videoWall.receiveShadow = true
+        this.scene.add(videoWall)
 
-        // Lumière principale au plafond
-        const mainLight = new THREE.PointLight(0xffd700, 1, 15, 1)
-        mainLight.position.set(0, height - 1, 0)
-        mainLight.castShadow = true
-        mainLight.shadow.mapSize.width = 1024
-        mainLight.shadow.mapSize.height = 1024
-        mainLight.shadow.radius = 2
-        this.scene.add(mainLight)
+        // Murs latéraux
+        const sideWallGeometry = new THREE.BoxGeometry(
+            this.config.wallThickness,
+            this.config.height,
+            this.config.length
+        )
 
-        // Créer un halo lumineux autour de la lumière principale
-        const glowGeometry = new THREE.SphereGeometry(0.1, 16, 16)
-        const glowMaterial = new THREE.MeshBasicMaterial({
-            color: 0xffd700,
-            transparent: true,
-            opacity: 0.5
+        // Mur gauche
+        const leftWall = new THREE.Mesh(sideWallGeometry, material)
+        leftWall.position.set(-this.config.width/2, this.config.height/2, 0)
+        leftWall.castShadow = true
+        leftWall.receiveShadow = true
+        this.scene.add(leftWall)
+        this.experience.walls.push(leftWall)
+
+        // Mur droit
+        const rightWall = new THREE.Mesh(sideWallGeometry, material)
+        rightWall.position.set(this.config.width/2, this.config.height/2, 0)
+        rightWall.castShadow = true
+        rightWall.receiveShadow = true
+        this.scene.add(rightWall)
+        this.experience.walls.push(rightWall)
+
+        // Nouveaux murs avant (similaires à Room2)
+        const frontWalls = [
+            // Mur avant gauche
+            {
+                geometry: new THREE.BoxGeometry((this.config.width - this.config.doorWidth * 2), this.config.height, this.config.wallThickness),
+                position: [-this.config.width/1.68 + this.config.doorWidth, this.config.height/2, -this.config.length/2]
+            },
+            // Mur avant droit
+            {
+                geometry: new THREE.BoxGeometry((this.config.width - this.config.doorWidth * 2), this.config.height, this.config.wallThickness),
+                position: [this.config.width/1.68 - this.config.doorWidth, this.config.height/2, -this.config.length/2]
+            },
+        ]
+
+        frontWalls.forEach(wallConfig => {
+            const wall = new THREE.Mesh(wallConfig.geometry, material)
+            wall.position.set(...wallConfig.position)
+            wall.castShadow = true
+            wall.receiveShadow = true
+            this.scene.add(wall)
+            this.experience.walls.push(wall)
         })
-        const glow = new THREE.Mesh(glowGeometry, glowMaterial)
-        glow.position.copy(mainLight.position)
-        this.scene.add(glow)
+    }
 
-        // Lumières d'accent sur les murs
-        const createWallLight = (angle) => {
-            const light = new THREE.PointLight(0xffd700, 0.5, 4, 2)
-            const x = Math.cos(angle) * (radius - 0.5)
-            const z = Math.sin(angle) * (radius - 0.5)
-            light.position.set(x, height / 2, z)
-
-            // Créer un petit halo pour chaque lumière murale
-            const smallGlow = new THREE.Mesh(
-                new THREE.SphereGeometry(0.01, 16, 16),
-                new THREE.MeshBasicMaterial({
-                    color: 0xffd700,
-                    transparent: true,
-                    opacity: 0.4
-                })
-            )
-            smallGlow.position.copy(light.position)
-
-            return { light, glow: smallGlow }
+    update() {
+        // Mettre à jour le temps pour le shader si nécessaire
+        if (this.videoMaterial.uniforms) {
+            this.videoMaterial.uniforms.time.value += 0.01
         }
-
-        // Ajouter les lumières murales
-        const numLights = 6
-        for (let i = 0; i < numLights; i++) {
-            const angle = (i / numLights) * Math.PI * 2
-            const { light, glow } = createWallLight(angle)
-            this.scene.add(light)
-            this.scene.add(glow)
-        }
-
-        // Léger brouillard pour l'ambiance
-        this.scene.fog = new THREE.Fog(0x000000, 1, 20)
-
-
-
-
-        //AJOUT DU TEXTE
-
-// Créer une texture avec du texte
-const canvas = document.createElement('canvas');
-canvas.width = 2048;
-canvas.height = 256;
-const context = canvas.getContext('2d');
-
-// Style du texte
-context.fillStyle = 'white';
-context.font = 'bold 80px Arial';
-context.textAlign = 'center';
-context.textBaseline = 'middle';
-
-// Inverser le contexte horizontalement pour le texte en miroir
-context.scale(-1, 1);
-context.fillText('Bienvenue dans la galerie virtuelle', -canvas.width/2, canvas.height/2);
-
-// Créer la texture
-const texture = new THREE.CanvasTexture(canvas);
-const textMaterial = new THREE.MeshBasicMaterial({
-    map: texture,
-    transparent: true,
-    side: THREE.DoubleSide
-});
-
-// Créer un plan courbé pour le texte
-const textGeometry = new THREE.CylinderGeometry(
-    radius - 0.1,
-    radius - 0.1,
-    1.5,
-    64,
-    1,
-    true,
-    -Math.PI/2 - Math.PI/4, // Ajusté pour centrer
-    Math.PI/2.5
-);
-
-// Créer le mesh
-const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-textMesh.position.y = height/2;
-textMesh.rotation.y = -Math.PI/2;
-
-
-this.scene.add(textMesh);
-
     }
 }

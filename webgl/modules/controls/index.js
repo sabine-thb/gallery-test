@@ -241,7 +241,7 @@ export default class Controls {
             newPosition.x * newPosition.x + 
             newPosition.z * newPosition.z
         )
-        const maxRadius = 5.5
+        const maxRadius = 105.5
 
         // Appliquer le mouvement si dans les limites
         if (distanceFromCenter < maxRadius) {
