@@ -20,7 +20,7 @@ export default class Controls {
         this.moveRight = false
 
         // Créer les éléments UI s'ils n'existent pas
-        this.createUIElements()
+        // this.createUIElements()
 
         // Lier les méthodes
         this.onKeyDown = this.onKeyDown.bind(this)
@@ -32,57 +32,57 @@ export default class Controls {
         this.setupEventListeners()
 
         // Afficher le blocker au démarrage
-        this.showBlocker()
+        // this.showBlocker()
     }
 
-    createUIElements() {
-        // Créer le blocker s'il n'existe pas
-        if (!document.getElementById('blocker')) {
-            const blocker = document.createElement('div')
-            blocker.id = 'blocker'
-            blocker.style.position = 'absolute'
-            blocker.style.width = '100%'
-            blocker.style.height = '100%'
-            blocker.style.backgroundColor = 'rgba(0,0,0,0.5)'
-            blocker.style.display = 'flex'
-            blocker.style.justifyContent = 'center'
-            blocker.style.alignItems = 'center'
-            blocker.style.zIndex = '999'
-            blocker.style.top = '0'
-            blocker.style.left = '0'
+    // createUIElements() {
+    //     // Créer le blocker s'il n'existe pas
+    //     if (!document.getElementById('blocker')) {
+    //         const blocker = document.createElement('div')
+    //         blocker.id = 'blocker'
+    //         blocker.style.position = 'absolute'
+    //         blocker.style.width = '100%'
+    //         blocker.style.height = '100%'
+    //         blocker.style.backgroundColor = 'rgba(0,0,0,0.5)'
+    //         blocker.style.display = 'flex'
+    //         blocker.style.justifyContent = 'center'
+    //         blocker.style.alignItems = 'center'
+    //         blocker.style.zIndex = '999'
+    //         blocker.style.top = '0'
+    //         blocker.style.left = '0'
     
-            const instructions = document.createElement('div')
-            instructions.id = 'instructions'
-            instructions.style.color = '#ffffff'
-            instructions.style.textAlign = 'center'
-            instructions.style.fontSize = '24px'
-            instructions.style.cursor = 'pointer'
-            instructions.style.userSelect = 'none'
-            instructions.innerHTML = `
-                <span>Cliquez pour rejoindre l'expérience</span>
-                <br/>
-                <span style="font-size: 14px;">(ZQSD = Mouvement, SOURIS = Vue, ECHAP = Pause)</span>
-            `
+    //         const instructions = document.createElement('div')
+    //         instructions.id = 'instructions'
+    //         instructions.style.color = '#ffffff'
+    //         instructions.style.textAlign = 'center'
+    //         instructions.style.fontSize = '24px'
+    //         instructions.style.cursor = 'pointer'
+    //         instructions.style.userSelect = 'none'
+    //         instructions.innerHTML = `
+    //             <span>Cliquez pour rejoindre l'expérience</span>
+    //             <br/>
+    //             <span style="font-size: 14px;">(ZQSD = Mouvement, SOURIS = Vue, ECHAP = Pause)</span>
+    //         `
     
-            blocker.appendChild(instructions)
-            document.body.appendChild(blocker)
-        }
+    //         blocker.appendChild(instructions)
+    //         document.body.appendChild(blocker)
+    //     }
     
-        this.blocker = document.getElementById('blocker')
-        this.instructions = document.getElementById('instructions')
-    }
+    //     this.blocker = document.getElementById('blocker')
+    //     this.instructions = document.getElementById('instructions')
+    // }
 
-    showBlocker() {
-        if (this.blocker) {
-            this.blocker.style.display = 'flex'
-        }
-    }
+    // showBlocker() {
+    //     if (this.blocker) {
+    //         this.blocker.style.display = 'flex'
+    //     }
+    // }
 
-    hideBlocker() {
-        if (this.blocker) {
-            this.blocker.style.display = 'none'
-        }
-    }
+    // hideBlocker() {
+    //     if (this.blocker) {
+    //         this.blocker.style.display = 'none'
+    //     }
+    // }
 
     onClick() {
         if (!this.instance.isLocked) {
