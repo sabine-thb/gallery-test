@@ -4,8 +4,10 @@ import Controls from '../modules/controls'
 import Renderer from '../modules/render'
 import Room1 from '../components/room1'
 import Room2 from '../components/room2'
+import Room3 from '../components/room3'
 import Corridor from '../components/corridor'
 import { Sky } from 'three/addons/objects/Sky.js'
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
 
 export default class Experience {
     constructor(canvas) {
@@ -32,6 +34,7 @@ export default class Experience {
         this.initSky()
         this.createEnvironment()
         this.setupEventListeners()
+        this.setupGUI()
         this.animate()
         
         // Initialisation du temps pour l'animation du soleil
@@ -121,12 +124,15 @@ export default class Experience {
             }
         }
 
-        this.room1 = new Room1(this.scene, this.materials, this)
+        //this.room1 = new Room1(this.scene, this.materials, this)
         this.room2 = new Room2(this.scene, this.materials, this)
+        this.room3 = new Room3(this.scene, this.materials, this)
         this.corridor = new Corridor(this.scene, this.materials, this)
-        this.room1.scene.position.set(30, 0, -32.5)
-        this.room1.scene.rotation.y = Math.PI
+        //this.room1.scene.position.set(30, 0, -32.5)
+        //this.room1.scene.rotation.y = Math.PI
         this.room2.scene.position.set(0, 0, 0)
+        this.room3.scene.position.set(30, 0, -29.75)
+        this.room3.scene.rotation.y = -Math.PI/1.48
         this.corridor.scene.position.set(30, 0, -17.5)
 
         // Gestion des collisions
@@ -144,11 +150,6 @@ export default class Experience {
         const room2Helper = new THREE.BoxHelper(this.room2.scene, 0x0000ff)
         this.scene.add(room2Helper)
 
-        // Debug des collisions
-        this.walls.forEach(wall => {
-            const boxHelper = new THREE.BoxHelper(wall, 0xff0000)
-            this.scene.add(boxHelper)
-        })
     }
 
     setupCollisions() {
@@ -206,11 +207,9 @@ export default class Experience {
     animate = () => {
         requestAnimationFrame(this.animate)
 
-        // Animation du soleil
         const elapsed = Date.now() - this.startTime
         const progress = (elapsed % this.cycleDuration) / this.cycleDuration
         
-        // Fait tourner l'azimuth de 0 à 360 degrés
         this.skyParams.azimuth = progress * 360
         this.updateSky()
 
@@ -219,5 +218,117 @@ export default class Experience {
         }
 
         this.renderer.render(this.scene, this.camera.instance)
+    }
+
+    setupGUI() {
+        const gui = new GUI()
+        
+        const spotlightFolder = gui.addFolder('Room3 Spotlight')
+        
+        const params = {
+            positionX: -4.3,
+            positionY: 3.3,
+            positionZ: 3.1,
+            rotationX: 0,
+            rotationY: 0,
+            intensity: 500,
+            angle: 0.972322,
+            penumbra: 1,
+            decay: 1,
+            distance: 20
+        }
+
+        // Position X
+        spotlightFolder.add(params, 'positionX', -10, 10, 0.1)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.position.x = value
+                    this.room3.updateHelper()
+                }
+            })
+
+        // Position Y
+        spotlightFolder.add(params, 'positionY', 1, 10, 0.1)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.position.y = value
+                    this.room3.updateHelper()
+                }
+            })
+
+        // Position Z
+        spotlightFolder.add(params, 'positionZ', -5, 5, 0.1)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.position.z = value
+                    this.room3.updateHelper()
+                }
+            })
+
+        // Intensité
+        spotlightFolder.add(params, 'intensity', 0, 500)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.intensity = value
+                }
+            })
+
+        // Angle
+        spotlightFolder.add(params, 'angle', 0, Math.PI / 2)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.angle = value
+                }
+            })
+
+        // Penumbra
+        spotlightFolder.add(params, 'penumbra', 0, 1)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.penumbra = value
+                }
+            })
+
+        // Decay
+        spotlightFolder.add(params, 'decay', 1, 2)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.decay = value
+                }
+            })
+
+        // Distance
+        spotlightFolder.add(params, 'distance', 0, 20)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.distance = value
+                }
+            })
+
+        // Rotation X
+        spotlightFolder.add(params, 'rotationX', -Math.PI, Math.PI, 0.1)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.target.position.x = 
+                        this.room3.spotLight.position.x + Math.sin(value) * 10
+                    this.room3.spotLight.target.position.y = 
+                        this.room3.spotLight.position.y - Math.cos(value) * 10
+                    this.room3.updateHelper()
+                }
+            })
+
+        // Rotation Y
+        spotlightFolder.add(params, 'rotationY', -Math.PI, Math.PI, 0.1)
+            .onChange((value) => {
+                if (this.room3 && this.room3.spotLight) {
+                    this.room3.spotLight.target.position.x = 
+                        this.room3.spotLight.position.x + Math.sin(value) * 10
+                    this.room3.spotLight.target.position.z = 
+                        this.room3.spotLight.position.z + Math.cos(value) * 10
+                    this.room3.updateHelper()
+                }
+            })
+
+        spotlightFolder.open()
     }
 }
