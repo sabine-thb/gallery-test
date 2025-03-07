@@ -3,17 +3,8 @@
     <transition name="fade">
       <startScreen v-if="!started" @start="startExperience" />
     </transition>
-<<<<<<< Updated upstream
     <div id="experience">
       <ThreeScene v-if="started"/>
-=======
-
-    <div id="experience" v-if="started">
-      <!-- La scène Three.js -->
-      <ThreeScene />
-      
-      <!-- Contrôle du son -->
->>>>>>> Stashed changes
       <div
         class="sound-button"
         @click.stop="toggleMute"
@@ -27,6 +18,7 @@
       </div>
     </div>
   </div>
+  <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted"/>
 </template>
 
 <<<<<<< Updated upstream
@@ -39,6 +31,8 @@
 import { ref } from 'vue'
 import ThreeScene from './components/webglApplication/ThreeScene.vue'
 import startScreen from './components/startScreen/startScreen.vue'
+import controls from './components/controls/controls.vue'
+import soundButton from './components/soundButton/soundButton.vue'
 import './style.css'
 
 <<<<<<< Updated upstream
@@ -46,10 +40,6 @@ const started = ref(false)
 const isMuted = ref(false)
 let audioElement = null
 
-=======
-const started = ref(false)  // Contrôle de l'état du démarrage
-const isMuted = ref(false)   // Contrôle du mute
->>>>>>> Stashed changes
 
 // Démarre l'expérience
 const startExperience = () => {
@@ -60,7 +50,6 @@ const startExperience = () => {
   audioElement.play()
 }
 
-<<<<<<< Updated upstream
 const toggleMute = () => {
   if (audioElement) {
     isMuted.value = !isMuted.value

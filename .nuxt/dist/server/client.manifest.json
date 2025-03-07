@@ -7,12 +7,20 @@
     "module": true,
     "resourceType": "script"
   },
+<<<<<<< HEAD
   "C:/Users/Andry/Desktop/Cours MMI/MMI3/Garbage/Gallery/gallery-test/node_modules/nuxt/dist/app/entry.js": {
+=======
+  "/Users/admin/MMI3/PROJET/gallery-test/node_modules/nuxt/dist/app/entry.js": {
+>>>>>>> main
     "resourceType": "script",
     "module": true,
     "prefetch": true,
     "preload": true,
     "isEntry": true,
+<<<<<<< HEAD
     "file": "C:/Users/Andry/Desktop/Cours MMI/MMI3/Garbage/Gallery/gallery-test/node_modules/nuxt/dist/app/entry.js"
+=======
+    "file": "/Users/admin/MMI3/PROJET/gallery-test/node_modules/nuxt/dist/app/entry.js"
+>>>>>>> main
   }
 }
