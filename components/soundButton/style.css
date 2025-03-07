@@ -1,5 +1,6 @@
-  /* animation du bouton son  */
+@import '../../utils/vars.css';
 
+  /* animation du bouton son  */
   .sound-button{
     width:65px;
     height:65px;
@@ -106,5 +107,22 @@
     }
     to {
       height: 8px;
+    }
+  }
+
+
+  @media(max-width:500px){
+    .sound-button{
+      width:60px;
+      height:60px;
+      border:none;
+      right:0px;
+      bottom:0px;
+      
+    }
+    .sound-button-line {
+      width: 1px;
+      height: 1px;
+      margin: 0 .1rem;
     }
   }

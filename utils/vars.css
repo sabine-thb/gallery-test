@@ -29,4 +29,14 @@
     --playfairNormal: 'PlayFair Display Normal', sans-serif;
     --playfairItalic: 'PlayFair Display Italic', sans-serif;
 
+    font-size: calc(100vw / 1920 * 10); 
+  
+    @media (max-width: 1440px) {
+      font-size: calc(100vw / 1440 * 10);
+    }
+  
+    @media (max-width: 540px) {
+      font-size: calc(100vw / 390 * 10);
+    }
 }
+

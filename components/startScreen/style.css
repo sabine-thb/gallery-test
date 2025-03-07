@@ -23,14 +23,14 @@
   }
 
   h1 {
-    font-size: 6.5rem;
+    font-size: 10rem;
     color: #fff;
     margin:0;
     font-family: var(--akira);
   }
 
   .description {
-    font-size: 3rem;
+    font-size: 4rem;
     margin:0;
     color: #fff;
     font-family: var(--playfairNormal);
@@ -42,9 +42,9 @@
   }
   
   #startButton {
-    padding: 8px 40px;
+    padding: 0.8rem 4rem;
     margin-top:60px;
-    font-size: 1rem;
+    font-size: 1.4rem;
     background: transparent;
     color: #fff;
     border: 1px solid #fff;
@@ -57,7 +57,25 @@
   #startButton:hover {
     background: #fff;
     color: #000;
+ 
   }
-  
+
+
+  @media(max-width: 540px ){
+    h1{
+      font-size: 4rem;
+    }
+
+    .description{
+      font-size: 2rem;
+    }
+
+    #startButton {
+      padding: 5px 15px;
+      font-size: 1rem;
+    }
+  }
+
+
 
   
