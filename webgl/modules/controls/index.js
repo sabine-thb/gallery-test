@@ -32,7 +32,7 @@ export default class Controls {
         this.setupEventListeners()
 
         // Afficher le blocker au démarrage
-        // this.showBlocker()
+        //this.showBlocker()
     }
 
     // createUIElements() {
@@ -91,11 +91,16 @@ export default class Controls {
     }
 
     onLock() {
-        this.hideBlocker()
-    }
+        //console.log("onLock appelé", this.hideBlocker);
+        //if (typeof this.hideBlocker === "function") {
+            //this.hideBlocker();
+        //} else {
+            //console.error("hideBlocker n'est pas défini !");
+        //}
+    }    
 
     onUnlock() {
-        this.showBlocker()
+        //this.showBlocker()
     }
 
     setupEventListeners() {
@@ -110,7 +115,7 @@ export default class Controls {
         document.addEventListener('keydown', (event) => {
             if (event.code === 'Escape' && this.instance.isLocked) {
                 this.instance.unlock()
-                this.showBlocker()
+                //this.showBlocker()
             }
         })
 
@@ -198,7 +203,7 @@ export default class Controls {
         const delta = (time - this.lastTime) / 1000
 
         // Obtenir la direction de la caméra
-        const camera = this.instance.getObject()
+        const camera = this.instance.object
         const direction = new THREE.Vector3()
         camera.getWorldDirection(direction)
         

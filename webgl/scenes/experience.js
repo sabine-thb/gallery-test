@@ -40,6 +40,8 @@ export default class Experience {
         // Initialisation du temps pour l'animation du soleil
         this.startTime = Date.now()
         this.cycleDuration = 20 * 60 * 1000 // 20 minutes en millisecondes
+
+        this.roomAudio = new THREE.AudioListener();
     }
 
     initSky() {
@@ -172,7 +174,7 @@ export default class Experience {
         // Mettre à jour la méthode update des controls
         const originalUpdate = this.controls.update.bind(this.controls)
         this.controls.update = () => {
-            const camera = this.controls.instance.getObject()
+            const camera = this.controls.instance.object
             const oldPosition = camera.position.clone()
             
             originalUpdate()
