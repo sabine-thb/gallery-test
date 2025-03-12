@@ -174,11 +174,7 @@ export default class Experience {
         // Mettre à jour la méthode update des controls
         const originalUpdate = this.controls.update.bind(this.controls)
         this.controls.update = () => {
-<<<<<<< HEAD
             const camera = this.controls.instance.object
-=======
-            const camera = this.controls.instance.objects
->>>>>>> main
             const oldPosition = camera.position.clone()
             
             originalUpdate()
