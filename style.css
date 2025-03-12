@@ -18,7 +18,6 @@ body {
 
   /* fade de l'ecran start */
 
-
   .fade-enter-active {
     transition: opacity 1.5s ease, backdrop-filter 1.5s ease; /* Ajoute une transition fluide */
   }
@@ -38,6 +37,29 @@ body {
     opacity: 0;
     backdrop-filter: blur(0px);
   }
+
+
+
+
+@keyframes slideOutBottom {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%); 
+  }
+}
+
+.bottom-enter-active,
+.bottom-leave-active {
+  animation-duration: 1.5s; 
+  animation-timing-function: ease-in-out; 
+}
+
+.bottom-leave-active {
+  animation-name: slideOutBottom;
+}
+
   
 
   .overlay {

@@ -3,12 +3,12 @@
       <div class="controls-background"></div>
       <div class="controls-flex">
         <div class="controls-flex-item">
-          <img src="/images/controls1.svg" alt="">
+          <img src="/images/controls1.svg" class="controls-flex-img" alt="">
           <p>Utilisez les flèches pour naviguer</p>
         </div>
         <div class="controls-flex-text">ou</div>
         <div class="controls-flex-item">
-          <img src="/images/controls2.svg" alt="">
+          <img src="/images/controls2.svg" class="controls-flex-img" alt="">
           <p>Utilisez ZQSD pour naviguer</p>
         </div>
       </div>

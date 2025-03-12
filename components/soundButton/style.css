@@ -9,7 +9,7 @@
     right:20px;
     border-radius: 50%;
     border:white 1px solid;
-    z-index: 100;
+    z-index: 1000;
 
     display: flex;
     justify-content: center;

@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Experience from '../../webgl/scenes/Experience.js'
+import Experience from '../../webgl/scenes/experience.js'
 
 export default {
   name: 'ThreeScene',
