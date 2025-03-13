@@ -2,128 +2,118 @@ import * as THREE from 'three';
 import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 
 export default class Controls {
-    constructor(camera, domElement, experience) {
-        this.experience = experience;
-        this.instance = new PointerLockControls(camera, domElement);
+  constructor(camera, domElement, experience) {
+    this.experience = experience;
+    this.instance = new PointerLockControls(camera, domElement);
 
-        // Définir la hauteur initiale de la caméra
-        camera.position.y = 1.7;
+    camera.position.y = 1.7;
 
-        this.moveSpeed = 0.08;
-        this.velocity = new THREE.Vector3();
-        this.lastTime = performance.now();
+    this.moveSpeed = 0.08;
+    this.velocity = new THREE.Vector3();
+    this.lastTime = performance.now();
 
-        // États de mouvement
+    // États de mouvement
+    this.moveForward = false;
+    this.moveBackward = false;
+    this.moveLeft = false;
+    this.moveRight = false;
+
+    // Bind des méthodes
+    this.onKeyDown = this.onKeyDown.bind(this);
+    this.onKeyUp = this.onKeyUp.bind(this);
+
+    this.setupEventListeners();
+  }
+
+  setupEventListeners() {
+    // Gestion des touches pour desktop
+    document.addEventListener('keydown', this.onKeyDown);
+    document.addEventListener('keyup', this.onKeyUp);
+
+    // Optionnel : désactiver comportement lié au pointer lock si nécessaire
+    document.addEventListener('pointerlockchange', () => {
+      console.log('Pointer lock activé/désactivé.');
+    });
+  }
+
+  onKeyDown(event) {
+    switch (event.code) {
+      case 'ArrowUp':
+      case 'KeyW':
+      case 'KeyZ':
+        this.moveForward = true;
+        break;
+      case 'ArrowDown':
+      case 'KeyS':
+        this.moveBackward = true;
+        break;
+      case 'ArrowLeft':
+      case 'KeyA':
+      case 'KeyQ':
+        this.moveLeft = true;
+        break;
+      case 'ArrowRight':
+      case 'KeyD':
+        this.moveRight = true;
+        break;
+    }
+  }
+
+  onKeyUp(event) {
+    switch (event.code) {
+      case 'ArrowUp':
+      case 'KeyW':
+      case 'KeyZ':
         this.moveForward = false;
+        break;
+      case 'ArrowDown':
+      case 'KeyS':
         this.moveBackward = false;
+        break;
+      case 'ArrowLeft':
+      case 'KeyA':
+      case 'KeyQ':
         this.moveLeft = false;
+        break;
+      case 'ArrowRight':
+      case 'KeyD':
         this.moveRight = false;
+        break;
+    }
+  }
 
-        // Lier les méthodes
-        this.onKeyDown = this.onKeyDown.bind(this);
-        this.onKeyUp = this.onKeyUp.bind(this);
+  update() {
+    const time = performance.now();
+    const delta = (time - this.lastTime) / 1000;
 
-        this.setupEventListeners();
+    this.velocity.set(0, 0, 0);
+    const camera = this.instance.object;
+
+    // Déplacement avant/arrière
+    if (this.moveForward) {
+      const forward = new THREE.Vector3();
+      camera.getWorldDirection(forward);
+      forward.y = 0; // Déplacement horizontal uniquement
+      forward.normalize();
+      this.velocity.add(forward.multiplyScalar(this.moveSpeed));
+    }
+    if (this.moveBackward) {
+      const backward = new THREE.Vector3();
+      camera.getWorldDirection(backward);
+      backward.y = 0;
+      backward.normalize();
+      this.velocity.add(backward.multiplyScalar(-this.moveSpeed));
     }
 
-    setupEventListeners() {
-        this.instance.pointerSpeed = 0.8;
-
-        // Supprimez la nécessité d'un clic
-        document.addEventListener('keydown', this.onKeyDown);
-        document.addEventListener('keyup', this.onKeyUp);
-
-        // Désactiver le comportement automatique lié au pointer lock
-        document.addEventListener('pointerlockchange', () => {
-            console.log('Pointer lock ignoré.');
-        });
+    // Rotation gauche/droite
+    if (this.moveLeft) {
+      camera.rotation.y += delta ;
+    }
+    if (this.moveRight) {
+      camera.rotation.y -= delta ;
     }
 
-    onKeyDown(event) {
-        switch (event.code) {
-            case 'ArrowUp':
-            case 'KeyW':
-            case 'KeyZ':
-                this.moveForward = true;
-                break;
-            case 'ArrowDown':
-            case 'KeyS':
-                this.moveBackward = true;
-                break;
-            case 'ArrowLeft':
-            case 'KeyA':
-            case 'KeyQ':
-                this.moveLeft = true;
-                break;
-            case 'ArrowRight':
-            case 'KeyD':
-                this.moveRight = true;
-                break;
-        }
-    }
-
-    onKeyUp(event) {
-        switch (event.code) {
-            case 'ArrowUp':
-            case 'KeyW':
-            case 'KeyZ':
-                this.moveForward = false;
-                break;
-            case 'ArrowDown':
-            case 'KeyS':
-                this.moveBackward = false;
-                break;
-            case 'ArrowLeft':
-            case 'KeyA':
-            case 'KeyQ':
-                this.moveLeft = false;
-                break;
-            case 'ArrowRight':
-            case 'KeyD':
-                this.moveRight = false;
-                break;
-        }
-    }
-
-    update() {
-        const time = performance.now();
-        const delta = (time - this.lastTime) / 1000;
-    
-        // Obtenir la direction de la caméra
-        const camera = this.instance.getObject();
-    
-        // Réinitialiser la vélocité
-        this.velocity.set(0, 0, 0);
-    
-        // Ajouter les mouvements avant et arrière
-        if (this.moveForward) {
-            const moveDirection = new THREE.Vector3();
-            camera.getWorldDirection(moveDirection);
-            moveDirection.y = 0; // S'assurer que le mouvement est horizontal
-            moveDirection.normalize();
-            this.velocity.add(moveDirection.multiplyScalar(this.moveSpeed));
-        }
-        if (this.moveBackward) {
-            const moveDirection = new THREE.Vector3();
-            camera.getWorldDirection(moveDirection);
-            moveDirection.y = 0; // S'assurer que le mouvement est horizontal
-            moveDirection.normalize();
-            this.velocity.add(moveDirection.multiplyScalar(-this.moveSpeed));
-        }
-    
-        // Rotation seulement pour "droite" et "gauche"
-        if (this.moveRight) {
-            camera.rotation.y -= delta * 1.5; // Ajustez le facteur (1.5) pour la vitesse de rotation
-        }
-        if (this.moveLeft) {
-            camera.rotation.y += delta * 1.5; // Ajustez le facteur (1.5) pour la vitesse de rotation
-        }
-    
-        // Appliquer le mouvement (avant/arrière uniquement)
-        camera.position.add(this.velocity);
-    
-        this.lastTime = time;
-    }
-    
-    
+    camera.position.add(this.velocity);
+    this.lastTime = time;
+  }
 }

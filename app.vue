@@ -18,6 +18,7 @@
 
   </div>
   <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted"/>
+  <joystick v-if="started"/>
 </template>
 
 
@@ -30,6 +31,7 @@ import startScreen from './components/startScreen/startScreen.vue'
 import controls from './components/controls/controls.vue'
 import loader from './components/loader/loader.vue'
 import soundButton from './components/soundButton/soundButton.vue'
+import joystick from './components/joystick/joystick.vue'
 import './style.css'
 
 const started = ref(false)
