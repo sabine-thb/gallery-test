@@ -23,11 +23,9 @@ body {
   }
   .fade-enter-from {
     opacity: 0;
-    backdrop-filter: blur(0px); /* Pas de flou au début */
   }
   .fade-enter-to {
     opacity: 1;
-    backdrop-filter: blur(10px); /* Applique le flou une fois affiché */
   }
   
   .fade-leave-active {

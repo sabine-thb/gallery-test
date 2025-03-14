@@ -17,9 +17,10 @@
     </div>
 
   </div>
-  <transition name="fade">
+  <transition name="fade" >
     <paint v-if="started"/>
-    </transition>
+  </transition>
+
   <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted"/>
   <joystick v-if="started"/>
 </template>

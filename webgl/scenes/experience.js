@@ -20,13 +20,13 @@ export default class Experience {
         );
         
         this.scene = new THREE.Scene();
-        this.paintScene = new THREE.Scene();
+        // this.paintScene = new THREE.Scene();
 
         this.camera = new MainCamera();
-        this.paintCamera = new MainCamera();
+        // this.paintCamera = new MainCamera();
         
         this.renderer = new Renderer(canvas);
-        this.renderer.instance.setScissorTest(true);
+        // this.renderer.instance.setScissorTest(true);
         
         this.renderer.instance.shadowMap.enabled = true;
         this.renderer.instance.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -44,7 +44,7 @@ export default class Experience {
         this.startTime = Date.now();
         this.cycleDuration = 20 * 60 * 1000; // 20 minutes en millisecondes
 
-        this.createPaintScene();
+        // this.createPaintScene();
 
     }
 
@@ -221,20 +221,20 @@ export default class Experience {
     }
 
 
-    createPaintScene() {
-        const geometry = new THREE.BoxGeometry(1, 1, 1);
-        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-        const cube = new THREE.Mesh(geometry, material);
+    // createPaintScene() {
+    //     const geometry = new THREE.BoxGeometry(1, 1, 1);
+    //     const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    //     const cube = new THREE.Mesh(geometry, material);
     
-        cube.position.set(0, 0, 0);
-        cube.position.setZ(2);
-        this.paintScene.add(cube);
+    //     cube.position.set(0, 0, 0);
+    //     cube.position.setZ(2);
+    //     this.paintScene.add(cube);
 
     
-        // Positionner la caméra de peinture
-        this.paintCamera.instance.position.set(0, 0, 0);  // Ajuste la position pour mieux voir le cube
-        this.paintCamera.instance.lookAt(cube.position);
-    }
+    //     // Positionner la caméra de peinture
+    //     this.paintCamera.instance.position.set(0, 0, 0);  // Ajuste la position pour mieux voir le cube
+    //     this.paintCamera.instance.lookAt(cube.position);
+    // }
     
 
     animate = () => {
@@ -253,7 +253,7 @@ export default class Experience {
         }
 
         const canvasRect = this.canvas.getBoundingClientRect();
-        const paintRect = document.querySelector('.paint-content-visual').getBoundingClientRect();
+        // const paintRect = document.querySelector('.paint-content-visual').getBoundingClientRect();
 
         this.renderer.instance.setScissor(0, 0, canvasRect.width, canvasRect.height);
         this.renderer.instance.setViewport(0, 0, canvasRect.width, canvasRect.height);
@@ -261,11 +261,74 @@ export default class Experience {
         
         // Rendu de la paintScene dans une section spécifique du canvas
 
-        const x = paintRect.left - canvasRect.left;
-        const y = canvasRect.height - (paintRect.bottom - canvasRect.top);
+        // const x = paintRect.left - canvasRect.left;
+        // const y = canvasRect.height - (paintRect.bottom - canvasRect.top);
         
-        this.renderer.instance.setScissor(x, y, paintRect.width, paintRect.height);
-        this.renderer.instance.setViewport(x, y, paintRect.width, paintRect.height);
-        this.renderer.render(this.paintScene, this.paintCamera.instance);
+        // this.renderer.instance.setScissor(x, y, paintRect.width, paintRect.height);
+        // this.renderer.instance.setViewport(x, y, paintRect.width, paintRect.height);
+        // this.renderer.render(this.paintScene, this.paintCamera.instance);
     };
+
+    addSecondaryCanvas(canvas, container) {
+        this.secondaryCanvas = canvas;
+        this.secondaryContainer = container;
+        
+        // Créer un second renderer
+        this.secondaryRenderer = new THREE.WebGLRenderer({
+            canvas: this.secondaryCanvas,
+            antialias: true,
+            alpha: true
+        });
+        
+        // Configurer le renderer
+        this.secondaryRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.updateSecondarySize();
+
+        // Créer un cube de test
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        this.testCube = new THREE.Mesh(geometry, material);
+        this.testCube.position.set(0, 0, -3);
+        this.scene.add(this.testCube);
+    }
+
+    updateSecondarySize() {
+        if (this.secondaryContainer && this.secondaryRenderer) {
+            const bounds = this.secondaryContainer.getBoundingClientRect();
+            this.secondaryRenderer.setSize(bounds.width, bounds.height);
+            
+            // Mettre à jour la caméra pour ce viewport
+            this.camera.aspect = bounds.width / bounds.height;
+            this.camera.updateProjectionMatrix();
+        }
+    }
+
+    removeSecondaryCanvas() {
+        if (this.secondaryRenderer) {
+            this.secondaryRenderer.dispose();
+            this.secondaryRenderer = null;
+        }
+        if (this.testCube) {
+            this.scene.remove(this.testCube);
+            this.testCube.geometry.dispose();
+            this.testCube.material.dispose();
+        }
+        this.secondaryCanvas = null;
+        this.secondaryContainer = null;
+    }
+
+    update() {
+        // Mettre à jour la scène principale
+        this.renderer.render(this.scene, this.camera);
+        
+        // Mettre à jour le canvas secondaire s'il existe
+        if (this.secondaryRenderer) {
+            this.secondaryRenderer.render(this.scene, this.camera);
+            
+            // Optionnel : faire tourner le cube
+            if (this.testCube) {
+                this.testCube.rotation.y += 0.01;
+            }
+        }
+    }
 }
