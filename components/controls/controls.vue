@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isVisible" class="controls">
+    <div v-if="isVisible" class="controls" >
       <div class="controls-background"></div>
       <div class="controls-flex">
         <div class="controls-flex-item">

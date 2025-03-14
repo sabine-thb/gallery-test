@@ -4,9 +4,9 @@
       <startScreen v-if="!started" @start="startExperience" />
     </transition>
 
-    <transition name="fade">
+    <!-- <transition name="fade">
       <controls v-if="started"  />
-    </transition>
+    </transition> -->
 
     <transition name="bottom">
       <loader/>
@@ -17,6 +17,9 @@
     </div>
 
   </div>
+  <transition name="fade">
+    <paint v-if="started"/>
+    </transition>
   <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted"/>
   <joystick v-if="started"/>
 </template>
@@ -32,6 +35,7 @@ import controls from './components/controls/controls.vue'
 import loader from './components/loader/loader.vue'
 import soundButton from './components/soundButton/soundButton.vue'
 import joystick from './components/joystick/joystick.vue'
+import paint from './components/paint/paint.vue'
 import './style.css'
 
 const started = ref(false)

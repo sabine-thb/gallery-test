@@ -20,8 +20,14 @@ export default class Experience {
         );
         
         this.scene = new THREE.Scene();
+        this.paintScene = new THREE.Scene();
+
         this.camera = new MainCamera();
+        this.paintCamera = new MainCamera();
+        
         this.renderer = new Renderer(canvas);
+        this.renderer.instance.setScissorTest(true);
+        
         this.renderer.instance.shadowMap.enabled = true;
         this.renderer.instance.shadowMap.type = THREE.PCFSoftShadowMap;
         this.controls = new Controls(this.camera.instance, document.body, this);
@@ -38,7 +44,10 @@ export default class Experience {
         this.startTime = Date.now();
         this.cycleDuration = 20 * 60 * 1000; // 20 minutes en millisecondes
 
+        this.createPaintScene();
+
     }
+
 
     resize() {
         if (this.camera && this.renderer) {
@@ -136,6 +145,8 @@ export default class Experience {
         this.room2.scene.position.set(0, 0, 0);
         this.corridor.scene.position.set(30, 0, -17.5);
 
+        const cube = new THREE.BoxGeometry(1, 1, 1);
+
         // Gestion des collisions
         this.setupCollisions();
 
@@ -209,6 +220,23 @@ export default class Experience {
         this.renderer.instance.dispose();
     }
 
+
+    createPaintScene() {
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const cube = new THREE.Mesh(geometry, material);
+    
+        cube.position.set(0, 0, 0);
+        cube.position.setZ(2);
+        this.paintScene.add(cube);
+
+    
+        // Positionner la caméra de peinture
+        this.paintCamera.instance.position.set(0, 0, 0);  // Ajuste la position pour mieux voir le cube
+        this.paintCamera.instance.lookAt(cube.position);
+    }
+    
+
     animate = () => {
         requestAnimationFrame(this.animate);
 
@@ -224,6 +252,20 @@ export default class Experience {
             this.controls.update();
         }
 
+        const canvasRect = this.canvas.getBoundingClientRect();
+        const paintRect = document.querySelector('.paint-content-visual').getBoundingClientRect();
+
+        this.renderer.instance.setScissor(0, 0, canvasRect.width, canvasRect.height);
+        this.renderer.instance.setViewport(0, 0, canvasRect.width, canvasRect.height);
         this.renderer.render(this.scene, this.camera.instance);
+        
+        // Rendu de la paintScene dans une section spécifique du canvas
+
+        const x = paintRect.left - canvasRect.left;
+        const y = canvasRect.height - (paintRect.bottom - canvasRect.top);
+        
+        this.renderer.instance.setScissor(x, y, paintRect.width, paintRect.height);
+        this.renderer.instance.setViewport(x, y, paintRect.width, paintRect.height);
+        this.renderer.render(this.paintScene, this.paintCamera.instance);
     };
 }
