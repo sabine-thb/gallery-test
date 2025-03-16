@@ -21,12 +21,50 @@ export default class Experience {
             new THREE.Vector3(50, 50, 50)
         )
         
+<<<<<<< Updated upstream
         this.scene = new THREE.Scene()
         this.camera = new MainCamera()
         this.renderer = new Renderer(canvas)
         this.renderer.instance.shadowMap.enabled = true
         this.renderer.instance.shadowMap.type = THREE.PCFSoftShadowMap
         this.controls = new Controls(this.camera.instance, document.body, this)
+=======
+        this.scene = new THREE.Scene();
+        // this.paintScene = new THREE.Scene();
+
+        this.camera = new MainCamera();
+        // this.paintCamera = new MainCamera();
+        
+        this.renderer = new Renderer(canvas);
+        // this.renderer.instance.setScissorTest(true);
+
+        //Initialisation de l'audio
+        this.listener = new THREE.AudioListener();
+        this.camera.instance.add(this.listener);
+
+        // Création de la sphère audio
+        const sphereGeometry = new THREE.SphereGeometry(0.25, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.0, });
+        this.audioSphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        this.audioSphere.position.set(30, 1, 0);
+        this.scene.add(this.audioSphere);
+        
+        // Configuration du son positionnel
+        this.sound = new THREE.PositionalAudio(this.listener);
+        const audioLoader = new THREE.AudioLoader();
+        audioLoader.load('/audio/song.wav', (buffer) => {
+            this.sound.setBuffer(buffer);
+            this.sound.setRefDistance(0.45);
+            this.sound.setLoop(true);
+            this.sound.setVolume(1);
+            this.sound.play();
+        });
+        this.audioSphere.add(this.sound);
+        
+        this.renderer.instance.shadowMap.enabled = true;
+        this.renderer.instance.shadowMap.type = THREE.PCFSoftShadowMap;
+        this.controls = new Controls(this.camera.instance, document.body, this);
+>>>>>>> Stashed changes
         
         // Position initiale du joueur dans la première pièce
         this.camera.instance.position.set(29.79, 1.7, 0.65)
@@ -219,7 +257,63 @@ export default class Experience {
             this.controls.update()
         }
 
+<<<<<<< Updated upstream
         this.renderer.render(this.scene, this.camera.instance)
+=======
+        const canvasRect = this.canvas.getBoundingClientRect();
+        // const paintRect = document.querySelector('.paint-content-visual').getBoundingClientRect();
+
+        this.renderer.instance.setScissor(0, 0, canvasRect.width, canvasRect.height);
+        this.renderer.instance.setViewport(0, 0, canvasRect.width, canvasRect.height);
+        this.renderer.render(this.scene, this.camera.instance);
+        
+        // Rendu de la paintScene dans une section spécifique du canvas
+
+        // const x = paintRect.left - canvasRect.left;
+        // const y = canvasRect.height - (paintRect.bottom - canvasRect.top);
+        
+        // this.renderer.instance.setScissor(x, y, paintRect.width, paintRect.height);
+        // this.renderer.instance.setViewport(x, y, paintRect.width, paintRect.height);
+        // this.renderer.render(this.paintScene, this.paintCamera.instance);
+    };
+
+    toggleSound(isMuted) {
+        //console.log('toggleSound appelé avec isMuted:', isMuted);
+        if (this.sound && this.sound.isPlaying) {
+            //console.log('État actuel du son - volume:', this.sound.getVolume());
+            if (isMuted) {
+                this.sound.setVolume(0);
+            } else {
+                this.sound.setVolume(1);
+            }
+            //console.log('Nouveau volume:', this.sound.getVolume());
+        } else {
+            console.log('Son non initialisé ou non en lecture');
+        }
+    }
+
+    addSecondaryCanvas(canvas, container) {
+        this.secondaryCanvas = canvas;
+        this.secondaryContainer = container;
+        
+        // Créer un second renderer
+        this.secondaryRenderer = new THREE.WebGLRenderer({
+            canvas: this.secondaryCanvas,
+            antialias: true,
+            alpha: true
+        });
+        
+        // Configurer le renderer
+        this.secondaryRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.updateSecondarySize();
+
+        // Créer un cube de test
+        const geometry = new THREE.BoxGeometry(1, 1, 1);
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        this.testCube = new THREE.Mesh(geometry, material);
+        this.testCube.position.set(0, 0, -3);
+        this.scene.add(this.testCube);
+>>>>>>> Stashed changes
     }
 
     setupGUI() {
