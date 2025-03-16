@@ -33,20 +33,6 @@ onMounted(() => {
   if (window.experience) {
     experienceInstance = window.experience;
   }
-<<<<<<< Updated upstream
-  
-  onMounted(() => {
-    playMusic()
-  })
-  
-  onUnmounted(() => {
-    if (audioElement) {
-      audioElement.pause()
-      audioElement = null
-    }
-  })
-  </script>
-=======
 });
 
 onUnmounted(() => {
@@ -55,4 +41,3 @@ onUnmounted(() => {
   }
 })
 </script>
->>>>>>> Stashed changes

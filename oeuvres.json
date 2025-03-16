@@ -1,0 +1,59 @@
+{
+    "oeuvres": [
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "La Nuit étoilée",
+        "description": "Peinte en 1889, cette œuvre représente un ciel nocturne tourbillonnant au-dessus du village de Saint-Rémy-de-Provence.",
+        "objet3D": "nuit_etoilee.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "La Joconde",
+        "description": "Peinte entre 1503 et 1506, ce portrait énigmatique est l'un des plus célèbres au monde.",
+        "objet3D": "joconde.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "Le Cri",
+        "description": "Une des œuvres les plus emblématiques de l'expressionnisme, illustrant une figure tourmentée sous un ciel dramatique.",
+        "objet3D": "le_cri.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "Impression, soleil levant",
+        "description": "Ce tableau de 1872 est considéré comme le point de départ du mouvement impressionniste.",
+        "objet3D": "impression_soleil_levant.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "Guernica",
+        "description": "Réalisée en 1937, cette œuvre monumentale dénonce les horreurs de la guerre civile espagnole.",
+        "objet3D": "guernica.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "La Jeune Fille à la perle",
+        "description": "Ce portrait du XVIIe siècle est souvent surnommé 'la Joconde du Nord'.",
+        "objet3D": "jeune_fille_perle.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "La Persistance de la mémoire",
+        "description": "Un chef-d'œuvre du surréalisme représentant des montres molles fondant dans un paysage désertique.",
+        "objet3D": "persistance_memoire.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "Le Baiser",
+        "description": "Peinte en 1908, cette œuvre emblématique de l'Art nouveau représente un couple enlacé dans un décor doré.",
+        "objet3D": "le_baiser.fbx"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableau": "Le 3 mai 1808",
+        "description": "Une représentation poignante des exécutions de civils espagnols par les troupes napoléoniennes.",
+        "objet3D": "3_mai_1808.fbx"
+      }
+    ]
+  }
+  

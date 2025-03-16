@@ -1,10 +1,11 @@
 import * as THREE from 'three'
 
 export default class Renderer {
-    constructor(canvas) {
+    constructor(canvas, options = {}) {
         this.instance = new THREE.WebGLRenderer({
             canvas,
-            antialias: true
+            antialias: true,
+            ...options
         })
         
         this.instance.setSize(window.innerWidth, window.innerHeight)

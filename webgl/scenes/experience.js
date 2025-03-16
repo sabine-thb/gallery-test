@@ -1,34 +1,24 @@
-import * as THREE from 'three'
-import MainCamera from '../modules/camera/mainCamera'
-import Controls from '../modules/controls'
-import Renderer from '../modules/render'
-import Room1 from '../components/room1'
-import Room2 from '../components/room2'
-import Room3 from '../components/room3'
-import Corridor from '../components/corridor'
-import { Sky } from 'three/addons/objects/Sky.js'
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js'
+import * as THREE from 'three';
+import MainCamera from '../modules/camera/mainCamera';
+import Controls from '../modules/controls';
+import Renderer from '../modules/render';
+import Room1 from '../components/room1';
+import Room2 from '../components/room2';
+import Corridor from '../components/corridor';
+import { Sky } from 'three/addons/objects/Sky.js';
 
 export default class Experience {
     constructor(canvas) {
-        if (!canvas) return
+        if (!canvas) return;
         
-        this.canvas = canvas
-        this.walls = []
-        this.playerRadius = 0.5
+        this.canvas = canvas;
+        this.walls = [];
+        this.playerRadius = 0.5;
         this.boundaryBox = new THREE.Box3(
             new THREE.Vector3(-50, -50, -50),
             new THREE.Vector3(50, 50, 50)
-        )
+        );
         
-<<<<<<< Updated upstream
-        this.scene = new THREE.Scene()
-        this.camera = new MainCamera()
-        this.renderer = new Renderer(canvas)
-        this.renderer.instance.shadowMap.enabled = true
-        this.renderer.instance.shadowMap.type = THREE.PCFSoftShadowMap
-        this.controls = new Controls(this.camera.instance, document.body, this)
-=======
         this.scene = new THREE.Scene();
         // this.paintScene = new THREE.Scene();
 
@@ -54,7 +44,7 @@ export default class Experience {
         const audioLoader = new THREE.AudioLoader();
         audioLoader.load('/audio/song.wav', (buffer) => {
             this.sound.setBuffer(buffer);
-            this.sound.setRefDistance(0.45);
+            this.sound.setRefDistance(0.25);
             this.sound.setLoop(true);
             this.sound.setVolume(1);
             this.sound.play();
@@ -64,44 +54,51 @@ export default class Experience {
         this.renderer.instance.shadowMap.enabled = true;
         this.renderer.instance.shadowMap.type = THREE.PCFSoftShadowMap;
         this.controls = new Controls(this.camera.instance, document.body, this);
->>>>>>> Stashed changes
         
         // Position initiale du joueur dans la première pièce
-        this.camera.instance.position.set(29.79, 1.7, 0.65)
+        this.camera.instance.position.set(29.79, 1.7, 0.65);
         
-        this.initSky()
-        this.createEnvironment()
-        this.setupEventListeners()
-        this.setupGUI()
-        this.animate()
+        this.initSky();
+        this.createEnvironment();
+        this.setupEventListeners();
+        this.animate();
         
         // Initialisation du temps pour l'animation du soleil
-        this.startTime = Date.now()
-        this.cycleDuration = 20 * 60 * 1000 // 20 minutes en millisecondes
+        this.startTime = Date.now();
+        this.cycleDuration = 20 * 60 * 1000; // 20 minutes en millisecondes
 
-        this.roomAudio = new THREE.AudioListener();
+        // this.createPaintScene();
+
+    }
+
+
+    resize() {
+        if (this.camera && this.renderer) {
+            this.camera.resize();
+            this.renderer.resize();
+        }
     }
 
     initSky() {
         // Ajout du ciel
-        this.sky = new Sky()
-        this.sky.scale.setScalar(450000)
-        this.scene.add(this.sky)
+        this.sky = new Sky();
+        this.sky.scale.setScalar(450000);
+        this.scene.add(this.sky);
 
-        this.sun = new THREE.Vector3()
+        this.sun = new THREE.Vector3();
 
         // Création de la lumière directionnelle du soleil
-        this.sunLight = new THREE.DirectionalLight(0xffffff, 1)
-        this.sunLight.castShadow = true
-        this.sunLight.shadow.mapSize.width = 2048
-        this.sunLight.shadow.mapSize.height = 2048
-        this.sunLight.shadow.camera.near = 1
-        this.sunLight.shadow.camera.far = 100
-        this.sunLight.shadow.camera.left = -50
-        this.sunLight.shadow.camera.right = 50
-        this.sunLight.shadow.camera.top = 50
-        this.sunLight.shadow.camera.bottom = -50
-        this.scene.add(this.sunLight)
+        this.sunLight = new THREE.DirectionalLight(0xffffff, 1);
+        this.sunLight.castShadow = true;
+        this.sunLight.shadow.mapSize.width = 2048;
+        this.sunLight.shadow.mapSize.height = 2048;
+        this.sunLight.shadow.camera.near = 1;
+        this.sunLight.shadow.camera.far = 100;
+        this.sunLight.shadow.camera.left = -50;
+        this.sunLight.shadow.camera.right = 50;
+        this.sunLight.shadow.camera.top = 50;
+        this.sunLight.shadow.camera.bottom = -50;
+        this.scene.add(this.sunLight);
 
         // Paramètres du ciel
         this.skyParams = {
@@ -112,37 +109,36 @@ export default class Experience {
             elevation: 45,
             azimuth: 180,
             exposure: 0.5,
-            sunIntensity: 1
-        }
+            sunIntensity: 1,
+        };
 
-        this.updateSky()
+        this.updateSky();
     }
 
     updateSky() {
-        const uniforms = this.sky.material.uniforms
-        uniforms['turbidity'].value = this.skyParams.turbidity
-        uniforms['rayleigh'].value = this.skyParams.rayleigh
-        uniforms['mieCoefficient'].value = this.skyParams.mieCoefficient
-        uniforms['mieDirectionalG'].value = this.skyParams.mieDirectionalG
+        const uniforms = this.sky.material.uniforms;
+        uniforms['turbidity'].value = this.skyParams.turbidity;
+        uniforms['rayleigh'].value = this.skyParams.rayleigh;
+        uniforms['mieCoefficient'].value = this.skyParams.mieCoefficient;
+        uniforms['mieDirectionalG'].value = this.skyParams.mieDirectionalG;
 
-        const phi = THREE.MathUtils.degToRad(90 - this.skyParams.elevation)
-        const theta = THREE.MathUtils.degToRad(this.skyParams.azimuth)
+        const phi = THREE.MathUtils.degToRad(90 - this.skyParams.elevation);
+        const theta = THREE.MathUtils.degToRad(this.skyParams.azimuth);
 
-        this.sun.setFromSphericalCoords(1, phi, theta)
-        uniforms['sunPosition'].value.copy(this.sun)
+        this.sun.setFromSphericalCoords(1, phi, theta);
+        uniforms['sunPosition'].value.copy(this.sun);
         
         // Mise à jour de la position et intensité de la lumière directionnelle
-        this.sunLight.position.copy(this.sun).multiplyScalar(50)
-        this.sunLight.intensity = this.skyParams.sunIntensity
+        this.sunLight.position.copy(this.sun).multiplyScalar(50);
+        this.sunLight.intensity = this.skyParams.sunIntensity;
         
-        this.renderer.instance.toneMappingExposure = this.skyParams.exposure
+        this.renderer.instance.toneMappingExposure = this.skyParams.exposure;
     }
 
     setupEventListeners() {
         window.addEventListener('resize', () => {
-            this.camera.resize()
-            this.renderer.resize()
-        })
+            this.resize(); // Correctly use the resize method
+        });
     }
 
     createEnvironment() {
@@ -150,116 +146,135 @@ export default class Experience {
             items: {
                 wall: new THREE.MeshStandardMaterial({
                     color: 0x445566,
-                    roughness: 0.5
+                    roughness: 0.5,
                 }),
                 floor: new THREE.MeshStandardMaterial({
                     color: 0x222222,
                     roughness: 0.7,
-                    receiveShadow: true
+                    receiveShadow: true,
                 }),
                 ceiling: new THREE.MeshStandardMaterial({
                     color: 0x333333,
-                    roughness: 0.8
-                })
-            }
-        }
+                    roughness: 0.8,
+                }),
+            },
+        };
 
-        //this.room1 = new Room1(this.scene, this.materials, this)
-        this.room2 = new Room2(this.scene, this.materials, this)
-        this.room3 = new Room3(this.scene, this.materials, this)
-        this.corridor = new Corridor(this.scene, this.materials, this)
-        //this.room1.scene.position.set(30, 0, -32.5)
-        //this.room1.scene.rotation.y = Math.PI
-        this.room2.scene.position.set(0, 0, 0)
-        this.room3.scene.position.set(30, 0, -29.75)
-        this.room3.scene.rotation.y = -Math.PI/1.48
-        this.corridor.scene.position.set(30, 0, -17.5)
+        this.room1 = new Room1(this.scene, this.materials, this);
+        this.room2 = new Room2(this.scene, this.materials, this);
+        this.corridor = new Corridor(this.scene, this.materials, this);
+        this.room1.scene.position.set(30, 0, -32.5);
+        this.room1.scene.rotation.y = Math.PI;
+        this.room2.scene.position.set(0, 0, 0);
+        this.corridor.scene.position.set(30, 0, -17.5);
+
+        const cube = new THREE.BoxGeometry(1, 1, 1);
 
         // Gestion des collisions
-        this.setupCollisions()
+        this.setupCollisions();
 
         // Éclairage ambiant réduit pour accentuer les ombres
-        const ambient = new THREE.AmbientLight(0xffffff, 0.3)
-        this.scene.add(ambient)
+        const ambient = new THREE.AmbientLight(0xffffff, 0.3);
+        this.scene.add(ambient);
 
-        const mainLight = new THREE.DirectionalLight(0xffffff, 0.8)
-        mainLight.position.set(0, 10, 0)
-        this.scene.add(mainLight)
+        const mainLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        mainLight.position.set(0, 10, 0);
+        this.scene.add(mainLight);
 
         // Helper pour Room2 uniquement
-        const room2Helper = new THREE.BoxHelper(this.room2.scene, 0x0000ff)
-        this.scene.add(room2Helper)
+        const room2Helper = new THREE.BoxHelper(this.room2.scene, 0x0000ff);
+        this.scene.add(room2Helper);
 
+        // Debug des collisions
+        this.walls.forEach((wall) => {
+            const boxHelper = new THREE.BoxHelper(wall, 0xff0000);
+            this.scene.add(boxHelper);
+        });
     }
 
     setupCollisions() {
         // Fonction pour vérifier les collisions
         const checkCollisions = (position) => {
-            const playerBoundingSphere = new THREE.Sphere(position, this.playerRadius)
+            const playerBoundingSphere = new THREE.Sphere(position, this.playerRadius);
             
             for (const wall of this.walls) {
                 // Créer une boîte de collision pour le mur
-                const wallBox = new THREE.Box3().setFromObject(wall)
+                const wallBox = new THREE.Box3().setFromObject(wall);
                 
                 // Vérifier la collision
                 if (wallBox.intersectsSphere(playerBoundingSphere)) {
-                    return true
+                    return true;
                 }
             }
-            return false
-        }
+            return false;
+        };
 
         // Mettre à jour la méthode update des controls
-        const originalUpdate = this.controls.update.bind(this.controls)
+        const originalUpdate = this.controls.update.bind(this.controls);
         this.controls.update = () => {
-            const camera = this.controls.instance.object
-            const oldPosition = camera.position.clone()
+            const camera = this.controls.instance.object;
+            const oldPosition = camera.position.clone();
             
-            originalUpdate()
+            originalUpdate();
             
             // Si collision, revenir à l'ancienne position
             if (checkCollisions(camera.position)) {
-                camera.position.copy(oldPosition)
+                camera.position.copy(oldPosition);
             }
-        }
+        };
     }
 
     cleanup() {
         window.removeEventListener('resize', () => {
-            this.camera.resize()
-            this.renderer.resize()
-        })
+            this.resize();
+        });
         
         this.scene.traverse((object) => {
-            if (object.geometry) object.geometry.dispose()
+            if (object.geometry) object.geometry.dispose();
             if (object.material) {
                 if (Array.isArray(object.material)) {
-                    object.material.forEach(material => material.dispose())
+                    object.material.forEach((material) => material.dispose());
                 } else {
-                    object.material.dispose()
+                    object.material.dispose();
                 }
             }
-        })
+        });
         
-        this.renderer.instance.dispose()
+        this.renderer.instance.dispose();
     }
 
-    animate = () => {
-        requestAnimationFrame(this.animate)
 
-        const elapsed = Date.now() - this.startTime
-        const progress = (elapsed % this.cycleDuration) / this.cycleDuration
+    // createPaintScene() {
+    //     const geometry = new THREE.BoxGeometry(1, 1, 1);
+    //     const material = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    //     const cube = new THREE.Mesh(geometry, material);
+    
+    //     cube.position.set(0, 0, 0);
+    //     cube.position.setZ(2);
+    //     this.paintScene.add(cube);
+
+    
+    //     // Positionner la caméra de peinture
+    //     this.paintCamera.instance.position.set(0, 0, 0);  // Ajuste la position pour mieux voir le cube
+    //     this.paintCamera.instance.lookAt(cube.position);
+    // }
+    
+
+    animate = () => {
+        requestAnimationFrame(this.animate);
+
+        // Animation du soleil
+        const elapsed = Date.now() - this.startTime;
+        const progress = (elapsed % this.cycleDuration) / this.cycleDuration;
         
-        this.skyParams.azimuth = progress * 360
-        this.updateSky()
+        // Fait tourner l'azimuth de 0 à 360 degrés
+        this.skyParams.azimuth = progress * 360;
+        this.updateSky();
 
         if (this.controls) {
-            this.controls.update()
+            this.controls.update();
         }
 
-<<<<<<< Updated upstream
-        this.renderer.render(this.scene, this.camera.instance)
-=======
         const canvasRect = this.canvas.getBoundingClientRect();
         // const paintRect = document.querySelector('.paint-content-visual').getBoundingClientRect();
 
@@ -313,118 +328,45 @@ export default class Experience {
         this.testCube = new THREE.Mesh(geometry, material);
         this.testCube.position.set(0, 0, -3);
         this.scene.add(this.testCube);
->>>>>>> Stashed changes
     }
 
-    setupGUI() {
-        const gui = new GUI()
-        
-        const spotlightFolder = gui.addFolder('Room3 Spotlight')
-        
-        const params = {
-            positionX: -4.3,
-            positionY: 3.3,
-            positionZ: 3.1,
-            rotationX: 0,
-            rotationY: 0,
-            intensity: 500,
-            angle: 0.972322,
-            penumbra: 1,
-            decay: 1,
-            distance: 20
+    updateSecondarySize() {
+        if (this.secondaryContainer && this.secondaryRenderer) {
+            const bounds = this.secondaryContainer.getBoundingClientRect();
+            this.secondaryRenderer.setSize(bounds.width, bounds.height);
+            
+            // Mettre à jour la caméra pour ce viewport
+            this.camera.aspect = bounds.width / bounds.height;
+            this.camera.updateProjectionMatrix();
         }
+    }
 
-        // Position X
-        spotlightFolder.add(params, 'positionX', -10, 10, 0.1)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.position.x = value
-                    this.room3.updateHelper()
-                }
-            })
+    removeSecondaryCanvas() {
+        if (this.secondaryRenderer) {
+            this.secondaryRenderer.dispose();
+            this.secondaryRenderer = null;
+        }
+        if (this.testCube) {
+            this.scene.remove(this.testCube);
+            this.testCube.geometry.dispose();
+            this.testCube.material.dispose();
+        }
+        this.secondaryCanvas = null;
+        this.secondaryContainer = null;
+    }
 
-        // Position Y
-        spotlightFolder.add(params, 'positionY', 1, 10, 0.1)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.position.y = value
-                    this.room3.updateHelper()
-                }
-            })
-
-        // Position Z
-        spotlightFolder.add(params, 'positionZ', -5, 5, 0.1)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.position.z = value
-                    this.room3.updateHelper()
-                }
-            })
-
-        // Intensité
-        spotlightFolder.add(params, 'intensity', 0, 500)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.intensity = value
-                }
-            })
-
-        // Angle
-        spotlightFolder.add(params, 'angle', 0, Math.PI / 2)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.angle = value
-                }
-            })
-
-        // Penumbra
-        spotlightFolder.add(params, 'penumbra', 0, 1)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.penumbra = value
-                }
-            })
-
-        // Decay
-        spotlightFolder.add(params, 'decay', 1, 2)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.decay = value
-                }
-            })
-
-        // Distance
-        spotlightFolder.add(params, 'distance', 0, 20)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.distance = value
-                }
-            })
-
-        // Rotation X
-        spotlightFolder.add(params, 'rotationX', -Math.PI, Math.PI, 0.1)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.target.position.x = 
-                        this.room3.spotLight.position.x + Math.sin(value) * 10
-                    this.room3.spotLight.target.position.y = 
-                        this.room3.spotLight.position.y - Math.cos(value) * 10
-                    this.room3.updateHelper()
-                }
-            })
-
-        // Rotation Y
-        spotlightFolder.add(params, 'rotationY', -Math.PI, Math.PI, 0.1)
-            .onChange((value) => {
-                if (this.room3 && this.room3.spotLight) {
-                    this.room3.spotLight.target.position.x = 
-                        this.room3.spotLight.position.x + Math.sin(value) * 10
-                    this.room3.spotLight.target.position.z = 
-                        this.room3.spotLight.position.z + Math.cos(value) * 10
-                    this.room3.updateHelper()
-                }
-            })
-
-        spotlightFolder.open()
+    update() {
+        // Mettre à jour la scène principale
+        this.renderer.render(this.scene, this.camera);
+        
+        // Mettre à jour le canvas secondaire s'il existe
+        if (this.secondaryRenderer) {
+            this.secondaryRenderer.render(this.scene, this.camera);
+            
+            // Optionnel : faire tourner le cube
+            if (this.testCube) {
+                this.testCube.rotation.y += 0.01;
+            }
+        }
     }
 }

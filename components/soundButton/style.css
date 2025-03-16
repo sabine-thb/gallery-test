@@ -9,7 +9,7 @@
     right:20px;
     border-radius: 50%;
     border:white 1px solid;
-    z-index: 100;
+    z-index: 1000;
 
     display: flex;
     justify-content: center;
@@ -111,7 +111,7 @@
   }
 
 
-  @media(max-width:500px){
+  @media(max-width:540px){
     .sound-button{
       width:60px;
       height:60px;

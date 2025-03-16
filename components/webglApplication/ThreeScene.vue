@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Experience from '../../webgl/scenes/Experience.js'
+import Experience from '../../webgl/scenes/experience.js'
 
 export default {
   name: 'ThreeScene',
@@ -20,6 +20,10 @@ export default {
 
     // Initialiser l'expérience Three.js
     this.experience = new Experience(canvas)
+
+    // Définir l'instance de l'expérience globalement
+     window.experience = this.experience;
+
 
     // Créer le gestionnaire de redimensionnement
     this.resizeHandler = () => {

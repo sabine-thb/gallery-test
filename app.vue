@@ -3,40 +3,51 @@
     <transition name="fade">
       <startScreen v-if="!started" @start="startExperience" />
     </transition>
-    <transition name="fade">
-      <controls v-if="started" />
+
+    <!-- <transition name="fade">
+      <controls v-if="started"  />
+    </transition> -->
+
+    <transition name="bottom">
+      <loader/>
     </transition>
+
     <div id="experience">
-      <ThreeScene v-if="started" @experience-ready="handleExperienceReady" />
+      <ThreeScene v-if="started"/>
     </div>
-    <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted" />
+
   </div>
+  <transition name="fade" >
+    <paint v-if="started"/>
+  </transition>
+
+  <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted"/>
+  <joystick v-if="started"/>
 </template>
 
-<script setup>
-import { ref } from 'vue';
-import ThreeScene from './components/webglApplication/ThreeScene.vue';
-import startScreen from './components/startScreen/startScreen.vue';
-import controls from './components/controls/controls.vue';
-import soundButton from './components/soundButton/soundButton.vue';
-import './style.css';
 
-const started = ref(false);
-const isMuted = ref(false);
-const experience = ref(null); // Référence à l'instance de Experience
+
+
+<script setup>
+import { ref } from 'vue'
+import ThreeScene from './components/webglApplication/ThreeScene.vue'
+import startScreen from './components/startScreen/startScreen.vue'
+import controls from './components/controls/controls.vue'
+import loader from './components/loader/loader.vue'
+import soundButton from './components/soundButton/soundButton.vue'
+import joystick from './components/joystick/joystick.vue'
+import paint from './components/paint/paint.vue'
+import './style.css'
+
+const started = ref(false)
 
 const startExperience = () => {
-  started.value = true;
-};
+  started.value = true
+}
 
-const handleExperienceReady = (exp) => {
-  experience.value = exp; // Stocker l'instance de Experience
-};
 
-const toggleMute = () => {
-  isMuted.value = !isMuted.value;
-  if (experience.value) {
-    experience.value.toggleMuteSound(isMuted.value); // Appeler la méthode de Experience
-  }
-};
+
+
+
+
 </script>

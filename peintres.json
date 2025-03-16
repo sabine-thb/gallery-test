@@ -1,0 +1,19 @@
+{
+    "peintres": [
+      {
+        "nom": "Vincent van Gogh",
+        "description": "Peintre néerlandais post-impressionniste, connu pour son style vibrant et expressif. Il a créé plus de 2 000 œuvres, dont 'La Nuit étoilée' et 'Les Tournesols'.",
+        "photo": "van_gogh.jpg"
+      },
+      {
+        "nom": "Pablo Picasso",
+        "description": "Artiste espagnol et co-fondateur du cubisme, il a révolutionné l'art du XXe siècle avec des œuvres comme 'Guernica' et 'Les Demoiselles d'Avignon'.",
+        "photo": "picasso.jpg"
+      },
+      {
+        "nom": "Claude Monet",
+        "description": "Peintre français impressionniste, célèbre pour ses paysages et ses séries sur les Nymphéas. Il est considéré comme un pionnier de l'impressionnisme.",
+        "photo": "monet.jpg"
+      }
+    ]
+  }
