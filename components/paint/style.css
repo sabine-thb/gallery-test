@@ -38,7 +38,11 @@
 
   .paint-content-text p{
     font-size: 2rem;
+<<<<<<< HEAD
     font-family: var(--publicSans);
+=======
+    font-family: var(--futura);
+>>>>>>> features/andy
     letter-spacing: 0.1rem;
   }
   

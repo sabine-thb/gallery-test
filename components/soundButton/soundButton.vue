@@ -1,49 +1,43 @@
 <template>
-    <div
-      class="sound-button"
-      @click.stop="toggleMute"
-      :class="{ muted: isMuted }"
-    >
-      <div class="sound-button-line"></div>
-      <div class="sound-button-line"></div>
-      <div class="sound-button-line"></div>
-      <div class="sound-button-line"></div>
-      <div class="sound-button-line"></div>
-    </div>
-  </template>
+  <div
+    class="sound-button"
+    @click.prevent="toggleMute"
+    :class="{ muted: isMuted }"
+  >
+    <div class="sound-button-line"></div>
+    <div class="sound-button-line"></div>
+    <div class="sound-button-line"></div>
+    <div class="sound-button-line"></div>
+    <div class="sound-button-line"></div>
+  </div>
+</template>
 
-  <script setup>
-  import { ref, onMounted, onUnmounted } from 'vue'
-  import './style.css'
-  
-  const isMuted = ref(false)
-  let audioElement = null
-  
-  const playMusic = () => {
-    if (!audioElement) {
-      audioElement = new Audio('/audio/song.wav')
-      audioElement.loop = true
-    }
-  
-    audioElement.play().catch(err => console.warn('Playback blocked:', err))
+<script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+import Experience from '../../webgl/scenes/experience.js'; // Importer Experience
+
+import './style.css'
+
+const isMuted = ref(false)
+let experienceInstance = null;
+
+
+const toggleMute = () => {
+  isMuted.value = !isMuted.value;
+  if (window.experience) {
+    window.experience.toggleSound(isMuted.value);
   }
-  
-  const toggleMute = () => {
-    if (audioElement) {
-      isMuted.value = !isMuted.value
-      audioElement.muted = isMuted.value
-    }
+};
+
+onMounted(() => {
+  if (window.experience) {
+    experienceInstance = window.experience;
   }
-  
-  onMounted(() => {
-    playMusic()
-  })
-  
-  onUnmounted(() => {
-    if (audioElement) {
-      audioElement.pause()
-      audioElement = null
-    }
-  })
-  </script>
-  
+});
+
+onUnmounted(() => {
+  if (experienceInstance) {
+    experienceInstance = null;
+  }
+})
+</script>
