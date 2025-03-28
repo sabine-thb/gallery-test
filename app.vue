@@ -13,7 +13,7 @@
     </transition>
 
     <div id="experience">
-      <ThreeScene v-if="started"/>
+      <ThreeScene @experience-ready="onExperienceReady" :class="{ 'visible': started }"/>
     </div>
 
   </div>
@@ -40,14 +40,40 @@ import paint from './components/paint/paint.vue'
 import './style.css'
 
 const started = ref(false)
+const isMuted = ref(false)
+const experienceInstance = ref(null)
+
+const onExperienceReady = (experience) => {
+  experienceInstance.value = experience
+}
 
 const startExperience = () => {
   started.value = true
+  if (experienceInstance.value) {
+    experienceInstance.value.loadAudio()
+  }
 }
 
-
-
-
-
-
+const toggleMute = () => {
+  isMuted.value = !isMuted.value
+  if (experienceInstance.value) {
+    experienceInstance.value.toggleSound(isMuted.value)
+  }
+}
 </script>
+
+<style>
+#experience {
+  width: 100%;
+  height: 100%;
+}
+
+#experience canvas {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+#experience .visible {
+  opacity: 1;
+}
+</style>

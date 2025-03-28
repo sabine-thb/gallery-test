@@ -7,6 +7,7 @@ import Experience from '../../webgl/scenes/experience.js'
 
 export default {
   name: 'ThreeScene',
+  emits: ['experience-ready'],
   data() {
     return {
       experience: null,
@@ -22,8 +23,10 @@ export default {
     this.experience = new Experience(canvas)
 
     // Définir l'instance de l'expérience globalement
-     window.experience = this.experience;
+    window.experience = this.experience;
 
+    // Émettre un événement pour signaler que l'expérience est prête
+    this.$emit('experience-ready', this.experience);
 
     // Créer le gestionnaire de redimensionnement
     this.resizeHandler = () => {
@@ -38,7 +41,7 @@ export default {
   beforeUnmount() {
     // Nettoyer l'expérience Three.js
     if (this.experience) {
-      this.experience.destroy()
+      this.experience.cleanup()
       this.experience = null
     }
 
