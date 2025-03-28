@@ -38,7 +38,7 @@
 
   .paint-content-text p{
     font-size: 2rem;
-    font-family: var(--futura);
+    font-family: var(--publicSans);
     letter-spacing: 0.1rem;
   }
   

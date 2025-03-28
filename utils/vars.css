@@ -5,6 +5,12 @@
 
 
 @font-face {
+    font-family: 'Public Sans';
+    src: url('../assets/fonts/PublicSans-Light.woff2');
+}
+
+
+@font-face {
     font-family: 'Akira';
     src: url('../assets/fonts/Akira.woff2');
 }
@@ -25,6 +31,7 @@
 
 :root {
     --futura: 'Futura', sans-serif;
+    --publicSans: 'Public Sans', sans-serif;
     --akira: 'Akira', sans-serif;
     --playfairNormal: 'PlayFair Display Normal', sans-serif;
     --playfairItalic: 'PlayFair Display Italic', sans-serif;
