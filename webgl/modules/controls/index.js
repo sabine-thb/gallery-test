@@ -9,7 +9,7 @@ export default class Controls {
         // Définir la hauteur initiale de la caméra
         camera.position.y = 1.7;
 
-        this.moveSpeed = 0.08;
+        this.moveSpeed = 0.2;
         this.velocity = new THREE.Vector3();
         this.lastTime = performance.now();
 
