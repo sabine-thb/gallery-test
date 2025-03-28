@@ -54,20 +54,12 @@ const startExperience = () => {
   }
 }
 
-<<<<<<< HEAD
-
-
-
-
-
-=======
 const toggleMute = () => {
   isMuted.value = !isMuted.value
   if (experienceInstance.value) {
     experienceInstance.value.toggleSound(isMuted.value)
   }
 }
->>>>>>> features/andy
 </script>
 
 <style>
