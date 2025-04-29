@@ -2,57 +2,80 @@
     "oeuvres": [
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin1",
         "tableau": "La Nuit étoilée",
         "description": "Peinte en 1889, cette œuvre représente un ciel nocturne tourbillonnant au-dessus du village de Saint-Rémy-de-Provence.",
-        "objet3D": "nuit_etoilee.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/soazig.jpg"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin2",
         "tableau": "La Joconde",
         "description": "Peinte entre 1503 et 1506, ce portrait énigmatique est l'un des plus célèbres au monde.",
-        "objet3D": "joconde.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/lucie.jpg"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin3",
         "tableau": "Le Cri",
         "description": "Une des œuvres les plus emblématiques de l'expressionnisme, illustrant une figure tourmentée sous un ciel dramatique.",
-        "objet3D": "le_cri.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/5_lames_de_fond.jpg"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin4",
         "tableau": "Impression, soleil levant",
         "description": "Ce tableau de 1872 est considéré comme le point de départ du mouvement impressionniste.",
-        "objet3D": "impression_soleil_levant.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la_sirene.jpg"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin5",
         "tableau": "Guernica",
         "description": "Réalisée en 1937, cette œuvre monumentale dénonce les horreurs de la guerre civile espagnole.",
-        "objet3D": "guernica.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/imgg.jpg"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin6",
         "tableau": "La Jeune Fille à la perle",
         "description": "Ce portrait du XVIIe siècle est souvent surnommé 'la Joconde du Nord'.",
-        "objet3D": "jeune_fille_perle.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0965.JPG"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin7",
         "tableau": "La Persistance de la mémoire",
         "description": "Un chef-d'œuvre du surréalisme représentant des montres molles fondant dans un paysage désertique.",
-        "objet3D": "persistance_memoire.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0964.JPG"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin8",
         "tableau": "Le Baiser",
         "description": "Peinte en 1908, cette œuvre emblématique de l'Art nouveau représente un couple enlacé dans un décor doré.",
-        "objet3D": "le_baiser.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0963.JPG"
       },
       {
         "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin9",
         "tableau": "Le 3 mai 1808",
         "description": "Une représentation poignante des exécutions de civils espagnols par les troupes napoléoniennes.",
-        "objet3D": "3_mai_1808.fbx"
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0962.JPG"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin10",
+        "tableau": "Titre au hasard 1",
+        "description": "J'irai tué celui qui m'a donner envie de coder !",
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0958.JPG"
+      },
+      {
+        "peintre": "Martin Buffet",
+        "tableauId": "FaceTableauMartin11",
+        "tableau": "Titre au hasard 2",
+        "description": "On s'en fout c'est du texte",
+        "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0957.JPG"
       }
     ]
   }

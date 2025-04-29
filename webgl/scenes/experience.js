@@ -5,6 +5,7 @@ import MainCamera from '../modules/camera/mainCamera';
 import Controls from '../modules/controls';
 import Renderer from '../modules/render';
 import { Sky } from 'three/addons/objects/Sky.js';
+import { setSelectedObject } from '../../utils/selectionBridge';
 // import Room1 from '../components/room1';
 // import Room2 from '../components/room2';
 //import Corridor from '../components/corridor';
@@ -311,7 +312,7 @@ export default class Experience {
         const loader = new GLTFLoader();
         
         // Chargement du modèle des tableaux
-        loader.load('/MUSEE/BLENDER/RENDUS/V1/TABLEAUX/TABLEAUX.glb', (gltf) => {
+        loader.load('/MUSEE/BLENDER/RENDUS/V1/TABLEAUX/TableauxMartin.glb', (gltf) => {
             this.tableauxModel = gltf.scene;
             
             // Positionner les tableaux près du joueur
@@ -324,7 +325,9 @@ export default class Experience {
             
             // Configuration des matériaux pour les tableaux
             this.tableauxModel.traverse((child) => {
-                if (child.isMesh) {
+                if (child.isMesh && child.name.startsWith("FaceTableauMartin")) {
+                    // Store original name for texture matching
+                    child.userData.originalName = child.name;
                     // Stocker le matériau original pour pouvoir revenir à son état initial
                     child.originalMaterial = child.material.clone();
                     
@@ -334,9 +337,6 @@ export default class Experience {
                     
                     // Marquer comme tableau pour l'interaction
                     child.userData.isTableau = true;
-                    
-                    // Assigner un nom reconnaissable au tableau basé sur sa position
-                    child.userData.tableauName = `Tableau_${child.id}`;
                     
                     // Ajouter à la liste des tableaux pour l'interaction
                     this.tableaux.push(child);
@@ -359,14 +359,15 @@ export default class Experience {
         // Gestion du clic
         this.canvas.addEventListener('click', () => {
             if (this.hoveredTableau) {
-                console.log("Tableau cliqué:", this.hoveredTableau.userData.tableauName);
+                setSelectedObject(this.hoveredTableau.userData.originalName);
+                console.log("Tableau sélectionné:", this.hoveredTableau.userData.originalName);
             }
         });
     }
     
     checkTableauxInteraction() {
         // Vérifier la distance entre le joueur et les tableaux
-        const MAX_INTERACTION_DISTANCE = 20;
+        const MAX_INTERACTION_DISTANCE = 15;
         
         // Si on avait un tableau en survol avant, restaurer son matériau
         if (this.hoveredTableau) {
@@ -605,6 +606,7 @@ export default class Experience {
         this.testCube.position.set(0, 0, -3);
         this.scene.add(this.testCube);
     }
+    
 
     updateSecondarySize() {
         if (this.secondaryContainer && this.secondaryRenderer) {
