@@ -15,17 +15,36 @@
   
   <script setup>
   import { ref } from 'vue'
+  import Experience from '../../webgl/scenes/experience.js'
   import './style.css'
   
-  const isLoading = ref(true) 
-  
+  const isLoading = ref(true)
+let checkInterval = null
+let timeoutFallback = null
 
-  const simulateLoading = () => {
-    setTimeout(() => {
-      isLoading.value = false 
-    }, 2000) 
+// Vérifie périodiquement l'état de chargement
+const checkLoadingState = () => {
+  if (window.experience?.modelsLoaded) {
+    isLoading.value = false
+    clearInterval(checkInterval)
+    clearTimeout(timeoutFallback)
   }
+}
+
+onMounted(() => {
+  // Vérifie toutes les 100ms
+  checkInterval = setInterval(checkLoadingState, 100)
   
-  simulateLoading()
+  // Fallback après 4 secondes
+  timeoutFallback = setTimeout(() => {
+    isLoading.value = false
+    clearInterval(checkInterval)
+  }, 4000)
+})
+
+onBeforeUnmount(() => {
+  clearInterval(checkInterval)
+  clearTimeout(timeoutFallback)
+})
   </script>
   

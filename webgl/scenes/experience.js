@@ -4,7 +4,6 @@ import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 import MainCamera from '../modules/camera/mainCamera';
 import Controls from '../modules/controls';
 import Renderer from '../modules/render';
-import { Sky } from 'three/addons/objects/Sky.js';
 import { setSelectedObject } from '../../utils/selectionBridge';
 // import Room1 from '../components/room1';
 // import Room2 from '../components/room2';
@@ -65,13 +64,8 @@ export default class Experience {
         this.sound = new THREE.PositionalAudio(this.listener);
         this.audioLoaded = false;
         
-        // Configuration améliorée du rendu des ombres
-        this.renderer.instance.shadowMap.enabled = true;
-        this.renderer.instance.shadowMap.type = THREE.VSMShadowMap; // Changé pour VSM pour des ombres douces qui se fondent
-        this.renderer.instance.physicallyCorrectLights = true;
-        this.renderer.instance.outputEncoding = THREE.sRGBEncoding;
-        this.renderer.instance.toneMapping = THREE.ACESFilmicToneMapping;
-        this.renderer.instance.toneMappingExposure = 1.0;
+        this.renderer.instance.shadowMap.enabled = false;
+        this.renderer.instance.physicallyCorrectLights = false;
         
         // Créer les contrôles et sauvegarder la méthode update originale
         this.controls = new Controls(this.camera.instance, document.body, this);
@@ -80,19 +74,13 @@ export default class Experience {
         // Position initiale du joueur dans la première pièce
         this.camera.instance.position.set(29.79, 1.7, 0.65);
         
-        this.initSky();
         this.createEnvironment();
-        this.setupEventListeners();
         
         // Drapeaux pour suivre le chargement des modèles
         this.modelsLoaded = false;
         
         // Démarrer l'animation sans l'audio
         this.animate();
-        
-        // Initialisation du temps pour l'animation du soleil
-        this.startTime = Date.now();
-        this.cycleDuration = 20 * 60 * 1000; // 20 minutes en millisecondes
 
         // this.createPaintScene();
     }
@@ -120,72 +108,6 @@ export default class Experience {
         }
     }
 
-    initSky() {
-        // Ajout du ciel
-        this.sky = new Sky();
-        this.sky.scale.setScalar(450000);
-        this.scene.add(this.sky);
-
-        this.sun = new THREE.Vector3();
-
-        // Création de la lumière directionnelle du soleil avec des ombres améliorées
-        this.sunLight = new THREE.DirectionalLight(0xffffff, 1);
-        this.sunLight.castShadow = true;
-        this.sunLight.shadow.mapSize.width = 4096; // Haute résolution pour ombres détaillées
-        this.sunLight.shadow.mapSize.height = 4096;
-        this.sunLight.shadow.camera.near = 0.5;
-        this.sunLight.shadow.camera.far = 150;
-        this.sunLight.shadow.camera.left = -60;
-        this.sunLight.shadow.camera.right = 60;
-        this.sunLight.shadow.camera.top = 60;
-        this.sunLight.shadow.camera.bottom = -60;
-        this.sunLight.shadow.bias = -0.0005;
-        this.sunLight.shadow.normalBias = 0.04; // Augmenté pour éviter les artefacts
-        this.sunLight.shadow.radius = 3; // Augmenté pour plus de flou
-        this.sunLight.shadow.blurSamples = 8; // Augmente la qualité du flou
-        this.scene.add(this.sunLight);
-
-        // Paramètres du ciel
-        this.skyParams = {
-            turbidity: 10,
-            rayleigh: 3,
-            mieCoefficient: 0.005,
-            mieDirectionalG: 0.7,
-            elevation: 45,
-            azimuth: 180,
-            exposure: 0.5,
-            sunIntensity: 1,
-        };
-
-        this.updateSky();
-    }
-
-    updateSky() {
-        const uniforms = this.sky.material.uniforms;
-        uniforms['turbidity'].value = this.skyParams.turbidity;
-        uniforms['rayleigh'].value = this.skyParams.rayleigh;
-        uniforms['mieCoefficient'].value = this.skyParams.mieCoefficient;
-        uniforms['mieDirectionalG'].value = this.skyParams.mieDirectionalG;
-
-        const phi = THREE.MathUtils.degToRad(90 - this.skyParams.elevation);
-        const theta = THREE.MathUtils.degToRad(this.skyParams.azimuth);
-
-        this.sun.setFromSphericalCoords(1, phi, theta);
-        uniforms['sunPosition'].value.copy(this.sun);
-        
-        // Mise à jour de la position et intensité de la lumière directionnelle
-        this.sunLight.position.copy(this.sun).multiplyScalar(50);
-        this.sunLight.intensity = this.skyParams.sunIntensity;
-        
-        this.renderer.instance.toneMappingExposure = this.skyParams.exposure;
-    }
-
-    setupEventListeners() {
-        window.addEventListener('resize', () => {
-            this.resize(); // Correctly use the resize method
-        });
-    }
-
     createEnvironment() {
         this.materials = {
             items: {
@@ -211,7 +133,13 @@ export default class Experience {
         };
 
         // Chargement du modèle GLB du musée
-        this.loadMuseumModel();
+        Promise.all([
+            this.loadMuseumModel(),
+            this.loadTableauxModel()
+        ]).then(() => {
+            this.setupCollisionDetection();
+            this.modelsLoaded = true;
+        });
 
         // this.room1 = new Room1(this.scene, this.materials, this);
         // this.room2 = new Room2(this.scene, this.materials, this);
@@ -221,41 +149,38 @@ export default class Experience {
         // this.room2.scene.position.set(0, 0, 0);
         //this.corridor.scene.position.set(30, 0, -17.5);
 
-        const cube = new THREE.BoxGeometry(1, 1, 1);
+        //const cube = new THREE.BoxGeometry(1, 1, 1);
 
         // Gestion des collisions
-        this.setupCollisionDetection();
 
         // Éclairage ambiant amélioré
         const ambient = new THREE.AmbientLight(0xffffff, 0.35); // Légèrement réduit
         this.scene.add(ambient);
-
-        // Ajout d'une lumière hémisphérique pour réduire les zones trop sombres
-        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 0.25);
-        this.scene.add(hemiLight);
-
-        // Lumière principale avec ombres améliorées
-        const mainLight = new THREE.DirectionalLight(0xffffff, 0.7);
-        mainLight.position.set(0, 15, 0);
-        mainLight.castShadow = true;
-        mainLight.shadow.mapSize.width = 2048;
-        mainLight.shadow.mapSize.height = 2048;
-        mainLight.shadow.camera.near = 0.5;
-        mainLight.shadow.camera.far = 60;
-        mainLight.shadow.camera.left = -30;
-        mainLight.shadow.camera.right = 30;
-        mainLight.shadow.camera.top = 30;
-        mainLight.shadow.camera.bottom = -30;
-        mainLight.shadow.bias = -0.0003;
-        mainLight.shadow.normalBias = 0.02;
-        mainLight.shadow.radius = 2.5; // Ajout d'un flou aux ombres
-        mainLight.shadow.blurSamples = 8; // Paramètre pour la qualité du flou
-        this.scene.add(mainLight);
     }
+
+    load(callback) {
+        Promise.all([
+            this.loadMuseumModel(),
+            this.loadTableauxModel()
+        ]).then(() => {
+            this.setupCollisionDetection();
+            this.modelsLoaded = true;
+            if (callback) callback();
+        }).catch(error => {
+            console.error('Erreur de chargement:', error);
+        });
+    }
+
     
     loadMuseumModel() {
         if (this.modelsLoaded) return; // Éviter le double chargement
-        
+
+        return new Promise((resolve, reject) => {
+            if (this.modelsLoaded) {
+                resolve();
+                return;
+            }
+
         const loader = new GLTFLoader();
         
         // Chargement du modèle du musée
@@ -300,19 +225,29 @@ export default class Experience {
                 }
             });
 
+            resolve();
+        },
+        undefined, // Pas de suivi de progression
+            (error) => {
+                console.error('Erreur de chargement du musée:', error);
+                reject(error);
+            })
+
             // Chargement et positionnement des tableaux après avoir chargé le musée
             this.loadTableauxModel();
             
             this.setupCollisionDetection();
             this.modelsLoaded = true;
-        });
+     });
     }
     
     loadTableauxModel() {
+
+        return new Promise((resolve, reject) => {
         const loader = new GLTFLoader();
         
         // Chargement du modèle des tableaux
-        loader.load('/MUSEE/BLENDER/RENDUS/V1/TABLEAUX/TableauxMartin.glb', (gltf) => {
+        loader.load('/MUSEE/BLENDER/RENDUS/V1/TABLEAUX/TableauxMartinOptimizer.glb', (gltf) => {
             this.tableauxModel = gltf.scene;
             
             // Positionner les tableaux près du joueur
@@ -345,6 +280,14 @@ export default class Experience {
             
             // Ajouter les écouteurs d'événements pour l'interaction
             this.setupTableauxInteraction();
+            resolve();
+                },
+                undefined,
+                (error) => {
+                    console.error('Erreur de chargement des tableaux:', error);
+                    reject(error);
+                }
+            );
         });
     }
     
@@ -527,13 +470,6 @@ export default class Experience {
     animate = () => {
         requestAnimationFrame(this.animate);
 
-        // Animation du soleil
-        const elapsed = Date.now() - this.startTime;
-        const progress = (elapsed % this.cycleDuration) / this.cycleDuration;
-        
-        // Fait tourner l'azimuth de 0 à 360 degrés
-        this.skyParams.azimuth = progress * 360;
-        this.updateSky();
 
         // Mettre à jour la position du collider du joueur
         if (this.playerCollider) {

@@ -20,7 +20,6 @@
 import { ref, onMounted, onBeforeUnmount, watch, nextTick } from 'vue';
 import './style.css';
 import * as THREE from 'three';
-import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import { onSelectionChange, setSelectedObject } from '../utils/selectionBridge';
 import oeuvres from '../oeuvres.json';
 
@@ -35,6 +34,12 @@ let renderer, scene, camera, cube;
 let animationFrameId;
 
 let controls;
+let startTime;
+
+let mouseX = 0;
+let mouseY = 0;
+let targetRotationX = 0;
+let targetRotationY = 0;
 
 const hidePaint = () => {
   isVisible.value = false;
@@ -76,7 +81,7 @@ function init() {
   });
   renderer.setSize(width, height);
 
-  const geometry = new THREE.BoxGeometry(25, 17, 2);
+  const geometry = new THREE.BoxGeometry(25, 20, 2);
   const material = [
     new THREE.MeshBasicMaterial({ color: 0x000000 }), // Droite
     new THREE.MeshBasicMaterial({ color: 0x000000 }), // Gauche
@@ -88,16 +93,37 @@ function init() {
   cube = new THREE.Mesh(geometry, material);
   cube.rotation.z = -Math.PI / 2;
   cube.rotation.x = -Math.PI / 0.5;
+  const scale = 1;
+  cube.scale.set(scale, scale, scale);
+
   scene.add(cube);
 
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableZoom = false; // Désactive le zoom si besoin
-  controls.enablePan = false; // Désactive le déplacement
-  controls.rotateSpeed = 0.5; // Vitesse de rotation
-  controls.enableDamping = true; // Ajoute de l'inertie
-  controls.dampingFactor = 0.05;
-  controls.update();
+  const canvas = paintCanvas.value;
+  canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
+    
+    // Normaliser les coordonnées entre -1 et 1
+    const normalizedX = (mouseX / rect.width) * 2 - 1;
+    const normalizedY = -(mouseY / rect.height) * 2 + 1;
 
+    const MAX_ROTATION = Math.PI / 4.5;
+    
+    targetRotationY = THREE.MathUtils.clamp(
+      normalizedX * MAX_ROTATION, 
+      -MAX_ROTATION, 
+      MAX_ROTATION
+    );
+    
+    targetRotationX = THREE.MathUtils.clamp(
+      normalizedY * MAX_ROTATION, 
+      -MAX_ROTATION, 
+      MAX_ROTATION
+    );
+  });
+
+  startTime = Date.now()
   updateSize();
   animate();
 }
@@ -116,7 +142,15 @@ function updateSize() {
 
 function animate() {
   animationFrameId = requestAnimationFrame(animate);
-  controls.update();
+  const time = performance.now() * 0.001;
+
+  if(cube) {
+    cube.position.y = Math.sin(time) * 0.85;
+
+    cube.rotation.x += (targetRotationX - cube.rotation.x) * 0.1;
+    cube.rotation.y += (targetRotationY - cube.rotation.y) * 0.1;
+  }
+  
   renderer?.render(scene, camera);
 }
 
@@ -128,8 +162,6 @@ watch(isVisible, async (newVal) => {
   } else {
     cancelAnimationFrame(animationFrameId);
     window.removeEventListener('resize', updateSize);
-
-    if (controls) controls.dispose();
 
     if (renderer) {
       renderer.dispose();
