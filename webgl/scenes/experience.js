@@ -5,10 +5,7 @@ import MainCamera from '../modules/camera/mainCamera';
 import Controls from '../modules/controls';
 import Renderer from '../modules/render';
 import { setSelectedObject } from '../../utils/selectionBridge';
-
-// import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
-// import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
-// import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass.js';
+import { oeuvres } from '/oeuvres.json'; // Importez directement 'oeuvres' depuis le fichier JSON
 
 
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
@@ -32,6 +29,7 @@ export default class Experience {
         this.raycaster = new THREE.Raycaster();
         this.hoveredTableau = null;
         this.tableauSelected = false;
+        this.oeuvresData = oeuvres; // Utilisez directement la variable 'oeuvres'
 
 
         this.createTooltip();
@@ -153,6 +151,8 @@ export default class Experience {
             });
     }
 
+
+
     setupTableauxInteraction() {
         document.body.addEventListener('mousemove', (e) => {
             this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -221,11 +221,14 @@ export default class Experience {
 
                 document.body.style.cursor = 'pointer';
 
-                const highlight = this.hoveredTableau.material.clone();
-                highlight.emissiveIntensity = 0.5;
-                this.hoveredTableau.material = highlight;
+                // const highlight = this.hoveredTableau.material.clone();
+                // highlight.emissiveIntensity = 0.5;
+                // this.hoveredTableau.material = highlight;
 
-                this.tooltip.textContent = this.hoveredTableau.userData.originalName;
+                // Utiliser le nom de l'oeuvre à partir de oeuvresData
+                const oeuvreName = this.getOeuvreName(this.hoveredTableau.userData.originalName);
+                this.tooltip.innerHTML = oeuvreName || this.hoveredTableau.userData.originalName; // Utiliser innerHTML
+
                 this.tooltip.style.opacity = '1';
 
                 // 🟡 Mise à jour de la position ici
@@ -242,6 +245,10 @@ export default class Experience {
         this.tooltip.style.opacity = '0';
     }
 
+    getOeuvreName(tableauName) {
+        const oeuvreTrouve = this.oeuvresData.find(o => o.tableauId === tableauName);
+        return oeuvreTrouve ? oeuvreTrouve.tableau : null;
+    }
 
 
     setupCollisionDetection() {

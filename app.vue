@@ -8,9 +8,9 @@
       <controls v-if="started"  />
     </transition> -->
 
-    <transition name="bottom">
+    <!-- <transition name="bottom">
       <loader/>
-    </transition>
+    </transition> -->
 
     <div id="experience">
       <ThreeScene @experience-ready="onExperienceReady" :class="{ 'visible': started }"/>

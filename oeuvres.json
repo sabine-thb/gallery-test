@@ -5,77 +5,110 @@
       "tableauId": "FaceTableauMartin1",
       "tableau": "Tableau <em>super<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/soazig.jpg"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/soazig.jpg",
+      "width": 12,
+      "height": 30,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin2",
-      "tableau": "L'eau blabla <em>agitée<em>",
+      "tableau": "La <em>danseuse<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/lucie.jpg"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/lucie.jpg",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin3",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/5_lames_de_fond.jpg"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/5_lames_de_fond.jpg",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin4",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la_sirene.jpg"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la_sirene.jpg",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin5",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/imgg.jpg"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/imgg.jpg",
+      "width": 12,
+      "height": 30,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin6",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0965.JPG"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0965.JPG",
+      "width": 12,
+      "height": 30,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin7",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0964.JPG"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0964.JPG",
+      "width": 12,
+      "height": 30,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin8",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0963.JPG"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0963.JPG",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin9",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0962.JPG"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0962.JPG",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin10",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0958.JPG"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0958.JPG",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     },
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin11",
       "tableau": "L'eau blabla <em>agitée<em>",
       "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0957.JPG"
+      "tableauImg": "/MUSEE/BLENDER/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0957.JPG",
+      "width": 20,
+      "height": 25,
+      "depth": 2
     }
   ]
 }

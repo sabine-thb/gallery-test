@@ -22,11 +22,12 @@ import './style.css';
 import * as THREE from 'three';
 // N'importe plus GLTFLoader et MeshBVH ici, on ne s'en sert pas directement dans ce composant
 import { onSelectionChange, setSelectedObject } from '../utils/selectionBridge';
-import oeuvres from '../oeuvres.json';
+import oeuvres from '/oeuvres.json';
 
 const isVisible = ref(false);
 const tableauTitle = ref("");
 const tableauDescription = ref("");
+const selectedOeuvre = ref(null); // Ajout d'une ref pour stocker l'œuvre sélectionnée
 
 const canvasContainer = ref(null);
 const paintCanvas = ref(null);
@@ -51,10 +52,10 @@ const handleKeydown = (event) => {
   }
 };
 
-function init() {
+async function init() {
   const container = canvasContainer.value;
   const canvas = paintCanvas.value;
-  if (!container || !canvas) return;
+  if (!container || !canvas || !selectedOeuvre.value) return; // Vérifie si selectedOeuvre est défini
 
   // Nettoyer les ressources existantes
   if (renderer) {
@@ -68,10 +69,13 @@ function init() {
   }
 
   scene = new THREE.Scene();
-  const width = container.clientWidth;
-  const height = container.clientHeight;
+  const width = selectedOeuvre.value.width;
+  const height = selectedOeuvre.value.height;
+  const depth = selectedOeuvre.value.depth;
+  const containerWidth = container.clientWidth;
+  const containerHeight = container.clientHeight;
 
-  camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(75, containerWidth / containerHeight, 0.1, 1000);
   camera.position.z = 28;
 
   renderer = new THREE.WebGLRenderer({
@@ -79,9 +83,9 @@ function init() {
     alpha: true,
     antialias: true
   });
-  renderer.setSize(width, height);
+  renderer.setSize(containerWidth, containerHeight);
 
-  const geometry = new THREE.BoxGeometry(25, 20, 2);
+  const geometry = new THREE.BoxGeometry(height, width, depth);
   const material = [
     new THREE.MeshStandardMaterial({ color: 0xf0f0f0 }),
     new THREE.MeshStandardMaterial({ color: 0xf0f0f0 }),
@@ -104,6 +108,22 @@ function init() {
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(0, 50, 50);
   scene.add(directionalLight);
+
+  // Chargement de la texture ici
+  const textureLoader = new THREE.TextureLoader();
+  try {
+    const texture = await textureLoader.loadAsync(selectedOeuvre.value.tableauImg);
+    if (cube && Array.isArray(cube.material)) {
+      cube.material[4] = new THREE.MeshBasicMaterial({
+        map: texture
+      });
+      cube.material[4].map.rotation = Math.PI / 2;
+      cube.material[4].map.center.set(0.5, 0.5);
+      cube.material[4].needsUpdate = true;
+    }
+  } catch (error) {
+    console.error("Erreur de chargement de la texture:", error);
+  }
 
   canvas.addEventListener('mousemove', (event) => {
     const rect = canvas.getBoundingClientRect();
@@ -174,7 +194,9 @@ function animate() {
 watch(isVisible, async (newVal) => {
   if (newVal) {
     await nextTick();
-    init();
+    if (selectedOeuvre.value) {
+      init(); // Appelle init une fois que selectedOeuvre est défini
+    }
     window.addEventListener('resize', updateSize);
     window.addEventListener('keydown', handleKeydown);
   } else {
@@ -207,21 +229,7 @@ onMounted(() => {
       if (oeuvre) {
         tableauTitle.value = oeuvre.tableau;
         tableauDescription.value = oeuvre.description;
-
-        const textureLoader = new THREE.TextureLoader();
-        try {
-          const texture = await textureLoader.loadAsync(oeuvre.tableauImg);
-          if (cube && Array.isArray(cube.material)) {
-            cube.material[4] = new THREE.MeshBasicMaterial({
-              map: texture
-            });
-            cube.material[4].map.rotation = Math.PI / 2;
-            cube.material[4].map.center.set(0.5, 0.5);
-            cube.material[4].needsUpdate = true;
-          }
-        } catch (error) {
-          console.error("Erreur de chargement de la texture:", error);
-        }
+        selectedOeuvre.value = oeuvre; // Stocke l'œuvre sélectionnée
       }
     }
   });
@@ -242,4 +250,6 @@ onBeforeUnmount(() => {
     }
   }
 });
+
+
 </script>

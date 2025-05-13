@@ -1,3 +1,5 @@
+@import '/utils/vars.css';
+
 *,
 *::before,
 *::after {
@@ -84,11 +86,17 @@ body {
 .tooltip {
   color: white;
   font-size: 1.8rem;
-  font-family: "Futura", sans-serif;
+  font-family: var(--playfairNormal);
   position: fixed;
   transition: opacity 0.2s ease-in-out;
   pointer-events: none;
   z-index: 700;
+}
+
+
+.tooltip em {
+  font-family: var(--playfairItalic);
+  font-size: 2.2rem;
 }
 
 
