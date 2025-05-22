@@ -107,7 +107,7 @@ export default class Experience {
         if (this.modelsLoaded) return Promise.resolve();
 
         const loader = new GLTFLoader();
-        return loader.loadAsync('/MUSEE/BLENDER/RENDUS/V1/SALLES/MUSEE_DJERBAMOOD.glb')
+        return loader.loadAsync('/musee-blender/RENDUS/V1/SALLES/MUSEE_DJERBAMOOD.glb')
             .then(gltf => {
                 this.museumModel = gltf.scene;
                 this.museumModel.position.set(145, -17, 0.65);
@@ -131,7 +131,7 @@ export default class Experience {
 
     loadTableauxModel() {
         const loader = new GLTFLoader();
-        return loader.loadAsync('/MUSEE/BLENDER/RENDUS/V1/TABLEAUX/TableauxMartin.glb')
+        return loader.loadAsync('/musee-blender/RENDUS/V1/TABLEAUX/TableauxMartin.glb')
             .then(gltf => {
                 this.tableauxModel = gltf.scene;
                 this.tableauxModel.position.set(145, -17, 0.65);

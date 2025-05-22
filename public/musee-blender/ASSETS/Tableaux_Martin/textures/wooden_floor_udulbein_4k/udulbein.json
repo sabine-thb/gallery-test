@@ -1,0 +1,584 @@
+{
+  "assetCategories": {
+    "surface": {
+      "wood": {
+        "plank": {}
+      }
+    }
+  },
+  "averageColor": "#000000",
+  "categories": [
+    "surface",
+    "wood",
+    "plank"
+  ],
+  "comp_version": 1,
+  "description": "",
+  "displacementBias": 0.907866,
+  "displacementCalibrationAccuracy": 0.990763,
+  "displacementScale": 1.099584,
+  "environment": {
+    "biome": "undefined",
+    "region": "Europe"
+  },
+  "highest_available_res": 8192,
+  "id": "udulbein",
+  "json": {
+    "contentLength": 12342,
+    "uri": "udulbein.json"
+  },
+  "maps": [
+    {
+      "averageColor": "#F8F8F8",
+      "bitDepth": 32,
+      "colorSpace": "sRGB",
+      "contentLength": 39709597,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 0,
+      "name": "AO",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "ao",
+      "uri": "udulbein_8K_AO.exr"
+    },
+    {
+      "averageColor": "#F8F8F8",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 5823962,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 0,
+      "name": "AO",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "ao",
+      "uri": "udulbein_8K_AO.jpg"
+    },
+    {
+      "averageColor": "#665642",
+      "bitDepth": 16,
+      "colorSpace": "sRGB",
+      "contentLength": 244994305,
+      "maxIntensity": 112,
+      "mimeType": "image/x-exr",
+      "minIntensity": 0,
+      "name": "Basecolor",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "basecolor",
+      "uri": "udulbein_8K_Basecolor.exr"
+    },
+    {
+      "averageColor": "#665642",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 40178289,
+      "maxIntensity": 112,
+      "mimeType": "image/jpeg",
+      "minIntensity": 0,
+      "name": "Basecolor",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "basecolor",
+      "uri": "udulbein_8K_Basecolor.jpg"
+    },
+    {
+      "averageColor": "#808080",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 185420393,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 0,
+      "name": "Bump",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "bump",
+      "uri": "udulbein_8K_Bump.exr"
+    },
+    {
+      "averageColor": "#808080",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 9917580,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 0,
+      "name": "Bump",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "bump",
+      "uri": "udulbein_8K_Bump.jpg"
+    },
+    {
+      "averageColor": "#FFFFFF",
+      "bitDepth": 32,
+      "colorSpace": "sRGB",
+      "contentLength": 206710791,
+      "maxIntensity": 255,
+      "mimeType": "image/x-exr",
+      "minIntensity": 255,
+      "name": "Cavity",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "cavity",
+      "uri": "udulbein_8K_Cavity.exr"
+    },
+    {
+      "averageColor": "#FFFFFF",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 36098787,
+      "maxIntensity": 255,
+      "mimeType": "image/jpeg",
+      "minIntensity": 255,
+      "name": "Cavity",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "cavity",
+      "uri": "udulbein_8K_Cavity.jpg"
+    },
+    {
+      "averageColor": "#818181",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 259884793,
+      "maxIntensity": 140,
+      "mimeType": "image/x-exr",
+      "minIntensity": 91,
+      "name": "Displacement",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "displacement",
+      "uri": "udulbein_8K_Displacement.exr"
+    },
+    {
+      "averageColor": "#818181",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 3148637,
+      "maxIntensity": 140,
+      "mimeType": "image/jpeg",
+      "minIntensity": 91,
+      "name": "Displacement",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "displacement",
+      "uri": "udulbein_8K_Displacement.jpg"
+    },
+    {
+      "averageColor": "#303030",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 159202466,
+      "maxIntensity": 55,
+      "mimeType": "image/x-exr",
+      "minIntensity": 20,
+      "name": "Gloss",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "gloss",
+      "uri": "udulbein_8K_Gloss.exr"
+    },
+    {
+      "averageColor": "#303030",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 18058237,
+      "maxIntensity": 55,
+      "mimeType": "image/jpeg",
+      "minIntensity": 20,
+      "name": "Gloss",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "gloss",
+      "uri": "udulbein_8K_Gloss.jpg"
+    },
+    {
+      "averageColor": "#8282FD",
+      "bitDepth": 16,
+      "colorSpace": "Linear",
+      "contentLength": 166032412,
+      "maxIntensity": 164,
+      "mimeType": "image/x-exr",
+      "minIntensity": 125,
+      "name": "Normal",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "normal",
+      "uri": "udulbein_8K_Normal.exr"
+    },
+    {
+      "averageColor": "#8282FD",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 46988934,
+      "maxIntensity": 164,
+      "mimeType": "image/jpeg",
+      "minIntensity": 125,
+      "name": "Normal",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "normal",
+      "uri": "udulbein_8K_Normal.jpg"
+    },
+    {
+      "averageColor": "#CFCFCF",
+      "bitDepth": 32,
+      "colorSpace": "Linear",
+      "contentLength": 144134578,
+      "maxIntensity": 235,
+      "mimeType": "image/x-exr",
+      "minIntensity": 200,
+      "name": "Roughness",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "roughness",
+      "uri": "udulbein_8K_Roughness.exr"
+    },
+    {
+      "averageColor": "#CFCFCF",
+      "bitDepth": 8,
+      "colorSpace": "Linear",
+      "contentLength": 16909147,
+      "maxIntensity": 235,
+      "mimeType": "image/jpeg",
+      "minIntensity": 200,
+      "name": "Roughness",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "roughness",
+      "uri": "udulbein_8K_Roughness.jpg"
+    },
+    {
+      "averageColor": "#383838",
+      "bitDepth": 16,
+      "colorSpace": "sRGB",
+      "contentLength": 213295208,
+      "maxIntensity": 56,
+      "mimeType": "image/x-exr",
+      "minIntensity": 56,
+      "name": "Specular",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "specular",
+      "uri": "udulbein_8K_Specular.exr"
+    },
+    {
+      "averageColor": "#383838",
+      "bitDepth": 8,
+      "colorSpace": "sRGB",
+      "contentLength": 20200726,
+      "maxIntensity": 56,
+      "mimeType": "image/jpeg",
+      "minIntensity": 56,
+      "name": "Specular",
+      "physicalSize": "2x2",
+      "resolution": "8192x8192",
+      "type": "specular",
+      "uri": "udulbein_8K_Specular.jpg"
+    }
+  ],
+  "meta": [
+    {
+      "key": "scanArea",
+      "name": "Scan Area",
+      "value": "2x2 m"
+    },
+    {
+      "key": "height",
+      "name": "Height",
+      "value": "0.038 m"
+    },
+    {
+      "key": "tileable",
+      "name": "Tileable",
+      "value": true
+    },
+    {
+      "key": "texelDensity",
+      "name": "Texel Density",
+      "value": "4096 px/m"
+    },
+    {
+      "key": "calibration",
+      "name": "Calibration",
+      "value": "GretagMacbeth ColorChecker Color Rendition Chart"
+    },
+    {
+      "key": "scanner",
+      "name": "Scanner",
+      "value": "MKX"
+    }
+  ],
+  "models": [],
+  "name": "Wooden Floor",
+  "pack": {
+    "_id": "wooden-planks",
+    "name": "Wooden Planks"
+  },
+  "physicalSize": null,
+  "points": 2,
+  "previews": {
+    "images": [
+      {
+        "contentLength": 250751,
+        "resolution": "360x360",
+        "tags": [
+          "thumb"
+        ],
+        "uri": "udulbein_Grid_360.png"
+      },
+      {
+        "contentLength": 338406,
+        "resolution": "420x420",
+        "tags": [
+          "thumb"
+        ],
+        "uri": "udulbein_Grid_420.png"
+      },
+      {
+        "contentLength": 990597,
+        "resolution": "720x720",
+        "tags": [
+          "thumb",
+          "retina"
+        ],
+        "uri": "udulbein_Grid_720.png"
+      },
+      {
+        "contentLength": 1347536,
+        "resolution": "840x840",
+        "tags": [
+          "thumb",
+          "retina"
+        ],
+        "uri": "udulbein_Grid_840.png"
+      },
+      {
+        "contentLength": 2363814,
+        "resolution": "1440x768",
+        "tags": [
+          "preview",
+          "clay"
+        ],
+        "uri": "udulbein_PopupClay_1440.png"
+      },
+      {
+        "contentLength": 4493530,
+        "resolution": "1920x1080",
+        "tags": [
+          "preview",
+          "clay"
+        ],
+        "uri": "udulbein_PopupClay_1920.png"
+      },
+      {
+        "contentLength": 9733866,
+        "resolution": "2880x1536",
+        "tags": [
+          "preview",
+          "clay",
+          "retina"
+        ],
+        "uri": "udulbein_PopupClay_2880.png"
+      },
+      {
+        "contentLength": 18750459,
+        "resolution": "3840x2160",
+        "tags": [
+          "preview",
+          "clay",
+          "retina"
+        ],
+        "uri": "udulbein_PopupClay_3840.png"
+      },
+      {
+        "contentLength": 2723010,
+        "resolution": "1440x768",
+        "tags": [
+          "preview",
+          "tiled"
+        ],
+        "uri": "udulbein_PopupTiled_1440.png"
+      },
+      {
+        "contentLength": 5037701,
+        "resolution": "1920x1080",
+        "tags": [
+          "preview",
+          "tiled"
+        ],
+        "uri": "udulbein_PopupTiled_1920.png"
+      },
+      {
+        "contentLength": 10787222,
+        "resolution": "2880x1536",
+        "tags": [
+          "preview",
+          "tiled",
+          "retina"
+        ],
+        "uri": "udulbein_PopupTiled_2880.png"
+      },
+      {
+        "contentLength": 20717890,
+        "resolution": "3840x2160",
+        "tags": [
+          "preview",
+          "tiled",
+          "retina"
+        ],
+        "uri": "udulbein_PopupTiled_3840.png"
+      },
+      {
+        "contentLength": 2721216,
+        "resolution": "1440x768",
+        "tags": [
+          "preview"
+        ],
+        "uri": "udulbein_Popup_1440.png"
+      },
+      {
+        "contentLength": 5151369,
+        "resolution": "1920x1080",
+        "tags": [
+          "preview"
+        ],
+        "uri": "udulbein_Popup_1920.png"
+      },
+      {
+        "contentLength": 11180420,
+        "resolution": "2880x1536",
+        "tags": [
+          "preview",
+          "retina"
+        ],
+        "uri": "udulbein_Popup_2880.png"
+      },
+      {
+        "contentLength": 21678428,
+        "resolution": "3840x2160",
+        "tags": [
+          "preview",
+          "retina"
+        ],
+        "uri": "udulbein_Popup_3840.png"
+      }
+    ],
+    "relativeSize": "1x1",
+    "scaleReferences": []
+  },
+  "process_date": "2024-04-17 05:05:57",
+  "properties": [],
+  "referencePreviews": {
+    "maps": [],
+    "models": []
+  },
+  "references": [],
+  "revised": false,
+  "revision": 0,
+  "semanticTags": {
+    "architectural_style": {},
+    "asset_type": "surface",
+    "color": [
+      "Brown"
+    ],
+    "contains": [
+      "Wood",
+      "Nails",
+      "Grout"
+    ],
+    "country": "Sweden",
+    "descriptive": [
+      "Plain",
+      "Clean",
+      " worn"
+    ],
+    "environment": [
+      "rural"
+    ],
+    "industry": [
+      "archviz",
+      "games",
+      "VFX"
+    ],
+    "interior_exterior": [
+      "exterior"
+    ],
+    "locations": {
+      "Europe": {
+        "Sweden": {
+          "Gothenburg": {}
+        }
+      }
+    },
+    "maxSize": 2,
+    "minSize": 2,
+    "name": "Wooden Floor",
+    "orientation": [
+      "floor"
+    ],
+    "region": "Europe",
+    "resolution": 8192,
+    "state": [
+      "old"
+    ],
+    "subject_matter": "manmade",
+    "theme": [
+      "Outdoor",
+      "Pier",
+      "beach",
+      " decking"
+    ]
+  },
+  "tags": [
+    "brown",
+    "outdoor",
+    "pier",
+    "wood",
+    "nails",
+    "grout",
+    "plain",
+    "clean"
+  ],
+  "texelDensity": 4096,
+  "texture_type": "basic",
+  "ue_plugin_archives": [
+    {
+      "contentLength": 186446700,
+      "gltfVersion": "2.0",
+      "tier": 0,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_0/udulbein_tier_0.zip",
+      "version": 1
+    },
+    {
+      "contentLength": 62042046,
+      "gltfVersion": "2.0",
+      "tier": 1,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_1/udulbein_tier_1.zip",
+      "version": 1
+    },
+    {
+      "contentLength": 16344824,
+      "gltfVersion": "2.0",
+      "tier": 2,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_2/udulbein_tier_2.zip",
+      "version": 1
+    },
+    {
+      "contentLength": 1424418,
+      "gltfVersion": "2.0",
+      "tier": 3,
+      "type": "gltf",
+      "uri": "ue_plugin_archives/tier_3/udulbein_tier_3.zip",
+      "version": 1
+    }
+  ],
+  "version": 2
+}
