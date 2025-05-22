@@ -113,6 +113,7 @@ async function init() {
   const textureLoader = new THREE.TextureLoader();
   try {
     const texture = await textureLoader.loadAsync(selectedOeuvre.value.tableauImg);
+    texture.colorSpace = THREE.SRGBColorSpace;
     if (cube && Array.isArray(cube.material)) {
       cube.material[4] = new THREE.MeshBasicMaterial({
         map: texture
