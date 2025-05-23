@@ -2,7 +2,7 @@
   <div v-if="isVisible" class="paint">
     <div class="paint-content">
       <div class="paint-content-text">
-        <h1 v-html="tableauTitle" ></h1>
+        <h1 v-html="tableauTitle"></h1>
         <p>{{ tableauDescription }}</p>
       </div>
       <div class="paint-content-visual" ref="canvasContainer">
@@ -76,7 +76,7 @@ async function init() {
   const containerHeight = container.clientHeight;
 
   camera = new THREE.PerspectiveCamera(75, containerWidth / containerHeight, 0.1, 1000);
-  camera.position.z = 28;
+  camera.position.z = 12;
 
   renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -113,7 +113,11 @@ async function init() {
   const textureLoader = new THREE.TextureLoader();
   try {
     const texture = await textureLoader.loadAsync(selectedOeuvre.value.tableauImg);
+
     texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearMipMapLinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+
     if (cube && Array.isArray(cube.material)) {
       cube.material[4] = new THREE.MeshBasicMaterial({
         map: texture
@@ -169,13 +173,13 @@ function animate() {
   const time = performance.now() * 0.001;
 
   if (cube) {
-    const amplitudeX = 0.5;
-    const amplitudeY = 1.5;
-    const amplitudeZ = 0.5;
+    const amplitudeX = 0.3;
+    const amplitudeY = 0.8;
+    const amplitudeZ = 0.3;
 
-    const speedX = 1.2;
-    const speedY = 1.6;
-    const speedZ = 1.0;
+    const speedX = 1;
+    const speedY = 1.2;
+    const speedZ = 0.8;
 
     cube.position.x = Math.sin(time * speedX) * amplitudeX;
     cube.position.y = Math.sin(time * speedY) * amplitudeY;

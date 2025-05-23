@@ -77,6 +77,23 @@ export default class Experience {
         });
     }
 
+
+    toggleSound(isMuted) {
+        if (this.sound) {
+            if (!this.audioLoaded && !isMuted) {
+                this.loadAudio();
+            } else if (this.sound.isPlaying) {
+                if (isMuted) {
+                    this.sound.setVolume(0);
+                } else {
+                    this.sound.setVolume(1);
+                }
+            }
+        } else {
+            console.log('Son non initialisé');
+        }
+    }
+
     resize() {
         this.camera?.resize();
         this.renderer?.resize();

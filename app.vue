@@ -4,25 +4,25 @@
       <startScreen v-if="!started" @start="startExperience" />
     </transition>
 
-    <!-- <transition name="fade">
-      <controls v-if="started"  />
-    </transition> -->
+    <transition name="fade">
+      <controls v-if="started" />
+    </transition>
 
     <!-- <transition name="bottom">
       <loader/>
     </transition> -->
 
     <div id="experience">
-      <ThreeScene @experience-ready="onExperienceReady" :class="{ 'visible': started }"/>
+      <ThreeScene @experience-ready="onExperienceReady" :class="{ 'visible': started }" />
     </div>
 
   </div>
-  <transition name="fade" >
-    <paint v-if="started"/>
+  <transition name="fade">
+    <paint v-if="started" />
   </transition>
 
-  <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted"/>
-  <joystick v-if="started"/>
+  <soundButton v-if="started" @click="toggleMute" :isMuted="isMuted" />
+  <joystick v-if="started" />
 </template>
 
 
