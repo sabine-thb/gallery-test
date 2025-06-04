@@ -3,9 +3,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin1",
-      "tableau": "Tableau <em>super<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/soazig.jpg",
+      "tableau": "L' <em>amoureuse<em>",
+      "description": "Ce moment précieux où l’amour de soi se révèle, permettant de se mettre à nu avec courage et authenticité, et d’y puiser la force nécessaire pour gagner en confiance. Une libération intime où vulnérabilité rime avec puissance retrouvée. C’est l’étape essentielle où l’on s’affirme pleinement, prêt·e à embrasser sa vérité et à avancer avec assurance.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/amoureuse.jpg",
       "width": 8,
       "height": 10.6,
       "depth": 0.8
@@ -13,9 +13,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin2",
-      "tableau": "La <em>danseuse<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/lucie.jpg",
+      "tableau": "La <em>partition<em>",
+      "description": "La Partition est le jeu complexe et fragile de qui l’on est, une composition intime où se mêlent doutes, larmes et sourires. À travers les lignes et les notes d’une véritable partition de musique, le tableau raconte la mélodie intérieure, faite de tensions et d’harmonies, de silences et de rythmes, qui façonnent notre identité en perpétuel mouvement.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la-partition.jpg",
       "width": 8,
       "height": 10.6,
       "depth": 0.8
@@ -23,9 +23,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin3",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/5_lames_de_fond.jpg",
+      "tableau": "Les 5 lames <em>de fond<em>",
+      "description": "Divisé en cinq toiles où dansent le rêve de chaque spectateur·trice, Les Cinq Lames de fond déploie un bleu profond, mouvant, comme une mer intérieure qui reflète nos émotions les plus enfouies.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/les-5-lames-de-fond.jpg",
       "width": 9,
       "height": 7.78,
       "depth": 0.8
@@ -34,8 +34,8 @@
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin4",
       "tableau": "La <em>sirène<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la_sirene.jpg",
+      "description": "Le rêve de Léonie invite à s’enfoncer dans le bleu profond d’une mer mystérieuse, pour se métamorphoser en une créature aux contours flous, portée par une esthétique à la fois étrange et fascinante. Leonie rêve de devenir une sirène mais elle deviendra un cachalot. Un voyage où l’imaginaire se fond dans les profondeurs, entre rêve et réalité. ",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la-sirene.jpg",
       "width": 8,
       "height": 10.6,
       "depth": 0.8
@@ -43,9 +43,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin5",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/imgg.jpg",
+      "tableau": "La <em>rouquine<em>",
+      "description": "La Rouquine évolue dans un entre-deux sensuel et mystérieux. Vêtue d’une robe courte rouge à pois, elle semble flotter, frôlant et jouant entre la main et le corps, comme si elle dansait avec les algues au fond des océans. Son mouvement évoque une légèreté presque enfantine, mêlée à une tension invisible, comme si chaque geste dissimulait une histoire silencieuse, entre désir, pudeur et abandon.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la-rouquine.jpg",
       "width": 5.4,
       "height": 11.8,
       "depth": 0.8
@@ -53,9 +53,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin6",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0965.JPG",
+      "tableau": "La danseuse <em>aux petits pois<em>",
+      "description": "La recherche d'elle, un conte de fée ludique, dans un univers à la fois onirique et mystérieux. Une femme vêtue d’une robe rouge à petits pois blancs évolue doucement dans les profondeurs d’une mer d’un bleu profond, comme suspendue entre réalité et rêve. Son allure légère et presque dansante invite à explorer les méandres de l’identité et de la quête de soi, où chaque mouvement évoque une histoire, un désir, une découverte. Elle mêle subtilement poésie et intimité et offre une échappée belle dans un monde où l’imaginaire flotte au rythme des vagues.",
+      "tableauImg": "musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la-danseuse-aux-petits-pois.JPG ",
       "width": 5.4,
       "height": 11.8,
       "depth": 0.8
@@ -63,9 +63,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin7",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0964.JPG",
+      "tableau": "Mise à  <em>nu<em>",
+      "description": "Mise à nu est une célébration intime de la mise à nu de l’âme. Les courbes d’une femme de dos, en mouvement, épousent l’espace avec grâce, comme si chaque geste dévoilait une part de sa vérité intérieure. Entourée de bleu, elle semble flotter entre force et vulnérabilité, dans une danse silencieuse où le corps devient langage, et l’émotion, matière.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/mise-a-nu.JPG",
       "width": 5.4,
       "height": 11.8,
       "depth": 0.8
@@ -73,9 +73,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin8",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0963.JPG",
+      "tableau": "La <em>descente<em>",
+      "description": "Descente traduit avec force et abstraction la fragilité du rapport à soi. Une main, à peine reconnaissable, glisse lentement vers le bas, comme aspirée par le doute. Cette chute silencieuse incarne le manque de confiance en soi, cette sensation de perte de repères, de glissement intérieur, où l’on se sent happé·e par l’invisible poids de ses propres incertitudes.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la-descente.JPG",
       "width": 8,
       "height": 10.47,
       "depth": 0.8
@@ -83,9 +83,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin9",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0962.JPG",
+      "tableau": "Soi",
+      "description": "Réalisé en piscine, Soi est une plongée introspective dans la recherche de soi. Le bleu profond qui enveloppe la toile symbolise l’immensité de notre monde intérieur, tandis qu’au centre, un trou blanc intrigue, perturbe, appelle. Comme un silence au milieu du tumulte, il incarne ce vide essentiel, cet espace de questionnement où l’on se confronte à ce que l’on est.",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/soi.JPG",
       "width": 8,
       "height": 10.65,
       "depth": 0.8
@@ -93,9 +93,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin10",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0958.JPG",
+      "tableau": "La <em>remontée<em>",
+      "description": "Après avoir effleuré le fondement de l’âme mise à nu, La Remontée illustre le moment fragile et puissant où une femme s’élève vers la surface — une ascension lumineuse, entre libération et renaissance. ",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/la-remontee.JPG",
       "width": 8,
       "height": 11.53,
       "depth": 0.8
@@ -103,9 +103,9 @@
     {
       "peintre": "Martin Buffet",
       "tableauId": "FaceTableauMartin11",
-      "tableau": "L'eau blabla <em>agitée<em>",
-      "description": "Un vent léger caressait les feuilles des arbres, apportant avec lui une douce odeur de terre humide. Au loin, le rire d’enfants résonnait, mêlé au chant mélancolique d’un oiseau solitaire. Chaque détail semblait murmurer une promesse de sérénité, comme si le temps lui-même avait choisi de ralentir, offrant un instant suspendu entre le rêve et la réalité. Parfois, ces moments fugaces suffisent à rappeler que la beauté réside souvent dans les choses simples, invisibles à l’œil pressé.",
-      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/IMG_0957.JPG",
+      "tableau": "Les <em>poissons<em>",
+      "description": "Les Poissons capture le moment où l’on s’oublie dans l’esthétique des profondeurs : un bleu omniprésent ponctué de touches colorées, comme des éclats de vie qui nagent entre silence et rêverie. ",
+      "tableauImg": "/musee-blender/ASSETS/Tableaux_Martin/textures/imgs_tableaux/les-poissons.JPG",
       "width": 8,
       "height": 12.52,
       "depth": 0.8
