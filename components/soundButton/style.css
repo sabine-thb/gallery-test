@@ -119,6 +119,20 @@
   }
 }
 
+@media(max-width:900px) {
+  .sound-button {
+    width: 10rem;
+    height: 10rem;
+
+  }
+
+  .sound-button-line {
+    width: 0.3rem;
+    height: 0.3rem;
+    margin: 0.3rem;
+  }
+}
+
 
 @media(max-width:540px) {
   .sound-button {

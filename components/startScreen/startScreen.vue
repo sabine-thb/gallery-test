@@ -1,8 +1,7 @@
 <template>
     <div id="startScreen">
         <div class="content">
-            <h1>Welcome</h1>
-            <p class="description">Dans <span>les sentiers</span></p>
+            <img src="/public/images/logo-sentiers.png" alt="" class="logo-sentiers">
             <button @click="$emit('start')" id="startButton">Démarrer l'expérience</button>
         </div>
       

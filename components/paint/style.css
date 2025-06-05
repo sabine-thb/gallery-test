@@ -39,7 +39,7 @@
 
 .paint-content-text p {
   font-size: 1.5rem;
-  font-family: var(--publicSans);
+  font-family: var(--satoshi);
   letter-spacing: 0.1rem;
   line-height: 2.2rem;
 }
@@ -90,6 +90,23 @@
 }
 
 
+@media(max-width:1050px) {
+  .paint-content-text h1 {
+    font-size: 5.5rem;
+  }
+
+  .paint-content-text {
+    max-width: 50rem;
+  }
+
+  .paint-content-text p {
+    font-size: 2.5rem;
+    line-height: 4rem;
+  }
+
+}
+
+
 @media(max-width: 540px) {
 
   .paint-content {
@@ -112,6 +129,11 @@
 
   .paint-content-text h1 {
     font-size: 2.5rem;
+  }
+
+  .paint-content-text p {
+    font-size: 1.5rem;
+    line-height: 2.2rem;
   }
 
   .paint-content-visual {

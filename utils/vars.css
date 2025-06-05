@@ -9,6 +9,11 @@
     src: url('../assets/fonts/PublicSans-Light.woff2');
 }
 
+@font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-Variable.woff2');
+}
+
 
 @font-face {
     font-family: 'Akira';
@@ -31,7 +36,7 @@
 
 :root {
     --futura: 'Futura', sans-serif;
-    --publicSans: 'Public Sans', sans-serif;
+    --satoshi: 'Satoshi', sans-serif;
     --akira: 'Akira', sans-serif;
     --playfairNormal: 'PlayFair Display Normal', sans-serif;
     --playfairItalic: 'PlayFair Display Italic', sans-serif;
