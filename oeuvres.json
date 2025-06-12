@@ -112,7 +112,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte1",
+      "tableauId": "FaceTableauBrigitte1001",
       "tableau": "Mélancolie <em>rose<em>",
       "description": "Un visage rose au regard asymétrique se détache sur un fond rose moucheté. Les traits noirs marqués et les motifs du vêtement créent une forte présence. L’expression impassible donne une impression de calme figé, presque mélancolique.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/melancolie-rose.jpg",
@@ -122,7 +122,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte2",
+      "tableauId": "FaceTableauBrigitte2001",
       "tableau": "Echos <em>d'enfance<em>",
       "description": "À travers un jeu subtil de contrastes, cette œuvre plonge le spectateur dans la complexité des émotions humaines. Des figures expressives, à la fois joyeuses et mélancoliques, cohabitent dans une mise en scène colorée qui rappelle l’univers de l’enfance. Les motifs répétitifs et les teintes vives instaurent d’abord une atmosphère ludique et une tension plus profonde, où l’apparence festive masque une certaine fragilité.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/echos-enfance.jpg",
@@ -132,7 +132,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte3",
+      "tableauId": "FaceTableauBrigitte3001",
       "tableau": "La ronde <em>des âmes<em>",
       "description": "Plongée dans un tourbillon de couleurs vives, cette œuvre met en scène cinq visages stylisés qui gravitent autour d’un centre lumineux. Les formes épurées, soulignées de traits noirs marqués, rappellent l’esthétique de l’art brut. Une impression de lien invisible unit ces personnages, comme pris dans un mouvement commun, empreint d’émotions et d’énergie partagée.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/ronde-ames.jpg",
@@ -142,7 +142,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte4",
+      "tableauId": "FaceTableauBrigitte4001",
       "tableau": "Silence <em>éveillé<em>",
       "description": "Ce tableau présente un visage pâle aux yeux stylisés et intenses, se détachant sur un arrière-plan vibrant de motifs rouges, oranges et noirs. L'expression de la bouche ouverte et la texture des cheveux donnent l'impression d'un cri silencieux ou d'une surprise figée. L'œuvre évoque une figure captive d'un état émotionnel intense, entourée d'une énergie chaotique et flamboyante  ",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/silence-eveille.jpg",
@@ -152,7 +152,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte5",
+      "tableauId": "FaceTableauBrigitte5001",
       "tableau": "Danse <em>primaire<em>",
       "description": "Six visages verts et bleus s’organisent autour d’un centre circulaire coloré. Les contours noirs et les motifs simples rappellent l’art brut. L’œuvre évoque une forme de réunion ou de danse collective, pleine d’énergie.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/danse-primaire.jpg",
@@ -162,7 +162,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte6",
+      "tableauId": "FaceTableauBrigitte6001",
       "tableau": "Le gardien <em>d'orange<em>",
       "description": "Ce tableau présente une figure stylisée et imposante, dominée par des teintes d'orange et de marron, sur un fond vibrant. Son visage triangulaire et ses yeux singuliers, ornés de motifs striés, confèrent un aspect mystérieux et tribal. L'œuvre évoque la présence d'une entité forte, peut-être un esprit ou un gardien ancestral, dont la sagesse est dissimulée derrière une expression énigmatique et une esthétique riche en symboles culturels.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/gardien-orange.jpg",
@@ -172,7 +172,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte7",
+      "tableauId": "FaceTableauBrigitte7001",
       "tableau": "L'éveil <em>du rêve<em>",
       "description": "Sur un fond vert vif, un visage violet aux grands yeux décorés se détache sur un fond vert éclatant. Les motifs géométriques et les couleurs vives renforcent l’effet visuel hypnotique. L’ensemble crée une figure mystérieuse entre rêve et imaginaire.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/eveil-reve.jpg",
@@ -182,7 +182,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte8",
+      "tableauId": "FaceTableauBrigitte8001",
       "tableau": "L'oeil <em>ardent<em>",
       "description": "Ce tableau présente un visage stylisé aux teintes chaudes, évoquant une figure à la fois simple et mystérieuse. L'asymétrie des yeux, notamment l'un représenté comme un insecte ardent, insuffle une dimension surréaliste et énigmatique. Sur un fond sombre et paré de motifs chatoyants, cette œuvre semble explorer la dualité entre l'apparence et une perception intérieure singulière, invitant à une lecture profonde des émotions et des mondes invisibles.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/oeil-ardent.jpg",
@@ -192,7 +192,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte9",
+      "tableauId": "FaceTableauBrigitte9001",
       "tableau": "Dialogue <em>intérieur<em>",
       "description": "Ce tableau met en scène deux figures stylisées, l'une vive et expressive, l'autre plus introspective, cohabitant sur un fond sombre. Leurs corps sont ornés de motifs foisonnants et de couleurs éclatantes. L'œuvre suggère une exploration de la dualité émotionnelle et des liens subtils qui unissent les êtres, même dans leurs différences, comme un dialogue silencieux entre deux facettes de l'existence.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/dialogue-interieur.jpg",
@@ -202,7 +202,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte10",
+      "tableauId": "FaceTableauBrigitte10001",
       "tableau": "Dualité <em>unie<em>",
       "description": "Deux visages imbriqués, l’un bleu, l’autre jaune, forment une seule figure centrale entourée de lignes rayonnantes. Les couleurs vives et contrastées évoquent le jour et la nuit, ou deux émotions opposées. L’ensemble donne une impression de dualité et d’unité à la fois.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/dualite-unie.jpg",
@@ -212,7 +212,7 @@
     },
     {
       "peintre": "Brigitte Piquard",
-      "tableauId": "FaceTableauBrigitte11",
+      "tableauId": "FaceTableauBrigitte11001",
       "tableau": "Les <em>poissons<em>",
       "description": "Les Poissons capture le moment où l’on s’oublie dans l’esthétique des profondeurs : un bleu omniprésent ponctué de touches colorées, comme des éclats de vie qui nagent entre silence et rêverie. ",
       "tableauImg": "/textures/RoomMartin/PeintureMartin/les-poissons.JPG",

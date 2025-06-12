@@ -241,7 +241,7 @@ export default class RoomBrigitte {
 
     loadPaintings() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/TableauxBrigitte02.glb', (gltf) => {
+            this.loader.load('3dModels/RoomBrigitte/TableauxBrigitte04.glb', (gltf) => {
             //console.log("Début du chargement des tableaux de Brigitte");
             gltf.scene.traverse((child) => {
                 //console.log(`Objet traversé: ${child.name} (${child.isMesh ? 'Mesh' : 'Autre'})`);
