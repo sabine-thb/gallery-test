@@ -7,7 +7,7 @@
           <img src="/icons/star-loader.svg" alt="Star">
         </div>
         <p class="loader-title">Chargement de <span>l'expérience...</span></p>
-        <p class="loader-subtitle">Les sentiers</p>
+        <p class="loader-subtitle">Sentiers</p>
       </div>
       <img src="/icons/logo.svg" class="loader-logo" alt="Logo">
     </div>

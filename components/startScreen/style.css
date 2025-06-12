@@ -5,10 +5,34 @@
   width: 100%;
   height: 100%;
   background-color: #010101;
-  background-image: url('/images/startScreen.jpg');
+  /* background-image: url('/images/startScreen.jpg');
   background-size: cover;
-  background-position: top;
+  background-position: top; */
   z-index: 1000;
+}
+
+.hidden-screen {
+  opacity: 0;
+  pointer-events: none;
+  /* Empêche les clics quand il est caché */
+}
+
+#startScreen.active {
+  opacity: 1;
+  pointer-events: auto;
+  /* Active les interactions */
+}
+
+
+.video-intro {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  object-fit: cover;
+  object-position: center;
 }
 
 .content {
@@ -20,6 +44,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.content.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  /* Rend l'élément non cliquable une fois transparent */
+  pointer-events: none;
+  /* Empêche les interactions avec le contenu caché */
 }
 
 .logo-sentiers {
