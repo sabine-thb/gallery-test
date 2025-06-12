@@ -1,14 +1,11 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 import MainCamera from '../modules/camera/mainCamera';
 import Controls from '../modules/controls';
 import Renderer from '../modules/render';
 import { setSelectedObject } from '../../utils/selectionBridge';
+import RoomMartin from '../components/SalleMartin/RoomMartin';
+import RoomBrigitte  from '../components/SalleBrigitte/RoomBrigitte';
 import { oeuvres } from '/oeuvres.json'; // Importez directement 'oeuvres' depuis le fichier JSON
-
-
-THREE.Mesh.prototype.raycast = acceleratedRaycast;
 
 export default class Experience {
     constructor(canvas) {
@@ -19,34 +16,38 @@ export default class Experience {
         this.camera = new MainCamera();
         this.renderer = new Renderer(canvas);
         this.controls = new Controls(this.camera.instance, document.body, this);
-        this.originalControlsUpdate = this.controls.update.bind(this.controls);
+        //this.originalControlsUpdate = this.controls.update.bind(this.controls);
+        this.clock = new THREE.Clock();
 
-        this.playerRadius = 0.5;
+
+        this.assetsLoaded = 0;
+        this.totalAssets = 5;
+        this.RoomMartin = null;
+        this.RoomBrigitte = null;
+        this.tableaux = [];
+        this.collisionMeshes = [];
+        this.debugMode = true;
+
+        this.raycaster = new THREE.Raycaster();
+        this.raycaster.firstHitOnly = true;
+        //this.raycaster.params = { ...this.raycaster.params, UseBVH: true };
+
         this.modelsLoaded = false;
         this.audioLoaded = false;
-        this.tableaux = [];
         this.mouse = new THREE.Vector2();
-        this.raycaster = new THREE.Raycaster();
         this.hoveredTableau = null;
         this.tableauSelected = false;
         this.oeuvresData = oeuvres; // Utilisez directement la variable 'oeuvres'
-
+        this.tooltip = null;
+        this.latestMouseEvent = null;
 
         this.createTooltip();
-
-        this.initPlayerCollider();
         this.initAudio();
-        this.initEnvironment();
+        this.initEnvironment().then(() => {
+            this.animate();
+        });
 
         this.camera.instance.position.set(29.79, 1.7, 0.65);
-        this.animate();
-    }
-
-    initPlayerCollider() {
-        const geometry = new THREE.BoxGeometry(1, 1.7, 1);
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true, transparent: true, opacity: 0 });
-        this.playerCollider = new THREE.Mesh(geometry, material);
-        this.scene.add(this.playerCollider);
     }
 
     initAudio() {
@@ -72,23 +73,29 @@ export default class Experience {
             this.sound.setRefDistance(0.25);
             this.sound.setLoop(true);
             this.sound.setVolume(1);
-            this.sound.play();
-            this.audioLoaded = true;
+            // Add error handling
+            this.sound.onError = (error) => {
+                console.error('Audio playback error:', error);
+            };
+
+            try {
+                this.sound.play();
+                this.audioLoaded = true;
+            } catch (error) {
+                console.error('Audio playback failed:', error);
+            }
+        }, undefined, (error) => {
+            console.error('Audio loading failed:', error);
         });
     }
-
 
     toggleSound(isMuted) {
         if (this.sound) {
             if (!this.audioLoaded && !isMuted) {
                 this.loadAudio();
             } else if (this.sound.isPlaying) {
-                if (isMuted) {
-                    this.sound.setVolume(0);
-                } else {
-                    this.sound.setVolume(1);
+                this.sound.setVolume(isMuted ? 0 : 1);
                 }
-            }
         } else {
             console.log('Son non initialisé');
         }
@@ -99,78 +106,94 @@ export default class Experience {
         this.renderer?.resize();
     }
 
-    initEnvironment() {
-        this.materials = {
-            items: {
-                wall: new THREE.MeshStandardMaterial({ color: 0x445566, roughness: 0.5 }),
-                floor: new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.7, receiveShadow: true }),
-                ceiling: new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.8 }),
-                invisible: new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.2 })
+    addCollisionObjects(meshes) {
+        meshes.forEach(mesh => {
+            if (mesh.geometry && !mesh.geometry.boundsTree) {
+                mesh.geometry.computeBoundsTree();
             }
-        };
-
-        this.scene.add(new THREE.AmbientLight(0xffffff, 0.35));
-
-        Promise.all([
-            this.loadMuseumModel(),
-            this.loadTableauxModel()
-        ]).then(() => {
-            this.setupCollisionDetection();
-            this.modelsLoaded = true;
+            this.collisionMeshes.push(mesh);
         });
     }
 
-    loadMuseumModel() {
-        if (this.modelsLoaded) return Promise.resolve();
-
-        const loader = new GLTFLoader();
-        return loader.loadAsync('/musee-blender/RENDUS/V1/SALLES/MUSEE_DJERBAMOOD.glb')
-            .then(gltf => {
-                this.museumModel = gltf.scene;
-                this.museumModel.position.set(145, -17, 0.65);
-                this.scene.add(this.museumModel);
-
-                this.museumModel.traverse((child) => {
-                    if (child.isMesh) {
-                        child.geometry.boundsTree = new MeshBVH(child.geometry, { lazyGeneration: false });
-                        child.material.side = child.material.shadowSide = THREE.DoubleSide;
-                        child.castShadow = child.receiveShadow = true;
-
-                        const box = new THREE.Box3().setFromObject(child);
-                        const size = box.getSize(new THREE.Vector3());
-                        const isFloor = size.y < size.x * 0.3 && size.y < size.z * 0.3 && box.min.y < -16.5;
-                        child.userData.isFloor = isFloor;
-
-                    }
-                });
-            });
-    }
-
-    loadTableauxModel() {
-        const loader = new GLTFLoader();
-        return loader.loadAsync('/musee-blender/RENDUS/V1/TABLEAUX/TableauxMartin.glb')
-            .then(gltf => {
-                this.tableauxModel = gltf.scene;
-                this.tableauxModel.position.set(145, -17, 0.65);
-                this.scene.add(this.tableauxModel);
-
-                this.tableauxModel.traverse((child) => {
-                    if (child.isMesh && child.name.startsWith('FaceTableauMartin')) {
-                        child.userData.originalName = child.name;
-                        child.originalMaterial = child.material.clone();
-                        child.material.side = THREE.DoubleSide;
-                        child.castShadow = child.receiveShadow = true;
-                        child.userData.isTableau = true;
-                        this.tableaux.push(child);
-                    }
-                });
+    onAssetLoaded() {
+        this.assetsLoaded++;
+        //console.log(`Asset loaded (${this.assetsLoaded}/${this.totalAssets})`);
+    
+        if( this.assetsLoaded === this.totalAssets) {
+            console.log("All assets loaded, starting animations");
+            this.collectTableaux().then(async() => {
                 this.setupTableauxInteraction();
+                this.startAllAnimations();
+
+                await new Promise((resolve) => {
+                    this.renderer.instance.setAnimationLoop(() => {
+                        this.renderer.instance.render(this.scene, this.camera.instance);
+                        resolve(); // Laisse le GPU faire une première frame "à vide"
+                        this.renderer.instance.setAnimationLoop(null);
+                    });
+                });
+
+                this.renderer.instance.render(this.scene, this.camera.instance);
+                this.tableaux.forEach((tableau) => {
+                    if (tableau.material) {
+                        const dummy = new THREE.Mesh(tableau.geometry, tableau.material);
+                        this.scene.add(dummy);
+                        this.renderer.instance.compile(this.scene, this.camera.instance)
+                        this.scene.remove(dummy);
+                    }
+                })
             });
+        }
     }
 
+    async initEnvironment() {
+        this.scene.add(new THREE.AmbientLight(0xffffff, 2));
 
+        this.RoomBrigitte = new RoomBrigitte(
+            this.scene, 
+            () => this.onAssetLoaded(),
+            this,
+            150, -20, 50,
+        );
+
+        await this.RoomBrigitte.init();
+
+        this.RoomMartin = new RoomMartin(
+            this.scene, 
+            () => this.onAssetLoaded(),
+            this,
+            150, -19.05, 50,  // Position de la salle Martin
+        );
+
+        await this.RoomMartin.init();
+
+        console.log("Both rooms initialized");
+        if (this.debugMode && this.RoomMartin && this.RoomBrigitte) {
+            this.RoomMartin.toggleBVHHelpers(true);
+            this.RoomBrigitte.toggleBVHHelpers(true);
+        }
+    }
+
+    startAllAnimations() {
+        if (this.RoomMartin.startMartinAnimation) {
+            this.RoomMartin.startMartinAnimation();
+        }
+    }
+
+    createTooltip() {
+        this.tooltip = document.querySelector('.tooltip');
+
+        if(!this.tooltip) {
+            this.tooltip = document.createElement('div');
+            this.tooltip.className = 'tooltip';
+            document.body.appendChild(this.tooltip);
+        }
+    }
 
     setupTableauxInteraction() {
+        this.raycaster = new THREE.Raycaster();
+        this.raycaster.firstHitOnly = true;
+
         document.body.addEventListener('mousemove', (e) => {
             this.mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
             this.mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
@@ -181,8 +204,6 @@ export default class Experience {
             }
 
             this.latestMouseEvent = e;
-
-
         });
 
         this.canvas.addEventListener('click', () => {
@@ -196,133 +217,126 @@ export default class Experience {
         });
     }
 
-
-    createTooltip() {
-        this.tooltip = document.querySelector('.tooltip');
-
-        if (!this.tooltip) {
-            this.tooltip = document.createElement('div');
-            this.tooltip.className = 'tooltip';
-            document.body.appendChild(this.tooltip);
-        }
-    }
-
-
     checkTableauxInteraction() {
-        if (this.hoveredTableau) {
+        if (this.hoveredTableau && this.hoveredTableau.originalMaterial) {
             this.hoveredTableau.material = this.hoveredTableau.originalMaterial.clone();
             this.hoveredTableau = null;
         }
 
-        if (this.tableauSelected) {
+        if (this.tableauSelected || this.tableaux.length === 0) {
             this.tooltip.style.opacity = '0';
             document.body.style.cursor = 'auto';
             return;
         }
 
-        if (!this.tableaux.length) {
-            this.tooltip.style.opacity = '0';
+        if (this.tableaux.length === 0) {
+            console.warn("Aucun tableau à interagir");
             return;
         }
 
+        //console.log("Vérification interaction tableaux...");
+        //console.log(`Tableaux totaux: ${this.tableaux.length}, Tableau sélectionné: ${this.tableauSelected}`);
 
         const playerPos = this.camera.instance.position;
-        const nearby = this.tableaux.filter(obj => playerPos.distanceTo(obj.getWorldPosition(new THREE.Vector3())) <= 50);
+        const worldPosition = new THREE.Vector3();
+        const nearby = this.tableaux.filter(obj => {
+            obj.getWorldPosition(worldPosition);
+            return playerPos.distanceTo(worldPosition) <= 50;
+        });
 
-        if (nearby.length) {
-            this.raycaster.setFromCamera(this.mouse, this.camera.instance);
-            const intersects = this.raycaster.intersectObjects(nearby);
+        if (nearby.length === 0) {
+            this.tooltip.style.opacity = '0';
+            document.body.style.cursor = 'auto';
+            return;
+        }
 
-            if (intersects.length > 0) {
-                this.hoveredTableau = intersects[0].object;
+        this.raycaster.params.Mesh.threshold = 0.1;
 
-                document.body.style.cursor = 'pointer';
+        if (!this.raycaster) {
+            this.raycaster = new THREE.Raycaster();
+            this.raycaster.firstHitOnly = true;
+        }
 
-                // const highlight = this.hoveredTableau.material.clone();
-                // highlight.emissiveIntensity = 0.5;
-                // this.hoveredTableau.material = highlight;
+        this.raycaster.setFromCamera(this.mouse, this.camera.instance);
+        const intersects = this.raycaster.intersectObjects(nearby);
 
-                // Utiliser le nom de l'oeuvre à partir de oeuvresData
-                const oeuvreName = this.getOeuvreName(this.hoveredTableau.userData.originalName);
-                this.tooltip.innerHTML = oeuvreName || this.hoveredTableau.userData.originalName; // Utiliser innerHTML
+        if (intersects.length > 0) {
+            this.hoveredTableau = intersects[0].object;
+            document.body.style.cursor = 'pointer';
 
-                this.tooltip.style.opacity = '1';
+            //const oeuvreName = this.getOeuvreName(this.hoveredTableau.userData?.originalName);
+            const originalName = this.hoveredTableau.userData?.originalName || 
+                         this.hoveredTableau.name;
+            const oeuvreName = this.getOeuvreName(originalName);
+        
+            this.tooltip.innerHTML = oeuvreName || originalName;
+            this.tooltip.style.opacity = '1';
 
-                // 🟡 Mise à jour de la position ici
-                if (this.latestMouseEvent) {
-                    this.tooltip.style.left = `${this.latestMouseEvent.clientX + 50}px`;
-                    this.tooltip.style.top = `${this.latestMouseEvent.clientY + 20}px`;
-                }
-
-                return;
+            if (this.latestMouseEvent) {
+                this.tooltip.style.left = `${this.latestMouseEvent.clientX + 50}px`;
+                this.tooltip.style.top = `${this.latestMouseEvent.clientY + 20}px`;
             }
+            return;
         }
 
         document.body.style.cursor = 'auto';
         this.tooltip.style.opacity = '0';
     }
 
+    async collectTableaux() {
+    console.log("Collecte des tableaux...");
+    this.tableaux = [];
+
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    if (this.RoomBrigitte?.tableaux) {
+        console.log(`Found ${this.RoomBrigitte.tableaux.length} Brigitte tableaux`);
+        this.tableaux.push(...this.RoomBrigitte.tableaux);
+    }
+
+    // Utiliser les tableaux déjà collectés dans les salles
+    if (this.RoomMartin?.tableaux) {
+        console.log(`Found ${this.RoomMartin.tableaux.length} Martin tableaux`);
+        this.tableaux.push(...this.RoomMartin.tableaux);
+    }
+
+    console.log("Tableaux collectés:", this.tableaux.length);
+    
+    // Debug: afficher tous les noms de tableaux
+    console.log("Noms des tableaux:", this.tableaux.map(t => {
+        return `${t.name} (original: ${t.userData?.originalName})`;
+    }));
+}
+
     getOeuvreName(tableauName) {
         const oeuvreTrouve = this.oeuvresData.find(o => o.tableauId === tableauName);
         return oeuvreTrouve ? oeuvreTrouve.tableau : null;
     }
 
+    checkCameraCollisions() {
+        if (!this.collisionMeshes || this.collisionMeshes.length === 0) return;
 
-    setupCollisionDetection() {
-        this.controls.update = () => {
-            const camera = this.controls.instance.object;
-            const prevPos = camera.position.clone();
-            this.originalControlsUpdate();
-            this.playerCollider.position.copy(camera.position);
-            if (this.checkCollisions(camera.position)) {
-                camera.position.copy(prevPos);
-            }
-        };
-    }
+        const origin = this.camera.instance.position.clone();
+        let direction = new THREE.Vector3();
+        this.controls.getMoveDirection(direction);
 
-    checkCollisions(position) {
-        if (!this.museumModel) return false;
+        const raycaster = new THREE.Raycaster(origin, direction, 0, 1.2); // 0.8m pour coller au corps du joueur
 
-        const raycaster = new THREE.Raycaster();
-        raycaster.far = 1.5;
-        const directions = [
-            new THREE.Vector3(1, 0, 0), new THREE.Vector3(-1, 0, 0),
-            new THREE.Vector3(0, 0, 1), new THREE.Vector3(0, 0, -1),
-            new THREE.Vector3(0, -1, 0),
-            new THREE.Vector3(1, 0, 1).normalize(),
-            new THREE.Vector3(-1, 0, 1).normalize(),
-            new THREE.Vector3(1, 0, -1).normalize(),
-            new THREE.Vector3(-1, 0, -1).normalize()
-        ];
-
-        for (const dir of directions) {
-            raycaster.set(position, dir);
-            const intersects = raycaster.intersectObjects(this.getAllCollisionMeshes(), true);
-            if (intersects.length > 0) return true;
+        if (direction.length() > 0) {
+            direction = direction.normalize();
         }
 
-        return false;
+        raycaster.firstHitOnly = true;
+        raycaster.params.UseBVH = true;
+        const intersects = raycaster.intersectObjects(this.collisionMeshes, true);
+
+        if (intersects.length > 0) {
+            this.controls.preventForwardMotion(); // méthode custom à implémenter dans Controls
+        }
     }
 
-    getAllCollisionMeshes() {
-        const meshes = [];
-
-        const gatherMeshes = (model) => {
-            if (!model) return;
-            model.traverse((child) => {
-                if (child.isMesh && child !== this.playerCollider) {
-                    meshes.push(child);
-                }
-            });
-        };
-
-        gatherMeshes(this.museumModel);
-        gatherMeshes(this.tableauxModel);
-        this.scene.traverse((child) => {
-            if (child.isMesh && child !== this.playerCollider) meshes.push(child);
-        });
-
-        return meshes;
+    deselectTableau() {
+        this.tableauSelected = false;
     }
 
     cleanup() {
@@ -335,15 +349,27 @@ export default class Experience {
         this.renderer.instance.dispose();
     }
 
-    deselectTableau() {
-        this.tableauSelected = false;
-    }
-
-
-
     animate = () => {
         requestAnimationFrame(this.animate);
         this.controls.update();
+        this.checkCameraCollisions();
+
+        const delta = this.clock.getDelta(); 
+
+        if (this.RoomMartin) {
+            this.RoomMartin.update(delta);
+        }
+
+        if (this.tableaux.length > 0 && !this.debugPrinted) {
+        setTimeout(() => {
+            //console.log("Tableaux détectés après délai:", this.tableaux);
+            this.tableaux.forEach(t => {
+                //console.log(`- ${t.name} (original: ${t.userData?.originalName})`);
+            });
+            this.debugPrinted = true;
+        }, 1000);
+    }
+
         this.checkTableauxInteraction();
         this.renderer.instance.render(this.scene, this.camera.instance);
     };
