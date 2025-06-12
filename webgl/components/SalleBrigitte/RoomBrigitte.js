@@ -11,7 +11,7 @@ export default class RoomBrigitte {
         this.position = new THREE.Vector3(x, y, z)
         this.tableaux = []
         this.bvhHelpers = []
-        this.showBVHHelpers = experience?.debugMode || false; // Ajouté
+        this.showBVHHelpers = experience?.debugMode || false;
 
         if (!THREE.BufferGeometry.prototype.computeBoundsTree) {
             THREE.BufferGeometry.prototype.computeBoundsTree = function () {

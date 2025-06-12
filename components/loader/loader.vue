@@ -19,8 +19,8 @@
   import './style.css'
   
   const isLoading = ref(true)
-let checkInterval = null
-let timeoutFallback = null
+  let checkInterval = null
+  let timeoutFallback = null
 
 // Vérifie périodiquement l'état de chargement
 const checkLoadingState = () => {
@@ -32,10 +32,8 @@ const checkLoadingState = () => {
 }
 
 onMounted(() => {
-  // Vérifie toutes les 100ms
   checkInterval = setInterval(checkLoadingState, 100)
   
-  // Fallback après 4 secondes
   timeoutFallback = setTimeout(() => {
     isLoading.value = false
     clearInterval(checkInterval)

@@ -5,7 +5,7 @@ import Renderer from '../modules/render';
 import { setSelectedObject } from '../../utils/selectionBridge';
 import RoomMartin from '../components/SalleMartin/RoomMartin';
 import RoomBrigitte from '../components/SalleBrigitte/RoomBrigitte';
-import { oeuvres } from '/oeuvres.json'; // Importez directement 'oeuvres' depuis le fichier JSON
+import { oeuvres } from '/oeuvres.json';
 
 export default class Experience {
     constructor(canvas) {
@@ -19,7 +19,7 @@ export default class Experience {
         this.clock = new THREE.Clock();
 
         this.assetsLoaded = 0;
-        this.totalAssets = 5; 
+        this.totalAssets = 5;
 
         this.RoomMartin = null;
         this.RoomBrigitte = null;
@@ -193,9 +193,8 @@ export default class Experience {
             console.log("All assets reported loaded by individual components.");
             this.collectTableaux().then(async () => {
                 this.setupTableauxInteraction();
-                //this.startAllAnimations(); // <-- Suppression de l'appel ici !
+                this.startAllAnimations();
 
-                // Laisse le GPU faire une première frame "à vide" pour compilation
                 await new Promise((resolve) => {
                     const renderOnce = () => {
                         this.renderer.instance.render(this.scene, this.camera.instance);
@@ -374,7 +373,6 @@ export default class Experience {
 
         console.log("Tableaux collectés:", this.tableaux.length);
 
-        // Debug: afficher tous les noms de tableaux
         console.log("Noms des tableaux:", this.tableaux.map(t => {
             return `${t.name} (original: ${t.userData?.originalName})`;
         }));
@@ -436,7 +434,6 @@ export default class Experience {
         if (this.tableaux.length > 0 && !this.debugPrinted) {
             setTimeout(() => {
                 this.tableaux.forEach(t => {
-                    //console.log(`- ${t.name} (original: ${t.userData?.originalName})`);
                 });
                 this.debugPrinted = true;
             }, 1000);
