@@ -127,7 +127,7 @@
       "description": "À travers un jeu subtil de contrastes, cette œuvre plonge le spectateur dans la complexité des émotions humaines. Des figures expressives, à la fois joyeuses et mélancoliques, cohabitent dans une mise en scène colorée qui rappelle l’univers de l’enfance. Les motifs répétitifs et les teintes vives instaurent d’abord une atmosphère ludique et une tension plus profonde, où l’apparence festive masque une certaine fragilité.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/echos-enfance.jpg",
       "width": 8,
-      "height": 10.6,
+      "height": 9.83,
       "depth": 0.8
     },
     {
@@ -146,7 +146,7 @@
       "tableau": "Silence <em>éveillé<em>",
       "description": "Ce tableau présente un visage pâle aux yeux stylisés et intenses, se détachant sur un arrière-plan vibrant de motifs rouges, oranges et noirs. L'expression de la bouche ouverte et la texture des cheveux donnent l'impression d'un cri silencieux ou d'une surprise figée. L'œuvre évoque une figure captive d'un état émotionnel intense, entourée d'une énergie chaotique et flamboyante  ",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/silence-eveille.jpg",
-      "width": 11,
+      "width": 8,
       "height": 8,
       "depth": 0.8
     },
@@ -167,7 +167,7 @@
       "description": "Ce tableau présente une figure stylisée et imposante, dominée par des teintes d'orange et de marron, sur un fond vibrant. Son visage triangulaire et ses yeux singuliers, ornés de motifs striés, confèrent un aspect mystérieux et tribal. L'œuvre évoque la présence d'une entité forte, peut-être un esprit ou un gardien ancestral, dont la sagesse est dissimulée derrière une expression énigmatique et une esthétique riche en symboles culturels.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/gardien-orange.jpg",
       "width": 9,
-      "height": 8,
+      "height": 9,
       "depth": 0.8
     },
     {
@@ -177,7 +177,7 @@
       "description": "Sur un fond vert vif, un visage violet aux grands yeux décorés se détache sur un fond vert éclatant. Les motifs géométriques et les couleurs vives renforcent l’effet visuel hypnotique. L’ensemble crée une figure mystérieuse entre rêve et imaginaire.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/eveil-reve.jpg",
       "width": 8,
-      "height": 10.6,
+      "height": 9.64,
       "depth": 0.8
     },
     {
@@ -187,7 +187,7 @@
       "description": "Ce tableau présente un visage stylisé aux teintes chaudes, évoquant une figure à la fois simple et mystérieuse. L'asymétrie des yeux, notamment l'un représenté comme un insecte ardent, insuffle une dimension surréaliste et énigmatique. Sur un fond sombre et paré de motifs chatoyants, cette œuvre semble explorer la dualité entre l'apparence et une perception intérieure singulière, invitant à une lecture profonde des émotions et des mondes invisibles.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/oeil-ardent.jpg",
       "width": 8,
-      "height": 10.47,
+      "height": 12,
       "depth": 0.8
     },
     {
@@ -197,7 +197,7 @@
       "description": "Ce tableau met en scène deux figures stylisées, l'une vive et expressive, l'autre plus introspective, cohabitant sur un fond sombre. Leurs corps sont ornés de motifs foisonnants et de couleurs éclatantes. L'œuvre suggère une exploration de la dualité émotionnelle et des liens subtils qui unissent les êtres, même dans leurs différences, comme un dialogue silencieux entre deux facettes de l'existence.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/dialogue-interieur.jpg",
       "width": 8,
-      "height": 9,
+      "height": 8,
       "depth": 0.8
     },
     {
@@ -207,7 +207,7 @@
       "description": "Deux visages imbriqués, l’un bleu, l’autre jaune, forment une seule figure centrale entourée de lignes rayonnantes. Les couleurs vives et contrastées évoquent le jour et la nuit, ou deux émotions opposées. L’ensemble donne une impression de dualité et d’unité à la fois.",
       "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/dualite-unie.jpg",
       "width": 9,
-      "height": 8,
+      "height": 9,
       "depth": 0.8
     },
     {
