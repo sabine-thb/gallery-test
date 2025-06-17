@@ -278,7 +278,7 @@ export default class RoomMartin {
                 this.toggleBVHHelpers(true);
             }
 
-            gltf.scene.position.set(150, -19.05, 50);
+            gltf.scene.position.set(150, -19.74, 50);
             this.scene.add(gltf.scene);
 
             if (this.experience?.addCollisionObjects) {
@@ -297,7 +297,7 @@ export default class RoomMartin {
     loadPaintings() {
         return new Promise((resolve) => {
         this.loader.load('3dModels/RoomMartin/TableauMartin04.glb', (gltf) => {
-            gltf.scene.position.set(150, -19.03, 31.47);
+            gltf.scene.position.set(150, -19.75, 31.47);
             this.applyBVH(gltf)
             this.scene.add(gltf.scene);
 
@@ -335,7 +335,7 @@ export default class RoomMartin {
     loadAnimatedMartin() {
         return new Promise((resolve) => {
         this.loader.load('3dModels/RoomMartin/testemartin3.glb', (gltf) => {
-            gltf.scene.position.set(150.5, -19.18, 50);
+            gltf.scene.position.set(150.5, -19.95, 50);
 
             const video = document.createElement('video');
             video.src = 'textures/RoomMartin/VideoMartin/PeintureAnimationMartin2.mp4';

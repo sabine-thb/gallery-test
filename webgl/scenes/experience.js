@@ -5,6 +5,8 @@ import Renderer from '../modules/render';
 import { setSelectedObject } from '../../utils/selectionBridge';
 import RoomMartin from '../components/SalleMartin/RoomMartin';
 import RoomBrigitte from '../components/SalleBrigitte/RoomBrigitte';
+import RoomJCD from '../components/SalleJCD/RoomJCD';
+import CouloirMusee from '../components/corridor/CouloirMusee';
 import { oeuvres } from '/oeuvres.json';
 
 export default class Experience {
@@ -19,10 +21,11 @@ export default class Experience {
         this.clock = new THREE.Clock();
 
         this.assetsLoaded = 0;
-        this.totalAssets = 5;
+        this.totalAssets = 12;
 
         this.RoomMartin = null;
         this.RoomBrigitte = null;
+        this.RoomJCD = null;
         this.tableaux = [];
         this.collisionMeshes = [];
         this.debugMode = true;
@@ -224,10 +227,26 @@ export default class Experience {
             this.scene,
             () => this.onAssetLoaded(),
             this,
-            150, -20, 50,
+            150, -20.5, 31,
         );
 
         await this.RoomBrigitte.init();
+
+        this.Couloir = new CouloirMusee(
+            this.scene,
+            () => this.onAssetLoaded(),
+            this,
+            150, -20.5, 31,
+        );
+
+        this.RoomJCD = new RoomJCD(
+            this.scene,
+            () => this.onAssetLoaded(),
+            this,
+            150, -20.5, 31,
+        );
+
+        await this.RoomJCD.init();
 
         this.RoomMartin = new RoomMartin(
             this.scene,
@@ -242,6 +261,7 @@ export default class Experience {
         if (this.debugMode && this.RoomMartin && this.RoomBrigitte) {
             this.RoomMartin.toggleBVHHelpers(true);
             this.RoomBrigitte.toggleBVHHelpers(true);
+            this.RoomJCD.toggleBVHHelpers(true);
         }
     }
 
@@ -365,6 +385,11 @@ export default class Experience {
             this.tableaux.push(...this.RoomBrigitte.tableaux);
         }
 
+        if (this.RoomJCD?.tableaux) {
+            console.log(`Found ${this.RoomJCD.tableaux.length} JCD tableaux`);
+            this.tableaux.push(...this.RoomJCD.tableaux);
+        }
+
         // Utiliser les tableaux déjà collectés dans les salles
         if (this.RoomMartin?.tableaux) {
             console.log(`Found ${this.RoomMartin.tableaux.length} Martin tableaux`);
@@ -423,7 +448,7 @@ export default class Experience {
     animate = () => {
         requestAnimationFrame(this.animate);
         this.controls.update();
-        this.checkCameraCollisions();
+        //this.checkCameraCollisions();
 
         const delta = this.clock.getDelta();
 
