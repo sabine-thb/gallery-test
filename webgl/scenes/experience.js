@@ -11,12 +11,20 @@ import { oeuvres } from '/oeuvres.json';
 
 export default class Experience {
     constructor(canvas) {
-        if (!canvas) return;
+        if (!canvas) {
+            console.error("Experience: Le canvas fourni est null ou undefined.");
+            return;
+        }
+        if (!(canvas instanceof HTMLCanvasElement)) {
+            console.error("Experience: L'objet fourni n'est pas un élément HTMLCanvasElement.", canvas);
+            return;
+        }
+        console.log("Experience: Initialisation avec le canvas :", canvas);
 
         this.canvas = canvas;
         this.scene = new THREE.Scene();
         this.camera = new MainCamera();
-        this.renderer = new Renderer(canvas);
+        this.renderer = new Renderer(canvas); // Le problème se produit probablement à l'intérieur de ce constructeur
         this.controls = new Controls(this.camera.instance, document.body, this);
         this.clock = new THREE.Clock();
 
@@ -56,6 +64,7 @@ export default class Experience {
 
         this.camera.instance.position.set(29.79, 1.7, 0.65);
     }
+
 
     initAudio() {
         this.listener = new THREE.AudioListener();

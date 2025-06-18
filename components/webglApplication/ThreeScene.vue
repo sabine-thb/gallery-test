@@ -16,7 +16,21 @@ export default {
   },
   mounted() {
     const canvas = this.$refs.canvas
-    if (!canvas) return
+
+    // --- DÉBUT DES MODIFICATIONS ---
+    if (!canvas) {
+      console.error("Erreur: L'élément canvas n'a pas été trouvé dans le DOM.");
+      return; // S'assurer qu'on sort si le canvas n'est pas là
+    }
+
+    // Ajout d'un log pour vérifier le type du canvas
+    if (!(canvas instanceof HTMLCanvasElement)) {
+      console.error("Erreur: L'objet récupéré n'est pas un élément HTMLCanvasElement valide.", canvas);
+      return; // Sortir si ce n'est pas un canvas valide
+    }
+
+    console.log("Canvas trouvé et est un HTMLCanvasElement:", canvas);
+    // --- FIN DES MODIFICATIONS ---
 
     this.experience = new Experience(canvas)
 

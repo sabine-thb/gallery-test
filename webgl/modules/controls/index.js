@@ -107,30 +107,30 @@ export default class Controls {
 
     // Rotation gauche/droite
     if (this.moveLeft) {
-      camera.rotation.y += delta ;
+      camera.rotation.y += delta;
     }
     if (this.moveRight) {
-      camera.rotation.y -= delta ;
+      camera.rotation.y -= delta;
     }
 
     camera.position.add(this.velocity);
     this.lastTime = time;
   }
 
-    preventForwardMotion() {
-      const forward = new THREE.Vector3();
-      this.instance.getDirection(forward);
-      forward.y = 0;
-      forward.normalize();
+  preventForwardMotion() {
+    const forward = new THREE.Vector3();
+    this.instance.getDirection(forward);
+    forward.y = 0;
+    forward.normalize();
 
-      this.velocity.add(forward.multiplyScalar(-this.moveSpeed));
+    this.velocity.add(forward.multiplyScalar(-this.moveSpeed));
   }
 
-    getMoveDirection() {
-      const direction = new THREE.Vector3();
-      this.instance.getDirection(direction);
-      direction.y = 0;
-      direction.normalize();
-      return direction;
+  getMoveDirection() {
+    const direction = new THREE.Vector3();
+    this.instance.getDirection(direction);
+    direction.y = 0;
+    direction.normalize();
+    return direction;
   }
 }
