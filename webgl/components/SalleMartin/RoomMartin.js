@@ -60,35 +60,22 @@ export default class RoomMartin {
     }
 
     loadTextures() {
-        this.bakedTexture = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreBaseColor.jpg')
-        this.bakedTextureNormal = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreNormal.jpg')
-        this.bakedTextureRougness = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreRougness.jpg')
-        this.bakedTexture2 = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreBaseColor.jpg')
-        this.bakedTexture2Normal = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreNormal.jpg')
-        this.bakedTexture2Rougness = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreRougness.jpg')
-        this.bakedTextureRoom = this.textureLoader.load('textures/RoomMartin/RoomMartinBake/MartinRoomBC.png')
-        this.bakedTextureRoomNormal = this.textureLoader.load('textures/RoomMartin/RoomMartinBake/MartinRoomNormal.png')
-        this.bakedTextureRoomRougness = this.textureLoader.load('textures/RoomMartin/RoomMartinBake/MartinRoomRougness.png')
-        this.bakedTexturelamp = this.textureLoader.load('textures/RoomMartin/LampColorBake/LampBake.png')
-        this.bakedTextureMiniLamp = this.textureLoader.load('textures/RoomMartin/LampColorBake/LedC100_basecolor.png')
-        this.bakedTextureMiniLampRougness = this.textureLoader.load('textures/RoomMartin/LampColorBake/LedC100_roughness.png')
-        this.bakedTextureMiniLampEmissive = this.textureLoader.load('textures/RoomMartin/LampColorBake/LedC100_emissive.png')
-        this.bakedTextureHublot = this.textureLoader.load('textures/RoomMartin/HublotBake/goldBC.png')
-        this.bakedTextureHublotNormal = this.textureLoader.load('textures/RoomMartin/HublotBake/GoldNormal.png')
-        this.bakedTextureHublotRougness = this.textureLoader.load('textures/RoomMartin/HublotBake/GoldRougness.png')
-        this.bakedTextureBoulon = this.textureLoader.load('textures/RoomMartin/CuivreBake/BoulonBC.png')
-        this.bakedTextureBoulonNormal = this.textureLoader.load('textures/RoomMartin/CuivreBake/BoulonNormal.png')
-        this.bakedTextureBoulonRougness = this.textureLoader.load('textures/RoomMartin/CuivreBake/BoulonRougness.png')
-        this.bakedTexturePresentoir = this.textureLoader.load('textures/RoomMartin/RoomMartinBake/Cubesol.png')
+        this.bakedTexture = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreBaseColor.jpg');
+        this.bakedTexture2 = this.textureLoader.load('textures/RoomMartin/CuivreBake/RaelCuivreBaseColor.jpg');
+        this.bakedTextureRoom = this.textureLoader.load('textures/RoomMartin/RoomMartinBake/MartinRoomBC.png');
+        this.bakedTexturelamp = this.textureLoader.load('textures/RoomMartin/LampColorBake/LampBake.png');
+        this.bakedTextureMiniLamp = this.textureLoader.load('textures/RoomMartin/LampColorBake/LedC100_basecolor.png');
+        this.bakedTextureHublot = this.textureLoader.load('textures/RoomMartin/HublotBake/goldBC.png');
+        this.bakedTextureBoulon = this.textureLoader.load('textures/RoomMartin/CuivreBake/BoulonBC.png');
+        this.bakedTexturePresentoir = this.textureLoader.load('textures/RoomMartin/RoomMartinBake/Cubesol.png');
 
         const textures = [
-            this.bakedTexture, this.bakedTextureNormal, this.bakedTextureRougness,
-            this.bakedTexture2, this.bakedTexture2Normal, this.bakedTexture2Rougness,
-            this.bakedTextureRoom, this.bakedTextureRoomNormal, this.bakedTextureRoomRougness,
+            this.bakedTexture,
+            this.bakedTexture2,
+            this.bakedTextureRoom,
             this.bakedTexturePresentoir, this.bakedTexturelamp, this.bakedTextureMiniLamp,
-            this.bakedTextureMiniLampRougness, this.bakedTextureMiniLampEmissive,
-            this.bakedTextureHublot, this.bakedTextureHublotNormal, this.bakedTextureHublotRougness,
-            this.bakedTextureBoulon, this.bakedTextureBoulonNormal, this.bakedTextureBoulonRougness
+            this.bakedTextureHublot,
+            this.bakedTextureBoulon
         ]
 
         textures.forEach(tex => {
@@ -127,17 +114,13 @@ export default class RoomMartin {
 
     loadRoom() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/MartinRoom05.glb', (gltf) => {
+        this.loader.load('3dModels/RoomMartin/MartinRoom08.glb', (gltf) => {
+
             const archeTextures = {
                 group1: ['arche01005', 'arche01007', 'arche01001'],
                 group2: ['arche01006', 'arche01008', 'arche01002'],
             };
-            const excludedBoulons = new Set([
-                'Boulon01.070', 'Boulon01.071', 'Boulon01.072',
-                'Boulon01.073', 'Boulon01.074'
-            ]);
             const foundArches = new Set();
-
             if (!gltf.scene) return;
 
             gltf.scene.traverse((child) => {
@@ -145,28 +128,17 @@ export default class RoomMartin {
                     if (archeTextures.group1.includes(child.name)) {
                         child.material = new THREE.MeshStandardMaterial({
                             map: this.bakedTexture,
-                            normalMap: this.bakedTextureNormal,
-                            roughnessMap: this.bakedTextureRougness,
-                            metalness: 0,
-                            roughness: 0,
                         });
                         foundArches.add(child.name);
                     } else if (archeTextures.group2.includes(child.name)) {
                         child.material = new THREE.MeshStandardMaterial({
                             map: this.bakedTexture2,
-                            normalMap: this.bakedTexture2Normal,
-                            roughnessMap: this.bakedTexture2Rougness,
-                            metalness: 0,
-                            roughness: 0,
                         });
                         foundArches.add(child.name);
                     }
-
                     if (child.name === 'room') {
                         child.material = new THREE.MeshStandardMaterial({
                             map: this.bakedTextureRoom,
-                            normalMap: this.bakedTextureRoomNormal,
-                            roughnessMap: this.bakedTextureRoomRougness
                         });
                     }
 
@@ -200,8 +172,6 @@ export default class RoomMartin {
                     if (child.name === 'lamp') {
                         child.material = new THREE.MeshStandardMaterial({
                             map: this.bakedTextureMiniLamp,
-                            roughnessMap: this.bakedTextureMiniLampRougness,
-                            emissiveMap: this.bakedTextureMiniLampEmissive,
                             emissive: new THREE.Color(0xffffff),
                             emissiveIntensity: 5.5
                         });
@@ -210,16 +180,6 @@ export default class RoomMartin {
                     if (child.name === 'Cylinder') {
                         child.material = new THREE.MeshStandardMaterial({
                             map: this.bakedTextureHublot,
-                            normalMap: this.bakedTextureHublotNormal,
-                            roughnessMap: this.bakedTextureHublotRougness
-                        });
-                    }
-
-                    if (child.isMesh && child.name.includes('Boulon') && !excludedBoulons.has(child.name)) {
-                        child.material = new THREE.MeshStandardMaterial({
-                            map: this.bakedTextureBoulon,
-                            normalMap: this.bakedTextureBoulonNormal,
-                            roughnessMap: this.bakedTextureBoulonRougness
                         });
                     }
 
@@ -278,7 +238,7 @@ export default class RoomMartin {
                 this.toggleBVHHelpers(true);
             }
 
-            gltf.scene.position.set(150, -19.74, 50);
+            gltf.scene.position.set(150, -20.5, 31);
             this.scene.add(gltf.scene);
 
             if (this.experience?.addCollisionObjects) {
@@ -294,10 +254,49 @@ export default class RoomMartin {
       });
     }
 
+    loadBolts() {
+        return new Promise((resolve) => {
+            this.loader.load('3dModels/RoomMartin/BoulonsArches.glb', (gltf) => {
+                const boulonMaterial = new THREE.MeshStandardMaterial({
+                    map: this.bakedTextureBoulon,
+                });
+
+                gltf.scene.traverse((child) => {
+                    if (child.isMesh && (
+                        child.name.includes('BoulonsArche1') || 
+                        child.name.includes('BoulonsArche02') || 
+                        child.name.includes('BoulonsArche03')
+                    )) {
+                        child.material = boulonMaterial;
+                    }
+                });
+
+                this.applyBVH(gltf);
+                gltf.scene.position.copy(this.position);
+                this.scene.add(gltf.scene);
+
+                if (this.experience?.addCollisionObjects) {
+                    const collisionMeshes = [];
+                    gltf.scene.traverse(child => {
+                        if (child.isMesh) collisionMeshes.push(child);
+                    });
+                    this.experience.addCollisionObjects(collisionMeshes);
+                }
+
+                resolve();
+                this.onAssetLoaded();
+            }, undefined, (error) => {
+                console.error('Erreur chargement BoulonsArches:', error);
+                resolve();
+                this.onAssetLoaded();
+            });
+        });
+    }
+
     loadPaintings() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/TableauMartin04.glb', (gltf) => {
-            gltf.scene.position.set(150, -19.75, 31.47);
+        this.loader.load('3dModels/RoomMartin/TableauMartin03.glb', (gltf) => {
+            gltf.scene.position.set(149.7, -19.7, 31);
             this.applyBVH(gltf)
             this.scene.add(gltf.scene);
 
@@ -334,7 +333,7 @@ export default class RoomMartin {
 
     loadAnimatedMartin() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/testemartin3.glb', (gltf) => {
+        this.loader.load('3dModels/RoomMartin/testemartin4.glb', (gltf) => {
             gltf.scene.position.set(150.5, -19.95, 50);
 
             const video = document.createElement('video');

@@ -20,7 +20,7 @@ export default class CouloirMusee {
     }
 
     loadModel() {
-        this.loader.load('3dModels/Couloir/CouloirMusee.glb', (gltf) => {
+        this.loader.load('3dModels/Couloir/CouloirMusee02.glb', (gltf) => {
             gltf.scene.position.copy(this.position);
             this.scene.add(gltf.scene);
             

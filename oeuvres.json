@@ -219,6 +219,76 @@
       "width": 8,
       "height": 12.52,
       "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD1",
+      "tableau": "Mélancolie <em>rose<em>",
+      "description": "Un visage rose au regard asymétrique se détache sur un fond rose moucheté. Les traits noirs marqués et les motifs du vêtement créent une forte présence. L’expression impassible donne une impression de calme figé, presque mélancolique.",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/melancolie-rose.jpg",
+      "width": 9,
+      "height": 9,
+      "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD2",
+      "tableau": "Echos <em>d'enfance<em>",
+      "description": "À travers un jeu subtil de contrastes, cette œuvre plonge le spectateur dans la complexité des émotions humaines. Des figures expressives, à la fois joyeuses et mélancoliques, cohabitent dans une mise en scène colorée qui rappelle l’univers de l’enfance. Les motifs répétitifs et les teintes vives instaurent d’abord une atmosphère ludique et une tension plus profonde, où l’apparence festive masque une certaine fragilité.",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/echos-enfance.jpg",
+      "width": 8,
+      "height": 9.83,
+      "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD3",
+      "tableau": "La ronde <em>des âmes<em>",
+      "description": "Plongée dans un tourbillon de couleurs vives, cette œuvre met en scène cinq visages stylisés qui gravitent autour d’un centre lumineux. Les formes épurées, soulignées de traits noirs marqués, rappellent l’esthétique de l’art brut. Une impression de lien invisible unit ces personnages, comme pris dans un mouvement commun, empreint d’émotions et d’énergie partagée.",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/ronde-ames.jpg",
+      "width": 9,
+      "height": 9,
+      "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD4",
+      "tableau": "Silence <em>éveillé<em>",
+      "description": "Ce tableau présente un visage pâle aux yeux stylisés et intenses, se détachant sur un arrière-plan vibrant de motifs rouges, oranges et noirs. L'expression de la bouche ouverte et la texture des cheveux donnent l'impression d'un cri silencieux ou d'une surprise figée. L'œuvre évoque une figure captive d'un état émotionnel intense, entourée d'une énergie chaotique et flamboyante  ",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/silence-eveille.jpg",
+      "width": 8,
+      "height": 8,
+      "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD5",
+      "tableau": "Danse <em>primaire<em>",
+      "description": "Six visages verts et bleus s’organisent autour d’un centre circulaire coloré. Les contours noirs et les motifs simples rappellent l’art brut. L’œuvre évoque une forme de réunion ou de danse collective, pleine d’énergie.",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/danse-primaire.jpg",
+      "width": 9,
+      "height": 9,
+      "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD6",
+      "tableau": "Le gardien <em>d'orange<em>",
+      "description": "Ce tableau présente une figure stylisée et imposante, dominée par des teintes d'orange et de marron, sur un fond vibrant. Son visage triangulaire et ses yeux singuliers, ornés de motifs striés, confèrent un aspect mystérieux et tribal. L'œuvre évoque la présence d'une entité forte, peut-être un esprit ou un gardien ancestral, dont la sagesse est dissimulée derrière une expression énigmatique et une esthétique riche en symboles culturels.",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/gardien-orange.jpg",
+      "width": 9,
+      "height": 9,
+      "depth": 0.8
+    },
+    {
+      "peintre": "JCD",
+      "tableauId": "FaceTableauJCD7",
+      "tableau": "L'éveil <em>du rêve<em>",
+      "description": "Sur un fond vert vif, un visage violet aux grands yeux décorés se détache sur un fond vert éclatant. Les motifs géométriques et les couleurs vives renforcent l’effet visuel hypnotique. L’ensemble crée une figure mystérieuse entre rêve et imaginaire.",
+      "tableauImg": "/textures/RoomBrigitte/PeintureBrigitte/eveil-reve.jpg",
+      "width": 8,
+      "height": 9.64,
+      "depth": 0.8
     }
   ]
 }

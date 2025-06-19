@@ -29,7 +29,7 @@ export default class Experience {
         this.clock = new THREE.Clock();
 
         this.assetsLoaded = 0;
-        this.totalAssets = 12;
+        this.totalAssets = 16;
 
         this.RoomMartin = null;
         this.RoomBrigitte = null;
