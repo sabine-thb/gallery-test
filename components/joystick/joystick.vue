@@ -10,31 +10,18 @@ export default {
   data() {
     return {
       joystick: null,
-      isMobile: false,
     };
   },
   async mounted() {
     const module = await import("nipplejs");
     nipplejs = module.default || module;
 
-    this.checkIfMobile();
-    window.addEventListener("resize", this.checkIfMobile);
+    this.createJoystick();
   },
   beforeUnmount() {
-    window.removeEventListener("resize", this.checkIfMobile);
     this.destroyJoystick();
   },
   methods: {
-    checkIfMobile() {
-      const wasMobile = this.isMobile;
-      this.isMobile = window.innerWidth <= 540;
-
-      if (this.isMobile && !wasMobile) {
-        this.createJoystick();
-      } else if (!this.isMobile && wasMobile) {
-        this.destroyJoystick();
-      }
-    },
     createJoystick() {
       if (this.joystick) return;
 

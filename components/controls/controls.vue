@@ -12,6 +12,7 @@
           <p>Utilisez ZQSD pour naviguer</p>
         </div>
       </div>
+      <p class="joystick-info">Ou encore le joystick en bas à droite !</p>
       <button @click="hideControls" class="controls-close">
         <img src="/icons/close.svg" alt="close">
       </button>

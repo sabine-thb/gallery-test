@@ -5,8 +5,8 @@
   width: 6.5rem;
   height: 6.5rem;
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 3rem;
+  left: 3rem;
   border-radius: 50%;
   border: white 1px solid;
   z-index: 1000;
@@ -138,10 +138,6 @@
   .sound-button {
     width: 6rem;
     height: 6rem;
-    border: none;
-    right: 0px;
-    bottom: 0px;
-
   }
 
   .sound-button-line {
