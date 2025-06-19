@@ -216,8 +216,8 @@
       "tableau": "L'éclat <em>des cendres<em>",
       "description": "Ce tableau abstrait, aux couleurs ardentes de feu et de terre, évoque une puissante éruption ou un brasier vibrant. Les coups de pinceau dynamiques créent un mouvement ascendant, suggérant transformation et énergie brute, une célébration de la passion ou de la renaissance.",
       "tableauImg": "/textures/RoomJCD/PeintureJCD/eclat-cendres.jpg",
-      "width": 9,
-      "height": 9,
+      "width": 8,
+      "height": 9.86,
       "depth": 0.8
     },
     {
@@ -227,7 +227,7 @@
       "description": "Ce tableau abstrait, lumineux et aérien, suggère l'envol d'une forme majestueuse, peut-être un phénix, à travers des volutes de blanc et de couleurs pastel. Des touches de rouge, bleu, violet et or créent une sensation de mouvement gracieux et de renaissance éthérée, évoquant espoir et légèreté.",
       "tableauImg": "/textures/RoomJCD/PeintureJCD/renaissance-aerienne.jpg",
       "width": 8,
-      "height": 9.83,
+      "height": 9.51,
       "depth": 0.8
     },
     {
@@ -266,8 +266,8 @@
       "tableau": "L'aube des <em>éléments<em>",
       "description": "Cette œuvre abstraite présente une fusion intrigante de couleurs chaudes et froides, dominée par une palette de beiges et de gris terreux qui encadrent un cœur vibrant de rouges, d'oranges et de jaunes. Les coups de pinceau sont expressifs et texturés, créant un sentiment de mouvement et de transformation. L'ensemble évoque un paysage abstrait où la terre, le feu et l'eau s'entrelacent, peut-être une éruption lointaine ou la rencontre de forces naturelles puissantes.",
       "tableauImg": "/textures/RoomJCD/PeintureJCD/aube-elements.jpg",
-      "width": 9,
-      "height": 9,
+      "width": 8,
+      "height": 9.64,
       "depth": 0.8
     },
     {
@@ -277,7 +277,7 @@
       "description": "Pénétrez un monde sous-marin où le bleu intense et varié crée une atmosphère mystérieuse et enveloppante. Deux formes principales, éclatantes de couleurs chaudes – rouges, oranges, roses et violets – se détachent et semblent flotter ou danser au centre de la composition. Elles pourraient évoquer des créatures marines fantastiques, des coraux lumineux, ou même des manifestations émotionnelles rendues visibles par l'élément aquatique.",
       "tableauImg": "/textures/RoomJCD/PeintureJCD/valse-voiles-bleues.jpg",
       "width": 8,
-      "height": 9.64,
+      "height": 9.44,
       "depth": 0.8
     }
   ]
