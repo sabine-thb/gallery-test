@@ -10,6 +10,7 @@ export default class CouloirMusee {
         this.position = new THREE.Vector3(x, y, z);
         
         this.loader = new GLTFLoader();
+        this.textureLoader = new THREE.TextureLoader();
         
         // Initialiser DRACOLoader
         const dracoLoader = new DRACOLoader();
@@ -19,10 +20,77 @@ export default class CouloirMusee {
         this.loadModel();
     }
 
+    loadTextures() {
+        // Chargement des textures avec les chemins corrects
+        const textureAccueil = this.textureLoader.load('/textures/Couloir/AcceuilBC.png');
+        const textureCouloirs = this.textureLoader.load('/textures/Couloir/CouloirsBC.png');
+        const textureLamps = this.textureLoader.load('/textures/Couloir/CouloirsLampsBC.png');
+        const textureLampAccueil = this.textureLoader.load('/textures/Couloir/LampAcceuilBC.png');
+
+        // Liste de toutes les textures pour configuration
+        const textures = [
+            textureAccueil,
+            textureCouloirs,
+            textureLamps,
+            textureLampAccueil
+        ];
+
+        // Configuration commune pour toutes les textures
+        textures.forEach(tex => {
+            tex.flipY = false;
+            tex.colorSpace = THREE.SRGBColorSpace;
+        });
+
+        return {
+            textureAccueil,
+            textureCouloirs,
+            textureLamps,
+            textureLampAccueil
+        };
+    }
+
     loadModel() {
-        this.loader.load('3dModels/Couloir/CouloirMusee02.glb', (gltf) => {
+        this.loader.load('3dModels/Couloir/CouloirMusee04.glb', (gltf) => {
             gltf.scene.position.copy(this.position);
             this.scene.add(gltf.scene);
+            
+            // Charger et configurer les textures
+            const textures = this.loadTextures();
+            
+            // Application des matériaux avec les nouvelles textures
+            gltf.scene.traverse((child) => {
+                if (!child.isMesh) return;
+                
+                if (child.name === 'MuseTout') {
+                    child.material = new THREE.MeshStandardMaterial({ 
+                        map: textures.textureAccueil 
+                    });
+                }
+                
+                if (['CouloirD', 'CouloirG', 'CouloirM'].includes(child.name)) {
+                    child.material = new THREE.MeshStandardMaterial({ 
+                        map: textures.textureCouloirs 
+                    });
+                }
+                
+                if (['eclairageM', 'eclairageD', 'eclairageG'].includes(child.name)) {
+                    child.material = new THREE.MeshStandardMaterial({ 
+                        map: textures.textureLamps,
+                        emissive: 0xffffff,
+                        emissiveIntensity: 5.5,
+                        //emissiveMap: textures.textureLamps
+                    });
+                }
+                
+                if (child.name === 'LampAcceuil01') {
+                    child.material = new THREE.MeshStandardMaterial({ 
+                        map: textures.textureLampAccueil,
+                        emissive: 0xffffff,
+                        emissiveIntensity: 5.5,
+                        //emissiveMap: textures.textureLampAccueil
+                    });
+                }
+            });
             
             // Ajouter les meshes aux collisions
             if (this.experience?.addCollisionObjects) {

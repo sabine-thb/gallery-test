@@ -168,7 +168,7 @@ export default class RoomJCD {
         return new Promise((resolve) => {
             this.loader.load('3dModels/RoomJCD/2mursJCD.glb', (gltf) => {
                 const material = new THREE.MeshStandardMaterial({
-                    map: this.bakedTextureMurs
+                    map: this.bakedTextureMursJCD1
                 });
                 
                 gltf.scene.traverse((child) => {

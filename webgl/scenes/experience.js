@@ -41,8 +41,10 @@ export default class Experience {
         this.raycaster = new THREE.Raycaster();
         this.raycaster.firstHitOnly = true;
 
+        this.audioSources = [];
+
         this.modelsLoaded = false;
-        this.audioLoaded = false;
+        this.audioLoaded = [false, false, false];
         this.mouse = new THREE.Vector2();
         this.hoveredTableau = null;
         this.tableauSelected = false;
@@ -70,117 +72,148 @@ export default class Experience {
         this.listener = new THREE.AudioListener();
         this.camera.instance.add(this.listener);
 
-        const geometry = new THREE.SphereGeometry(0.25, 32, 32);
-        const material = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0 });
-        this.audioSphere = new THREE.Mesh(geometry, material);
-        this.audioSphere.position.set(30, 1, 0);
-        this.scene.add(this.audioSphere);
+        const audioPositions = [
+            new THREE.Vector3(36.88, 3, 29.16),  // Position pour Albumblatter-JCD
+            new THREE.Vector3(6.39, 3, -5.66),   // Position pour Ravel-Martin
+            new THREE.Vector3(36.14, 3, -34.86)  // Position pour Ladiaba-Brigitte
+        ];
 
-        this.sound = new THREE.PositionalAudio(this.listener);
-        this.audioSphere.add(this.sound);
-        this.sound.setVolume(0); // Le son est coupé au moment de l'initialisation
-        this.audioLoaded = false;
+        this.audioSources = []; // Réinitialiser les sources audio
+
+        for (let i = 0; i < 3; i++) {
+            const geometry = new THREE.SphereGeometry(0.25, 32, 32);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0xff0000, 
+                transparent: true, 
+                opacity: this.debugMode ? 0.5 : 0 
+            });
+            
+            const audioSphere = new THREE.Mesh(geometry, material);
+            audioSphere.position.copy(audioPositions[i]);
+            this.scene.add(audioSphere);
+
+            const sound = new THREE.PositionalAudio(this.listener);
+            audioSphere.add(sound);
+            sound.setVolume(0);
+
+            this.audioSources.push({
+                sphere: audioSphere,
+                sound: sound,
+                loaded: false
+            });
+
+            console.log(`Source audio ${i} position:`, audioPositions[i]);
+        }
     }
 
     loadAudio() {
-        if (this.audioLoaded) {
-            console.log("Audio déjà chargé.");
-            return;
-        }
+        const audioFiles = [
+            '/audio/Albumblatter-JCD.wav',
+            '/audio/Ravel-Martin.wav',
+            '/audio/Ladiaba-Brigitte.wav'
+        ];
 
         const loader = new THREE.AudioLoader();
-        loader.load('/audio/song.wav', (buffer) => {
-            this.sound.setBuffer(buffer);
-            this.sound.setRefDistance(0.25);
-            this.sound.setLoop(true);
-            this.audioLoaded = true;
-
-            console.log("Buffer audio chargé.");
-
-            // Une fois le buffer chargé, nous vérifions si le son doit être joué
-            if (!this.isVideoPlaying && !this.isMutedFromButton) {
-                this.sound.setVolume(1);
-                this.sound.play();
-                console.log("Audio joué car vidéo fermée et non muté.");
-            } else {
-                this.sound.setVolume(0);
-                console.log("Audio chargé mais non joué car vidéo ouverte ou muté.");
+        
+        for (let i = 0; i < this.audioSources.length; i++) {
+            const source = this.audioSources[i];
+            
+            if (source.loaded) {
+                console.log(`Audio ${i} déjà chargé.`);
+                continue;
             }
 
-            this.sound.onError = (error) => {
-                console.error('Audio playback error:', error);
-            };
-        }, undefined, (error) => {
-            console.error('Audio loading failed:', error);
-        });
+            loader.load(audioFiles[i], (buffer) => {
+                source.sound.setBuffer(buffer);
+                source.sound.setRefDistance(0.25);
+                source.sound.setLoop(true);
+                source.loaded = true;
+                this.audioLoaded[i] = true;
+
+                console.log(`Buffer audio ${i} chargé.`);
+
+                // Jouer si conditions remplies
+                if (!this.isVideoPlaying && !this.isMutedFromButton) {
+                    source.sound.setVolume(1);
+                    source.sound.play();
+                    console.log(`Audio ${i} joué car vidéo fermée et non muté.`);
+                } else {
+                    source.sound.setVolume(0);
+                    console.log(`Audio ${i} chargé mais non joué car vidéo ouverte ou muté.`);
+                }
+
+                source.sound.onError = (error) => {
+                    console.error(`Erreur de lecture audio ${i}:`, error);
+                };
+            }, undefined, (error) => {
+                console.error(`Erreur de chargement audio ${i}:`, error);
+                this.audioLoaded[i] = false;
+            });
+        }
     }
 
     toggleSound(isMuted) {
         this.isMutedFromButton = isMuted;
 
-        if (!this.sound) {
-            console.warn('Son non initialisé.');
-            return;
-        }
+        this.audioSources.forEach((source, index) => {
+            if (!source.sound) {
+                console.warn(`Source audio ${index} non initialisée.`);
+                return;
+            }
 
-        if (!this.audioLoaded && !isMuted) {
-            this.loadAudio();
-            console.log("toggleSound: Appel de loadAudio car non chargé et non muté.");
-        } else if (this.audioLoaded) {
-            if (isMuted) {
-                this.sound.setVolume(0);
-                if (this.sound.isPlaying) {
-                    this.sound.pause();
-                }
-                console.log("toggleSound: Son muté par l'utilisateur.");
-            } else {
-                if (!this.isVideoPlaying) {
-                    this.sound.setVolume(1);
-                    if (!this.sound.isPlaying) {
-                        this.sound.play();
-                    }
-                    console.log("toggleSound: Son non muté et vidéo fermée, joué.");
+            if (!source.loaded && !isMuted) {
+                this.loadAudio();
+                console.log(`toggleSound: Chargement audio ${index} déclenché.`);
+            } else if (source.loaded) {
+                if (isMuted) {
+                    source.sound.setVolume(0);
+                    if (source.sound.isPlaying) source.sound.pause();
+                    console.log(`toggleSound: Audio ${index} muté.`);
                 } else {
-                    this.sound.setVolume(0);
-                    if (this.sound.isPlaying) {
-                        this.sound.pause();
+                    if (!this.isVideoPlaying) {
+                        source.sound.setVolume(1);
+                        if (!source.sound.isPlaying) source.sound.play();
+                        console.log(`toggleSound: Audio ${index} joué (vidéo fermée).`);
+                    } else {
+                        source.sound.setVolume(0);
+                        if (source.sound.isPlaying) source.sound.pause();
+                        console.log(`toggleSound: Audio ${index} coupé (vidéo active).`);
                     }
-                    console.log("toggleSound: Son non muté mais vidéo active, donc coupé.");
                 }
             }
-        }
+        });
     }
 
     handleVideoStateChange(isVideoActive) {
         this.isVideoPlaying = isVideoActive;
         console.log(`handleVideoStateChange: isVideoActive = ${isVideoActive}, isMutedFromButton = ${this.isMutedFromButton}`);
 
-        if (isVideoActive) {
-            if (this.sound && this.sound.isPlaying) {
-                this.sound.setVolume(0);
-                this.sound.pause();
-                console.log("Vidéo ouverte, son du jeu coupé et mis en pause.");
-            }
-        } else {
-            if (!this.isMutedFromButton) {
-                if (!this.audioLoaded) {
-                    this.loadAudio();
-                    console.log("Vidéo fermée, son non chargé, appel de loadAudio.");
-                } else if (this.sound) {
-                    this.sound.setVolume(1);
-                    if (!this.sound.isPlaying) {
-                        this.sound.play();
-                    }
-                    console.log("Vidéo fermée, son déjà chargé, joué.");
+        this.audioSources.forEach((source, index) => {
+            if (isVideoActive) {
+                if (source.sound && source.sound.isPlaying) {
+                    source.sound.setVolume(0);
+                    source.sound.pause();
+                    console.log(`Audio ${index} coupé (vidéo ouverte).`);
                 }
             } else {
-                if (this.sound && this.sound.isPlaying) {
-                    this.sound.setVolume(0);
-                    this.sound.pause();
+                if (!this.isMutedFromButton) {
+                    if (!source.loaded) {
+                        this.loadAudio();
+                        console.log(`Audio ${index} non chargé, chargement déclenché.`);
+                    } else if (source.sound) {
+                        source.sound.setVolume(1);
+                        if (!source.sound.isPlaying) source.sound.play();
+                        console.log(`Audio ${index} joué (vidéo fermée).`);
+                    }
+                } else {
+                    if (source.sound && source.sound.isPlaying) {
+                        source.sound.setVolume(0);
+                        source.sound.pause();
+                    }
+                    console.log(`Audio ${index} reste coupé (sourdine activée).`);
                 }
-                console.log("Vidéo fermée, son du jeu reste coupé car bouton en sourdine.");
             }
-        }
+        });
     }
 
     resize() {

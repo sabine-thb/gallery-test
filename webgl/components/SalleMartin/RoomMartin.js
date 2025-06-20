@@ -333,7 +333,7 @@ export default class RoomMartin {
 
     loadAnimatedMartin() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/testemartin4.glb', (gltf) => {
+        this.loader.load('3dModels/RoomMartin/testemartin3.glb', (gltf) => {
             gltf.scene.position.set(150.5, -19.95, 50);
 
             const video = document.createElement('video');
