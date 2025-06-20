@@ -128,6 +128,12 @@
     font-size: 4rem;
   }
 
+  .logo-sentiers {
+    width: 35rem;
+    height: auto;
+    margin-bottom: 10px;
+  }
+
   .description {
     font-size: 2rem;
   }
@@ -135,5 +141,6 @@
   #startButton {
     padding: 5px 15px;
     font-size: 1rem;
+    margin-top: 2rem;
   }
 }
