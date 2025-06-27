@@ -82,13 +82,8 @@ export default class Experience {
 
         for (let i = 0; i < 3; i++) {
             const geometry = new THREE.SphereGeometry(0.25, 32, 32);
-            const material = new THREE.MeshBasicMaterial({ 
-                color: 0xff0000, 
-                transparent: true, 
-                opacity: this.debugMode ? 0.5 : 0 
-            });
             
-            const audioSphere = new THREE.Mesh(geometry, material);
+            const audioSphere = new THREE.Mesh(geometry);
             audioSphere.position.copy(audioPositions[i]);
             this.scene.add(audioSphere);
 
@@ -125,7 +120,7 @@ export default class Experience {
 
             loader.load(audioFiles[i], (buffer) => {
                 source.sound.setBuffer(buffer);
-                source.sound.setRefDistance(0.25);
+                source.sound.setRefDistance(0.15);
                 source.sound.setLoop(true);
                 source.loaded = true;
                 this.audioLoaded[i] = true;
@@ -134,7 +129,7 @@ export default class Experience {
 
                 // Jouer si conditions remplies
                 if (!this.isVideoPlaying && !this.isMutedFromButton) {
-                    source.sound.setVolume(1);
+                    source.sound.setVolume(3);
                     source.sound.play();
                     console.log(`Audio ${i} joué car vidéo fermée et non muté.`);
                 } else {
@@ -236,6 +231,7 @@ export default class Experience {
 
         if (this.assetsLoaded === this.totalAssets) {
             console.log("All assets reported loaded by individual components.");
+            this.modelsLoaded = true;
             this.collectTableaux().then(async () => {
                 this.setupTableauxInteraction();
                 this.startAllAnimations();
