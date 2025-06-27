@@ -15,11 +15,11 @@ export default class Renderer {
         this.instance = new THREE.WebGLRenderer({
             canvas: canvas,
             antialias: true,
-            alpha: true,
+            alpha: false, // Désactiver la transparence pour avoir un fond opaque
             ...options
         })
 
-        this.instance.setClearColor(0x000000, 0)
+        this.instance.setClearColor(0x000000, 1) // Fond noir opaque
         this.instance.setSize(window.innerWidth, window.innerHeight)
         this.instance.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 

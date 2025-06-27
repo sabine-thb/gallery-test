@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import MainCamera from '../modules/camera/mainCamera';
 import Controls from '../modules/controls';
 import Renderer from '../modules/render';
-import CollisionSystem from '../modules/collision/CollisionSystem';
+import SimpleCollisionSystem from '../modules/collision/SimpleCollisionSystem';
 import { setSelectedObject } from '../../utils/selectionBridge';
 import RoomMartin from '../components/SalleMartin/RoomMartin';
 import RoomBrigitte from '../components/SalleBrigitte/RoomBrigitte';
@@ -20,14 +20,13 @@ export default class Experience {
             console.error("Experience: L'objet fourni n'est pas un élément HTMLCanvasElement.", canvas);
             return;
         }
-        console.log("Experience: Initialisation avec le canvas :", canvas);
 
         this.canvas = canvas;
         this.scene = new THREE.Scene();
         this.camera = new MainCamera();
         this.renderer = new Renderer(canvas);
         this.controls = new Controls(this.camera.instance, document.body, this);
-        this.collisionSystem = new CollisionSystem(this.camera.instance, this);
+        this.collisionSystem = new SimpleCollisionSystem(this.camera.instance);
         this.clock = new THREE.Clock();
 
         this.assetsLoaded = 0;
@@ -38,7 +37,7 @@ export default class Experience {
         this.RoomJCD = null;
         this.tableaux = [];
         this.debugMode = true;
-        this.debugCollisions = true; // ACTIVÉ pour débugger
+        this.debugCollisions = false; // Désactivé - pas d'helpers visibles
 
         this.raycaster = new THREE.Raycaster();
         this.raycaster.firstHitOnly = true;
@@ -47,6 +46,7 @@ export default class Experience {
 
         this.modelsLoaded = false;
         this.audioLoaded = [false, false, false];
+        this.projectionVideo = null; // Vidéo de projection
         this.mouse = new THREE.Vector2();
         this.hoveredTableau = null;
         this.tableauSelected = false;
@@ -63,10 +63,9 @@ export default class Experience {
         this.initEnvironment().then(() => {
             this.animate();
             this.handleVideoStateChange(this.isVideoPlaying);
-            console.log("Environment initialized and animations started. Initial audio state set.");
         });
 
-        this.camera.instance.position.set(29.79, 1.7, 0.65);
+        this.camera.instance.position.set(36.92, 1.7, -4.72);
     }
 
 
@@ -84,8 +83,12 @@ export default class Experience {
 
         for (let i = 0; i < 3; i++) {
             const geometry = new THREE.SphereGeometry(0.25, 32, 32);
+            const invisibleMaterial = new THREE.MeshBasicMaterial({ 
+                transparent: true, 
+                opacity: 0 
+            });
             
-            const audioSphere = new THREE.Mesh(geometry);
+            const audioSphere = new THREE.Mesh(geometry, invisibleMaterial);
             audioSphere.position.copy(audioPositions[i]);
             this.scene.add(audioSphere);
 
@@ -98,8 +101,6 @@ export default class Experience {
                 sound: sound,
                 loaded: false
             });
-
-            console.log(`Source audio ${i} position:`, audioPositions[i]);
         }
     }
 
@@ -116,27 +117,22 @@ export default class Experience {
             const source = this.audioSources[i];
             
             if (source.loaded) {
-                console.log(`Audio ${i} déjà chargé.`);
                 continue;
             }
 
             loader.load(audioFiles[i], (buffer) => {
                 source.sound.setBuffer(buffer);
-                source.sound.setRefDistance(0.15);
+                source.sound.setRefDistance(0.16);
                 source.sound.setLoop(true);
                 source.loaded = true;
                 this.audioLoaded[i] = true;
 
-                console.log(`Buffer audio ${i} chargé.`);
-
                 // Jouer si conditions remplies
                 if (!this.isVideoPlaying && !this.isMutedFromButton) {
-                    source.sound.setVolume(3);
+                    source.sound.setVolume(5);
                     source.sound.play();
-                    console.log(`Audio ${i} joué car vidéo fermée et non muté.`);
                 } else {
                     source.sound.setVolume(0);
-                    console.log(`Audio ${i} chargé mais non joué car vidéo ouverte ou muté.`);
                 }
 
                 source.sound.onError = (error) => {
@@ -154,63 +150,69 @@ export default class Experience {
 
         this.audioSources.forEach((source, index) => {
             if (!source.sound) {
-                console.warn(`Source audio ${index} non initialisée.`);
                 return;
             }
 
             if (!source.loaded && !isMuted) {
                 this.loadAudio();
-                console.log(`toggleSound: Chargement audio ${index} déclenché.`);
             } else if (source.loaded) {
                 if (isMuted) {
                     source.sound.setVolume(0);
                     if (source.sound.isPlaying) source.sound.pause();
-                    console.log(`toggleSound: Audio ${index} muté.`);
                 } else {
                     if (!this.isVideoPlaying) {
                         source.sound.setVolume(1);
                         if (!source.sound.isPlaying) source.sound.play();
-                        console.log(`toggleSound: Audio ${index} joué (vidéo fermée).`);
                     } else {
                         source.sound.setVolume(0);
                         if (source.sound.isPlaying) source.sound.pause();
-                        console.log(`toggleSound: Audio ${index} coupé (vidéo active).`);
                     }
                 }
             }
         });
+
+        // Contrôler aussi la vidéo de projection
+        if (this.projectionVideo) {
+            this.projectionVideo.muted = isMuted;
+        }
     }
 
     handleVideoStateChange(isVideoActive) {
         this.isVideoPlaying = isVideoActive;
-        console.log(`handleVideoStateChange: isVideoActive = ${isVideoActive}, isMutedFromButton = ${this.isMutedFromButton}`);
 
         this.audioSources.forEach((source, index) => {
             if (isVideoActive) {
                 if (source.sound && source.sound.isPlaying) {
                     source.sound.setVolume(0);
                     source.sound.pause();
-                    console.log(`Audio ${index} coupé (vidéo ouverte).`);
                 }
             } else {
                 if (!this.isMutedFromButton) {
                     if (!source.loaded) {
                         this.loadAudio();
-                        console.log(`Audio ${index} non chargé, chargement déclenché.`);
                     } else if (source.sound) {
                         source.sound.setVolume(1);
                         if (!source.sound.isPlaying) source.sound.play();
-                        console.log(`Audio ${index} joué (vidéo fermée).`);
                     }
                 } else {
                     if (source.sound && source.sound.isPlaying) {
                         source.sound.setVolume(0);
                         source.sound.pause();
                     }
-                    console.log(`Audio ${index} reste coupé (sourdine activée).`);
                 }
             }
         });
+
+        // Contrôler aussi la vidéo de projection
+        if (this.projectionVideo) {
+            if (isVideoActive) {
+                this.projectionVideo.pause();
+            } else {
+                if (!this.isMutedFromButton) {
+                    this.projectionVideo.play();
+                }
+            }
+        }
     }
 
     resize() {
@@ -218,97 +220,119 @@ export default class Experience {
         this.renderer?.resize();
     }
 
+    // Enregistrer la vidéo de projection pour le contrôle du son
+    registerProjectionVideo(video) {
+        this.projectionVideo = video;
+        
+        // Écouter l'événement pour démarrer la vidéo après l'intro
+        window.addEventListener('startExperience', () => {
+            this.startProjectionVideo();
+        });
+    }
+
+    startProjectionVideo() {
+        if (this.projectionVideo) {
+            this.projectionVideo.currentTime = 0; // Remettre au début
+            this.projectionVideo.play().catch(console.error);
+        }
+    }
+
     addCollisionObjects(meshes) {
-        // Ne plus ajouter immédiatement les collisions
-        // Elles seront ajoutées dans initializeCollisions() après que tous les modèles soient positionnés
-        console.log(`🔧 Collision ajoutée en attente: ${meshes.length} meshes`);
+        // Collision ajoutée en attente
     }
 
     initializeCollisions() {
-        console.log("🚀 Initialisation des collisions après positionnement des modèles");
-        
-        // Effacer les anciennes collisions
+        // Nettoyer les anciennes collisions
         if (this.collisionSystem) {
             this.collisionSystem.clear();
         }
-        
-        // Parcourir toute la scène pour trouver les objets à collision
-        const allCollisionMeshes = [];
+
+        // Ajouter les collisions selon vos spécifications exactes
+        this.addSpecificCollisions();
+    }
+
+    addSpecificCollisions() {
+        let addedCount = 0;
         
         this.scene.traverse((child) => {
-            if (child.isMesh && child.geometry) {
-                // Exclure les objets de debug et les éléments non-collidables
-                if (!child.userData.isDebugBox && 
-                    !child.userData.isTableau && 
-                    child.name !== 'Water001' && 
-                    !child.name.includes('Sphere') &&
-                    !child.material?.transparent &&
-                    // Filtres supplémentaires pour éviter les problèmes
-                    !child.name.includes('room') && // Exclure les salles entières
-                    !child.name.includes('Room') &&
-                    !child.name.includes('salle') &&
-                    !child.name.includes('Salle') &&
-                    !child.name.includes('plafon') &&
-                    !child.name.includes('Plafond') &&
-                    !child.name.includes('Fauxplafon') &&
-                    !child.name.includes('Toit') &&
-                    !child.name.includes('Floor') &&
-                    !child.name.includes('Ground') &&
-                    // Filtres spécifiques aux objets problématiques
-                    child.name !== 'MuseTout' && // Objet de décoration du couloir
-                    !child.name.includes('lamp') && // Exclure les lampes (émissives)
-                    !child.name.includes('Lamp') &&
-                    !child.name.includes('eclairage') &&
-                    !child.name.includes('light')) {
-                    
-                    // Calculer approximativement la taille pour filtrer les objets trop grands
-                    child.geometry.computeBoundingBox();
-                    const localBox = child.geometry.boundingBox;
-                    if (localBox) {
-                        const size = localBox.getSize(new THREE.Vector3());
-                        // Ignorer les objets énormes (probablement des salles entières)
-                        if (size.x < 50 && size.y < 50 && size.z < 50) {
-                            allCollisionMeshes.push(child);
-                        } else {
-                            console.log(`🚫 Objet filtré (trop grand): ${child.name || 'unnamed'} - taille:`, size);
-                        }
-                    }
-                }
+            if (!child.isMesh) return;
+            
+            // Brigitte - Room_B seulement dans loadRoom
+            if (child.name === 'Room_B') {
+                this.collisionSystem.addCollisionObject(child, 'Brigitte_Room_B');
+                addedCount++;
+            }
+            
+            // Brigitte - Socle seulement dans loadTree
+            if (child.name === 'Socle') {
+                this.collisionSystem.addCollisionObject(child, 'Brigitte_Socle');
+                addedCount++;
+            }
+            
+            // Brigitte - Tout le modèle loadArtSupport (chevalet)
+            if (child.name === 'EaselMerged') {
+                this.collisionSystem.addCollisionObject(child, 'Brigitte_ArtSupport');
+                addedCount++;
+            }
+            
+            // JCD - salleJCD et ugztdfmdw dans loadRoom
+            if (child.name === 'salleJCD') {
+                this.collisionSystem.addCollisionObject(child, 'JCD_salleJCD');
+                addedCount++;
+            }
+            if (child.name === 'ugztdfmdw_LOD0_TIER2_000') {
+                this.collisionSystem.addCollisionObject(child, 'JCD_ugztdfmdw');
+                addedCount++;
+            }
+            
+            // JCD - Tous les modèles loadMiddleWalls (murs du milieu)
+            if (child.parent && child.parent.userData && 
+                (child.parent.name?.includes('2mursJCD') || child.parent.userData.is2mursJCD)) {
+                this.collisionSystem.addCollisionObject(child, `JCD_MiddleWalls_${child.name}`);
+                addedCount++;
+            }
+            
+            // JCD - Tous les modèles loadLibrary (bibliothèque)
+            if (child.name && (
+                child.name.includes('Album') ||
+                child.name.includes('VictorianBookcase') ||
+                child.name.includes('Library')
+            )) {
+                this.collisionSystem.addCollisionObject(child, `JCD_Library_${child.name}`);
+                addedCount++;
+            }
+            
+            // Martin - Cube010 et room dans loadRoom
+            if (child.name === 'Cube010') {
+                this.collisionSystem.addCollisionObject(child, 'Martin_Cube010');
+                addedCount++;
+            }
+            if (child.name === 'room') {
+                this.collisionSystem.addCollisionObject(child, 'Martin_room');
+                addedCount++;
+            }
+            
+            // Couloir - MuseTout, CouloirD, CouloirG, CouloirM
+            if (['MuseTout', 'CouloirD', 'CouloirG', 'CouloirM'].includes(child.name)) {
+                this.collisionSystem.addCollisionObject(child, `Couloir_${child.name}`);
+                addedCount++;
             }
         });
-        
-        console.log(`📦 Trouvé ${allCollisionMeshes.length} objets filtrés pour les collisions`);
-        
-        // Ajouter tous les objets aux collisions
-        if (this.collisionSystem && allCollisionMeshes.length > 0) {
-            // Attendre un peu plus pour s'assurer que toutes les transformations sont appliquées
-            setTimeout(() => {
-                allCollisionMeshes.forEach((mesh, index) => {
-                    console.log(`Ajout collision ${index}: ${mesh.name || 'unnamed'}`);
-                    this.collisionSystem.addCollisionMesh(mesh);
-                });
-                console.log("✅ Toutes les collisions initialisées");
-            }, 200);
-        }
+
+        // Collisions initialisées
     }
 
     checkCameraCollisions() {
         if (!this.collisionSystem) return false;
 
-        const cameraPosition = this.camera.instance.position;
-        
-        // Le système AABB gère automatiquement la correction de position
-        const hasCollision = this.collisionSystem.checkCollision(cameraPosition, new THREE.Vector3());
-        
-        return hasCollision;
+        const currentPosition = this.camera.instance.position;
+        return !this.collisionSystem.canMove(currentPosition);
     }
 
     onAssetLoaded() {
         this.assetsLoaded++;
-        console.log(`Asset loaded (${this.assetsLoaded}/${this.totalAssets})`);
 
         if (this.assetsLoaded === this.totalAssets) {
-            console.log("All assets reported loaded by individual components.");
             this.modelsLoaded = true;
             
             // Attendre que tous les modèles soient positionnés, puis initialiser les collisions
@@ -379,7 +403,7 @@ export default class Experience {
 
         await this.RoomMartin.init();
 
-        console.log("All rooms initialized");
+        // All rooms initialized
     }
 
     startAllAnimations() {
@@ -414,10 +438,8 @@ export default class Experience {
 
 
         this.canvas.addEventListener('click', () => {
-            console.log('Canvas cliqué');
             if (this.hoveredTableau) {
                 setSelectedObject(this.hoveredTableau.userData.originalName);
-                console.log("Tableau sélectionné:", this.hoveredTableau.userData.originalName);
                 this.tooltip.style.opacity = '0';
                 this.hoveredTableau = null;
                 this.tableauSelected = true;
@@ -498,32 +520,22 @@ export default class Experience {
     }
 
     async collectTableaux() {
-        console.log("Collecte des tableaux...");
         this.tableaux = [];
 
         await new Promise(resolve => setTimeout(resolve, 500));
 
         if (this.RoomBrigitte?.tableaux) {
-            console.log(`Found ${this.RoomBrigitte.tableaux.length} Brigitte tableaux`);
             this.tableaux.push(...this.RoomBrigitte.tableaux);
         }
 
         if (this.RoomJCD?.tableaux) {
-            console.log(`Found ${this.RoomJCD.tableaux.length} JCD tableaux`);
             this.tableaux.push(...this.RoomJCD.tableaux);
         }
 
         // Utiliser les tableaux déjà collectés dans les salles
         if (this.RoomMartin?.tableaux) {
-            console.log(`Found ${this.RoomMartin.tableaux.length} Martin tableaux`);
             this.tableaux.push(...this.RoomMartin.tableaux);
         }
-
-        console.log("Tableaux collectés:", this.tableaux.length);
-
-        console.log("Noms des tableaux:", this.tableaux.map(t => {
-            return `${t.name} (original: ${t.userData?.originalName})`;
-        }));
     }
 
 
@@ -555,6 +567,14 @@ export default class Experience {
         // Vérifier les collisions APRÈS le mouvement pour corriger si nécessaire
         this.checkCameraCollisions();
 
+        // Debug position toutes les 60 frames (environ 1 seconde)
+        if (!this.frameCount) this.frameCount = 0;
+        this.frameCount++;
+        if (this.frameCount % 60 === 0) {
+            const pos = this.camera.instance.position;
+            //console.log(`Position: x=${pos.x.toFixed(2)}, y=${pos.y.toFixed(2)}, z=${pos.z.toFixed(2)}`);
+        }
+
         const delta = this.clock.getDelta();
 
         // Animations 3D seulement si nécessaire
@@ -572,7 +592,7 @@ export default class Experience {
         // Interactions tableaux (optimisé avec distance)
         this.checkTableauxInteraction();
         
-        // Debug des bounding boxes (optionnel)
+        // Debug des collisions si activé
         if (this.debugCollisions && this.collisionSystem) {
             this.collisionSystem.showDebugBoxes(this.scene);
         }

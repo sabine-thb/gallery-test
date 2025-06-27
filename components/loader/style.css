@@ -61,6 +61,33 @@
     bottom: 2.1rem;
 }
 
+.progress-info {
+    margin: 1.5rem 0;
+    text-align: center;
+}
+
+.progress-text {
+    font-family: var(--futura);
+    font-size: 1.2rem;
+    color: #666;
+    margin: 0 0 0.8rem 0;
+}
+
+.progress-bar {
+    width: 300px;
+    height: 4px;
+    background-color: #e0e0e0;
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0 auto;
+}
+
+.progress-fill {
+    height: 100%;
+    background-color: #000;
+    transition: width 0.3s ease;
+    border-radius: 2px;
+}
 
 
 @keyframes rotation {

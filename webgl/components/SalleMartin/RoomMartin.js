@@ -267,7 +267,7 @@ export default class RoomMartin {
     loadAnimatedMartin() {
         return new Promise((resolve) => {
         this.loader.load('3dModels/RoomMartin/testemartin3.glb', (gltf) => {
-            gltf.scene.position.set(150.5, -19.95, 50);
+            gltf.scene.position.set(150.5, -19.75, 50);
 
             const video = document.createElement('video');
             video.src = 'textures/RoomMartin/VideoMartin/PeintureAnimationMartin2.mp4';

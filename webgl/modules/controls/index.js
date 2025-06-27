@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-//import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
+import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 
 export default class Controls {
   constructor(camera, domElement, experience) {
@@ -114,10 +114,20 @@ export default class Controls {
       camera.rotation.y -= delta;
     }
 
-    // Appliquer le mouvement directement
-    // La correction de collision se fait automatiquement par le système AABB
+    // Appliquer le mouvement avec vérification de collision
     if (movement.length() > 0) {
-      camera.position.add(movement);
+      const newPosition = camera.position.clone().add(movement);
+      
+      // Vérifier les collisions via l'experience
+      if (this.experience && this.experience.collisionSystem) {
+        if (this.experience.collisionSystem.canMove(newPosition)) {
+          camera.position.copy(newPosition);
+        }
+        // Si collision, ne pas bouger (le mouvement est bloqué)
+      } else {
+        // Pas de système de collision, mouvement libre
+        camera.position.add(movement);
+      }
     }
     
     this.lastTime = time;

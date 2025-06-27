@@ -2,7 +2,7 @@
     <div id="startScreen">
         <video
             ref="videoElement"
-            src="/public/video/intro-expo.mp4"
+            src="/public/video/intro-expo1.mp4"
             class="video-intro"
             playsinline
             :controls="showControls"

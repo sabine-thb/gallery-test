@@ -102,6 +102,9 @@ const handleVideoEnded = () => {
   if (experienceInstance.value) {
     experienceInstance.value.handleVideoStateChange(false) // false = la vidéo est terminée
   }
+  
+  // Émission de l'événement pour démarrer la vidéo de projection
+  window.dispatchEvent(new CustomEvent('startExperience'));
 }
 
 // Mute/unmute le son via le bouton

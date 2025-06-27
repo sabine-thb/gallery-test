@@ -8,6 +8,7 @@ export default class CouloirMusee {
         this.experience = experience;
         this.onAssetLoaded = onAssetLoaded;
         this.position = new THREE.Vector3(x, y, z);
+        this.video = null; // Stockage de la vidéo
         
         this.loader = new GLTFLoader();
         this.textureLoader = new THREE.TextureLoader();
@@ -90,6 +91,14 @@ export default class CouloirMusee {
                         //emissiveMap: textures.textureLampAccueil
                     });
                 }
+                
+                // Ajouter la vidéo sur l'écran de projection
+                if (child.name === 'ecranprojection') {
+                    console.log('Mesh ecranprojection trouvé:', child);
+                    console.log('Geometry:', child.geometry);
+                    console.log('Material original:', child.material);
+                    this.setupProjectionScreen(child);
+                }
             });
             
             // Ajouter les objets aux collisions
@@ -106,5 +115,63 @@ export default class CouloirMusee {
             console.error('Erreur chargement CouloirMusee:', error);
             this.onAssetLoaded();
         });
+    }
+
+    setupProjectionScreen(screenMesh) {
+        // Créer l'élément vidéo
+        this.video = document.createElement('video');
+        this.video.src = '/video/teaser-sentiers.mp4';
+        this.video.loop = true;
+        this.video.muted = false; // Pas muté par défaut
+        this.video.volume = 1.0; // Volume maximum (HTML5 max = 1.0)
+        this.video.autoplay = false; // Ne pas démarrer automatiquement
+        this.video.playsInline = true;
+        this.video.setAttribute('webkit-playsinline', '');
+        this.video.setAttribute('playsinline', '');
+
+        // Créer la texture vidéo
+        const videoTexture = new THREE.VideoTexture(this.video);
+        videoTexture.colorSpace = THREE.SRGBColorSpace;
+        videoTexture.minFilter = THREE.LinearFilter;
+        videoTexture.magFilter = THREE.LinearFilter;
+        videoTexture.flipY = false;
+        
+        // Pivoter la texture de 90°
+        videoTexture.center.set(0.5, 0.5);
+        videoTexture.rotation = Math.PI / 2; // 90° en radians
+        
+        // Configuration pour voir la vidéo entière
+        videoTexture.wrapS = THREE.ClampToEdgeWrapping;
+        videoTexture.wrapT = THREE.ClampToEdgeWrapping;
+        
+        // Adapter la vidéo pour qu'elle soit entièrement visible (fit)
+        videoTexture.repeat.set(1, 1);
+        videoTexture.offset.set(0, 0);
+
+        // Appliquer le matériau avec la vidéo
+        screenMesh.material = new THREE.MeshStandardMaterial({
+            map: videoTexture,
+            emissive: new THREE.Color(0x222222),
+            emissiveIntensity: 0.1,
+            side: THREE.FrontSide // Afficher seulement sur la face avant
+        });
+
+        // Enregistrer cette vidéo auprès de l'experience pour le contrôle du son
+        if (this.experience && this.experience.registerProjectionVideo) {
+            this.experience.registerProjectionVideo(this.video);
+        }
+    }
+
+    // Méthodes pour contrôler le son de la vidéo
+    muteVideo() {
+        if (this.video) {
+            this.video.muted = true;
+        }
+    }
+
+    unmuteVideo() {
+        if (this.video) {
+            this.video.muted = false;
+        }
     }
 }
