@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 
 export default class RoomBrigitte {
     constructor(scene, onAssetLoaded, experience, x, y, z) {
@@ -10,19 +9,6 @@ export default class RoomBrigitte {
         this.onAssetLoaded = onAssetLoaded
         this.position = new THREE.Vector3(x, y, z)
         this.tableaux = []
-        this.bvhHelpers = []
-        this.showBVHHelpers = experience?.debugMode || false;
-
-        if (!THREE.BufferGeometry.prototype.computeBoundsTree) {
-            THREE.BufferGeometry.prototype.computeBoundsTree = function () {
-                this.boundsTree = new MeshBVH(this)
-                return this.boundsTree
-            }
-            THREE.BufferGeometry.prototype.disposeBoundsTree = function () {
-                this.boundsTree = null
-            }
-            THREE.Mesh.prototype.raycast = acceleratedRaycast
-        }
 
         this.loader = new GLTFLoader()
         const dracoLoader = new DRACOLoader()
@@ -41,26 +27,6 @@ export default class RoomBrigitte {
         await this.loadProjectors();
         await this.loadBushes(); 
         await this.loadPaintings();
-    }
-
-    createBVHHelper(mesh) {
-        if (!this.showBVHHelpers || !mesh.geometry?.boundsTree) return null;
-
-        const helper = new THREE.Box3Helper(
-            mesh.geometry.boundsTree.getBoundingBox(new THREE.Box3()),
-            new THREE.Color(0xffff00)
-        );
-        helper.visible = true;
-        helper.matrixAutoUpdate = false;
-        helper.matrix.copy(mesh.matrixWorld);
-        return helper;
-    }
-
-    toggleBVHHelpers(visible) {
-        this.showBVHHelpers = visible;
-        this.bvhHelpers.forEach(helper => {
-            helper.visible = visible;
-        });
     }
 
     loadTextures() {
@@ -100,23 +66,6 @@ export default class RoomBrigitte {
         })
     }
 
-    applyBVH(gltf) {
-        gltf.scene.traverse(child => {
-            if (child.isMesh && child.geometry?.isBufferGeometry) {
-                if (!child.geometry.boundsTree) {
-                    child.geometry.computeBoundsTree();
-                    child.raycast = acceleratedRaycast;
-
-                    const helper = this.createBVHHelper(child);
-                    if (helper) {
-                        this.scene.add(helper);
-                        this.bvhHelpers.push(helper);
-                    }
-                }
-            }
-        });
-    }
-
     loadRoom() {
         return new Promise((resolve) => {
             this.loader.load('3dModels/RoomBrigitte/BrigitteRoom04.glb', (gltf) => {
@@ -143,10 +92,10 @@ export default class RoomBrigitte {
                     }
                 })
 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene)
 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -180,10 +129,10 @@ export default class RoomBrigitte {
                     console.warn("L'objet 'EaselMerged' n'a pas été trouvé dans le modèle");
                 }
                 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
                 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -226,10 +175,10 @@ export default class RoomBrigitte {
                     }
                 })
 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene)
 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -247,10 +196,10 @@ export default class RoomBrigitte {
     loadProjectors() {
         return new Promise((resolve) => {
             this.loader.load('3dModels/RoomBrigitte/ProjecteursBrigitte.glb', (gltf) => {
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
                 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -286,7 +235,6 @@ export default class RoomBrigitte {
                     }
                 })
 
-                this.applyBVH(gltf);
                 gltf.scene.position.set(
                     this.position.x - 0.01,
                     this.position.y,
@@ -296,6 +244,7 @@ export default class RoomBrigitte {
                 this.scene.add(gltf.scene)
                 //console.log("Tableaux ajoutés à la scène");
 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -339,16 +288,13 @@ export default class RoomBrigitte {
                     new THREE.Vector3(36.57107543945312, -0.5, -30.52993392944336)
                 ];
                 
-                // Appliquer le BVH au modèle original
-                this.applyBVH(gltf);
-                
                 // Dupliquer et positionner les buissons
                 bushPositions.forEach(position => {
                     const bushClone = gltf.scene.clone();
                     bushClone.position.copy(position);
                     this.scene.add(bushClone);
                     
-                    // Ajouter les collisions pour chaque clone
+                    // Ajouter chaque buisson aux collisions
                     if (this.experience?.addCollisionObjects) {
                         const collisionMeshes = [];
                         bushClone.traverse(child => {

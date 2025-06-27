@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
-import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 
 export default class RoomJCD {
     constructor(scene, onAssetLoaded, experience, x, y, z) {
@@ -10,20 +9,6 @@ export default class RoomJCD {
         this.onAssetLoaded = onAssetLoaded;
         this.position = new THREE.Vector3(x, y, z);
         this.tableaux = [];
-        this.bvhHelpers = [];
-        this.showBVHHelpers = experience?.debugMode || false;
-
-        // Initialisation BVH (identique à RoomBrigitte)
-        if (!THREE.BufferGeometry.prototype.computeBoundsTree) {
-            THREE.BufferGeometry.prototype.computeBoundsTree = function () {
-                this.boundsTree = new MeshBVH(this);
-                return this.boundsTree;
-            };
-            THREE.BufferGeometry.prototype.disposeBoundsTree = function () {
-                this.boundsTree = null;
-            };
-            THREE.Mesh.prototype.raycast = acceleratedRaycast;
-        }
 
         this.loader = new GLTFLoader();
         const dracoLoader = new DRACOLoader();
@@ -41,43 +26,6 @@ export default class RoomJCD {
         await this.loadLibrary();
         await this.loadAlbums();
         await this.loadPaintings();
-    }
-
-    createBVHHelper(mesh) {
-        if (!this.showBVHHelpers || !mesh.geometry?.boundsTree) return null;
-
-        const helper = new THREE.Box3Helper(
-            mesh.geometry.boundsTree.getBoundingBox(new THREE.Box3()),
-            new THREE.Color(0xffff00)
-        );
-        helper.visible = true;
-        helper.matrixAutoUpdate = false;
-        helper.matrix.copy(mesh.matrixWorld);
-        return helper;
-    }
-
-    toggleBVHHelpers(visible) {
-        this.showBVHHelpers = visible;
-        this.bvhHelpers.forEach(helper => {
-            helper.visible = visible;
-        });
-    }
-
-    applyBVH(gltf) {
-        gltf.scene.traverse(child => {
-            if (child.isMesh && child.geometry?.isBufferGeometry) {
-                if (!child.geometry.boundsTree) {
-                    child.geometry.computeBoundsTree();
-                    child.raycast = acceleratedRaycast;
-
-                    const helper = this.createBVHHelper(child);
-                    if (helper) {
-                        this.scene.add(helper);
-                        this.bvhHelpers.push(helper);
-                    }
-                }
-            }
-        });
     }
 
     loadTextures() {
@@ -141,11 +89,10 @@ export default class RoomJCD {
                     }
                 });
 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
 
-                // Gestion des collisions
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -177,10 +124,10 @@ export default class RoomJCD {
                     }
                 });
                 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
                 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -217,12 +164,16 @@ export default class RoomJCD {
                     }
                 });
 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
-                    // ... (identique à loadRoom)
+                    const collisionMeshes = [];
+                    gltf.scene.traverse(child => {
+                        if (child.isMesh) collisionMeshes.push(child);
+                    });
+                    this.experience.addCollisionObjects(collisionMeshes);
                 }
 
                 resolve();
@@ -257,11 +208,17 @@ export default class RoomJCD {
                     }
                 });
 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
 
-                // ... (gestion collisions identique)
+                // Ajouter les objets aux collisions
+                if (this.experience?.addCollisionObjects) {
+                    const collisionMeshes = [];
+                    gltf.scene.traverse(child => {
+                        if (child.isMesh) collisionMeshes.push(child);
+                    });
+                    this.experience.addCollisionObjects(collisionMeshes);
+                }
 
                 resolve();
                 this.onAssetLoaded();
@@ -276,9 +233,18 @@ export default class RoomJCD {
     loadAlbums() {
         return new Promise((resolve) => {
             this.loader.load('3dModels/RoomJCD/AlbumJCD02.glb', (gltf) => {
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
+                
+                // Ajouter les objets aux collisions
+                if (this.experience?.addCollisionObjects) {
+                    const collisionMeshes = [];
+                    gltf.scene.traverse(child => {
+                        if (child.isMesh) collisionMeshes.push(child);
+                    });
+                    this.experience.addCollisionObjects(collisionMeshes);
+                }
+                
                 resolve();
                 this.onAssetLoaded();
             }, undefined, (error) => {
@@ -302,14 +268,22 @@ export default class RoomJCD {
                     }
                 });
 
-                this.applyBVH(gltf);
                 gltf.scene.position.set(
                     this.position.x + 0.54,
                     this.position.y,
                     this.position.z
                 );
                 this.scene.add(gltf.scene);
-                // ... (gestion collisions)
+                
+                // Ajouter les objets aux collisions
+                if (this.experience?.addCollisionObjects) {
+                    const collisionMeshes = [];
+                    gltf.scene.traverse(child => {
+                        if (child.isMesh) collisionMeshes.push(child);
+                    });
+                    this.experience.addCollisionObjects(collisionMeshes);
+                }
+                
                 resolve();
                 this.onAssetLoaded();
             }, undefined, (error) => {

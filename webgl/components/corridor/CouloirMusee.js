@@ -92,7 +92,7 @@ export default class CouloirMusee {
                 }
             });
             
-            // Ajouter les meshes aux collisions
+            // Ajouter les objets aux collisions
             if (this.experience?.addCollisionObjects) {
                 const collisionMeshes = [];
                 gltf.scene.traverse(child => {

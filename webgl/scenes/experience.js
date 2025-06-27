@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import MainCamera from '../modules/camera/mainCamera';
 import Controls from '../modules/controls';
 import Renderer from '../modules/render';
+import CollisionSystem from '../modules/collision/CollisionSystem';
 import { setSelectedObject } from '../../utils/selectionBridge';
 import RoomMartin from '../components/SalleMartin/RoomMartin';
 import RoomBrigitte from '../components/SalleBrigitte/RoomBrigitte';
@@ -24,8 +25,9 @@ export default class Experience {
         this.canvas = canvas;
         this.scene = new THREE.Scene();
         this.camera = new MainCamera();
-        this.renderer = new Renderer(canvas); // Le problème se produit probablement à l'intérieur de ce constructeur
+        this.renderer = new Renderer(canvas);
         this.controls = new Controls(this.camera.instance, document.body, this);
+        this.collisionSystem = new CollisionSystem(this.camera.instance, this);
         this.clock = new THREE.Clock();
 
         this.assetsLoaded = 0;
@@ -35,8 +37,8 @@ export default class Experience {
         this.RoomBrigitte = null;
         this.RoomJCD = null;
         this.tableaux = [];
-        this.collisionMeshes = [];
         this.debugMode = true;
+        this.debugCollisions = true; // ACTIVÉ pour débugger
 
         this.raycaster = new THREE.Raycaster();
         this.raycaster.firstHitOnly = true;
@@ -217,12 +219,88 @@ export default class Experience {
     }
 
     addCollisionObjects(meshes) {
-        meshes.forEach(mesh => {
-            if (mesh.geometry && !mesh.geometry.boundsTree) {
-                mesh.geometry.computeBoundsTree();
+        // Ne plus ajouter immédiatement les collisions
+        // Elles seront ajoutées dans initializeCollisions() après que tous les modèles soient positionnés
+        console.log(`🔧 Collision ajoutée en attente: ${meshes.length} meshes`);
+    }
+
+    initializeCollisions() {
+        console.log("🚀 Initialisation des collisions après positionnement des modèles");
+        
+        // Effacer les anciennes collisions
+        if (this.collisionSystem) {
+            this.collisionSystem.clear();
+        }
+        
+        // Parcourir toute la scène pour trouver les objets à collision
+        const allCollisionMeshes = [];
+        
+        this.scene.traverse((child) => {
+            if (child.isMesh && child.geometry) {
+                // Exclure les objets de debug et les éléments non-collidables
+                if (!child.userData.isDebugBox && 
+                    !child.userData.isTableau && 
+                    child.name !== 'Water001' && 
+                    !child.name.includes('Sphere') &&
+                    !child.material?.transparent &&
+                    // Filtres supplémentaires pour éviter les problèmes
+                    !child.name.includes('room') && // Exclure les salles entières
+                    !child.name.includes('Room') &&
+                    !child.name.includes('salle') &&
+                    !child.name.includes('Salle') &&
+                    !child.name.includes('plafon') &&
+                    !child.name.includes('Plafond') &&
+                    !child.name.includes('Fauxplafon') &&
+                    !child.name.includes('Toit') &&
+                    !child.name.includes('Floor') &&
+                    !child.name.includes('Ground') &&
+                    // Filtres spécifiques aux objets problématiques
+                    child.name !== 'MuseTout' && // Objet de décoration du couloir
+                    !child.name.includes('lamp') && // Exclure les lampes (émissives)
+                    !child.name.includes('Lamp') &&
+                    !child.name.includes('eclairage') &&
+                    !child.name.includes('light')) {
+                    
+                    // Calculer approximativement la taille pour filtrer les objets trop grands
+                    child.geometry.computeBoundingBox();
+                    const localBox = child.geometry.boundingBox;
+                    if (localBox) {
+                        const size = localBox.getSize(new THREE.Vector3());
+                        // Ignorer les objets énormes (probablement des salles entières)
+                        if (size.x < 50 && size.y < 50 && size.z < 50) {
+                            allCollisionMeshes.push(child);
+                        } else {
+                            console.log(`🚫 Objet filtré (trop grand): ${child.name || 'unnamed'} - taille:`, size);
+                        }
+                    }
+                }
             }
-            this.collisionMeshes.push(mesh);
         });
+        
+        console.log(`📦 Trouvé ${allCollisionMeshes.length} objets filtrés pour les collisions`);
+        
+        // Ajouter tous les objets aux collisions
+        if (this.collisionSystem && allCollisionMeshes.length > 0) {
+            // Attendre un peu plus pour s'assurer que toutes les transformations sont appliquées
+            setTimeout(() => {
+                allCollisionMeshes.forEach((mesh, index) => {
+                    console.log(`Ajout collision ${index}: ${mesh.name || 'unnamed'}`);
+                    this.collisionSystem.addCollisionMesh(mesh);
+                });
+                console.log("✅ Toutes les collisions initialisées");
+            }, 200);
+        }
+    }
+
+    checkCameraCollisions() {
+        if (!this.collisionSystem) return false;
+
+        const cameraPosition = this.camera.instance.position;
+        
+        // Le système AABB gère automatiquement la correction de position
+        const hasCollision = this.collisionSystem.checkCollision(cameraPosition, new THREE.Vector3());
+        
+        return hasCollision;
     }
 
     onAssetLoaded() {
@@ -232,6 +310,12 @@ export default class Experience {
         if (this.assetsLoaded === this.totalAssets) {
             console.log("All assets reported loaded by individual components.");
             this.modelsLoaded = true;
+            
+            // Attendre que tous les modèles soient positionnés, puis initialiser les collisions
+            setTimeout(() => {
+                this.initializeCollisions();
+            }, 500);
+            
             this.collectTableaux().then(async () => {
                 this.setupTableauxInteraction();
                 this.startAllAnimations();
@@ -295,12 +379,7 @@ export default class Experience {
 
         await this.RoomMartin.init();
 
-        console.log("Both rooms initialized");
-        if (this.debugMode && this.RoomMartin && this.RoomBrigitte) {
-            this.RoomMartin.toggleBVHHelpers(true);
-            this.RoomBrigitte.toggleBVHHelpers(true);
-            this.RoomJCD.toggleBVHHelpers(true);
-        }
+        console.log("All rooms initialized");
     }
 
     startAllAnimations() {
@@ -347,6 +426,16 @@ export default class Experience {
     }
 
     checkTableauxInteraction() {
+        // Optimisation : cache temporel pour les interactions
+        if (!this.lastTableauCheckTime) this.lastTableauCheckTime = 0;
+        const currentTime = performance.now();
+        
+        // Ne vérifier les tableaux que toutes les 100ms pour optimiser
+        if (currentTime - this.lastTableauCheckTime < 100) {
+            return;
+        }
+        this.lastTableauCheckTime = currentTime;
+
         if (this.hoveredTableau && this.hoveredTableau.originalMaterial) {
             this.hoveredTableau.material = this.hoveredTableau.originalMaterial.clone();
             this.hoveredTableau = null;
@@ -358,19 +447,15 @@ export default class Experience {
             return;
         }
 
-        if (this.tableaux.length === 0) {
-            console.warn("Aucun tableau à interagir");
-            return;
-        }
-
-        //console.log("Vérification interaction tableaux...");
-        //console.log(`Tableaux totaux: ${this.tableaux.length}, Tableau sélectionné: ${this.tableauSelected}`);
-
         const playerPos = this.camera.instance.position;
         const worldPosition = new THREE.Vector3();
+        
+        // Optimisation : distance réduite et calcul plus simple
         const nearby = this.tableaux.filter(obj => {
             obj.getWorldPosition(worldPosition);
-            return playerPos.distanceTo(worldPosition) <= 50;
+            const dx = playerPos.x - worldPosition.x;
+            const dz = playerPos.z - worldPosition.z;
+            return (dx * dx + dz * dz) <= 2500; // 50² optimisé
         });
 
         if (nearby.length === 0) {
@@ -447,28 +532,6 @@ export default class Experience {
         return oeuvreTrouve ? oeuvreTrouve.tableau : null;
     }
 
-    checkCameraCollisions() {
-        if (!this.collisionMeshes || this.collisionMeshes.length === 0) return;
-
-        const origin = this.camera.instance.position.clone();
-        let direction = new THREE.Vector3();
-        this.controls.getMoveDirection(direction);
-
-        const raycaster = new THREE.Raycaster(origin, direction, 0, 1.2);
-
-        if (direction.length() > 0) {
-            direction = direction.normalize();
-        }
-
-        raycaster.firstHitOnly = true;
-        raycaster.params.UseBVH = true;
-        const intersects = raycaster.intersectObjects(this.collisionMeshes, true);
-
-        if (intersects.length > 0) {
-            this.controls.preventForwardMotion();
-        }
-    }
-
     deselectTableau() {
         this.tableauSelected = false;
     }
@@ -485,24 +548,36 @@ export default class Experience {
 
     animate = () => {
         requestAnimationFrame(this.animate);
+        
+        // Mettre à jour les contrôles (appliquer le mouvement) AVANT la vérification
         this.controls.update();
-        //this.checkCameraCollisions();
+        
+        // Vérifier les collisions APRÈS le mouvement pour corriger si nécessaire
+        this.checkCameraCollisions();
 
         const delta = this.clock.getDelta();
 
-        if (this.RoomMartin) {
+        // Animations 3D seulement si nécessaire
+        if (this.RoomMartin && delta > 0) {
             this.RoomMartin.update(delta);
         }
 
+        // Debug tableaux seulement une fois
         if (this.tableaux.length > 0 && !this.debugPrinted) {
             setTimeout(() => {
-                this.tableaux.forEach(t => {
-                });
                 this.debugPrinted = true;
             }, 1000);
         }
 
+        // Interactions tableaux (optimisé avec distance)
         this.checkTableauxInteraction();
+        
+        // Debug des bounding boxes (optionnel)
+        if (this.debugCollisions && this.collisionSystem) {
+            this.collisionSystem.showDebugBoxes(this.scene);
+        }
+        
+        // Rendu final
         this.renderer.instance.render(this.scene, this.camera.instance);
     };
 }

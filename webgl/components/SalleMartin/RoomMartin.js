@@ -1,7 +1,6 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
-import { MeshBVH, acceleratedRaycast } from 'three-mesh-bvh';
 
 export default class RoomMartin {
     constructor(scene, onAssetLoaded, experience, x, y, z) {
@@ -13,19 +12,6 @@ export default class RoomMartin {
         this.onAssetLoaded = onAssetLoaded
         this.position = new THREE.Vector3(x, y, z)
         this.tableaux = []
-        this.bvhHelpers = []; // Stocker les helpers BVH
-    this.showBVHHelpers = experience?.debugMode || false; // Active les helpers si le debug est activé
-
-        if (!THREE.BufferGeometry.prototype.computeBoundsTree) {
-            THREE.BufferGeometry.prototype.computeBoundsTree = function() {
-                this.boundsTree = new MeshBVH(this)
-                return this.boundsTree
-            }
-            THREE.BufferGeometry.prototype.disposeBoundsTree = function() {
-                this.boundsTree = null
-            }
-            THREE.Mesh.prototype.raycast = acceleratedRaycast
-        }
 
         this.loader = new GLTFLoader()
         const dracoLoader = new DRACOLoader()
@@ -41,22 +27,6 @@ export default class RoomMartin {
         await this.loadRoom();
         await this.loadPaintings();
         await this.loadAnimatedMartin();
-    }
-
-    createBVHHelper(mesh) {
-        if (!this.showBVHHelpers || !mesh.geometry?.boundsTree) return null;
-        
-        const boundingBox = mesh.geometry.boundsTree.getBoundingBox(new THREE.Box3());
-        if (!boundingBox) return null; 
-
-        const helper = new THREE.Box3Helper(
-            boundingBox,
-            new THREE.Color(0xffff00)
-        );
-        helper.visible = true;
-        helper.matrixAutoUpdate = false;
-        helper.matrix.copy(mesh.matrixWorld);
-        return helper;
     }
 
     loadTextures() {
@@ -82,34 +52,6 @@ export default class RoomMartin {
             tex.flipY = false
             tex.colorSpace = THREE.SRGBColorSpace
         })
-    }
-
-    toggleBVHHelpers(visible) {
-        this.showBVHHelpers = visible;
-        this.bvhHelpers.forEach(helper => {
-            helper.visible = visible;
-        });
-    }
-
-    applyBVH(gltf) {
-        gltf.scene.traverse((child) => {
-            if (child.isMesh && child.geometry?.isBufferGeometry) {
-                if (!child.geometry.boundsTree) {
-                    try {
-                        child.geometry.computeBoundsTree();
-                        child.raycast = acceleratedRaycast;
-                    
-                        const helper = this.createBVHHelper(child);
-                        if (helper) {
-                            this.scene.add(helper);
-                            this.bvhHelpers.push(helper);
-                        }
-                    } catch (error) {
-                        console.error("BVH computation failed for", child.name, error);
-                    }
-                }
-            }
-        });
     }
 
     loadRoom() {
@@ -232,15 +174,11 @@ export default class RoomMartin {
                     }
                 }
             });
-            this.applyBVH(gltf)
-
-            if (this.showBVHHelpers) {
-                this.toggleBVHHelpers(true);
-            }
 
             gltf.scene.position.set(150, -20.5, 31);
             this.scene.add(gltf.scene);
 
+            // Ajouter les objets aux collisions
             if (this.experience?.addCollisionObjects) {
                 const collisionMeshes = [];
                 gltf.scene.traverse(child => {
@@ -248,6 +186,7 @@ export default class RoomMartin {
                 });
                 this.experience.addCollisionObjects(collisionMeshes);
             }
+
             resolve();
             this.onAssetLoaded();
         });
@@ -271,10 +210,10 @@ export default class RoomMartin {
                     }
                 });
 
-                this.applyBVH(gltf);
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
 
+                // Ajouter les objets aux collisions
                 if (this.experience?.addCollisionObjects) {
                     const collisionMeshes = [];
                     gltf.scene.traverse(child => {
@@ -297,7 +236,6 @@ export default class RoomMartin {
         return new Promise((resolve) => {
         this.loader.load('3dModels/RoomMartin/TableauMartin03.glb', (gltf) => {
             gltf.scene.position.set(149.7, -19.7, 31);
-            this.applyBVH(gltf)
             this.scene.add(gltf.scene);
 
             gltf.scene.traverse((child) => {
@@ -308,16 +246,10 @@ export default class RoomMartin {
                     child.castShadow = child.receiveShadow = true;
                     child.userData.isTableau = true;
                     this.tableaux.push(child);
-                    //console.log("Tableau Martin ajouté:", child.name);
                 }
             });
 
-            this.applyBVH(gltf);
-
-            if (this.showBVHHelpers) {
-                this.toggleBVHHelpers(true);
-            }
-
+            // Ajouter les objets aux collisions
             if (this.experience?.addCollisionObjects) {
                 const collisionMeshes = [];
                 gltf.scene.traverse(child => {
@@ -325,6 +257,7 @@ export default class RoomMartin {
                 });
                 this.experience.addCollisionObjects(collisionMeshes);
             }
+
             resolve();
             this.onAssetLoaded();
         });
@@ -376,13 +309,10 @@ export default class RoomMartin {
                     this.animationActions.push(action);
                 });
             }
-            this.applyBVH(gltf)
+            
             this.scene.add(gltf.scene);
 
-            if (this.showBVHHelpers) {
-                this.toggleBVHHelpers(true);
-            }
-
+            // Ajouter les objets aux collisions
             if (this.experience?.addCollisionObjects) {
                 const collisionMeshes = [];
                 gltf.scene.traverse(child => {
@@ -409,10 +339,5 @@ export default class RoomMartin {
 
     update(delta) {
         this.mixers.forEach((mixer) => mixer.update(delta));
-        
-        this.bvhHelpers.forEach(helper => {
-            // Mettre à jour la position des helpers
-            helper.updateMatrixWorld(true);
-        });
     }
 }

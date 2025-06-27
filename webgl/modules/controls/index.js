@@ -8,8 +8,7 @@ export default class Controls {
 
     camera.position.y = 1.7;
 
-    this.moveSpeed = 0.2;
-    this.velocity = new THREE.Vector3();
+    this.moveSpeed = 0.15; // Réduit pour plus de fluidité
     this.lastTime = performance.now();
 
     // États de mouvement
@@ -85,24 +84,26 @@ export default class Controls {
   update() {
     const time = performance.now();
     const delta = (time - this.lastTime) / 1000;
-
-    this.velocity.set(0, 0, 0);
+    
     const camera = this.instance.object;
+
+    // Mouvement simple et direct
+    const movement = new THREE.Vector3();
 
     // Déplacement avant/arrière
     if (this.moveForward) {
       const forward = new THREE.Vector3();
       camera.getWorldDirection(forward);
-      forward.y = 0; // Déplacement horizontal uniquement
+      forward.y = 0;
       forward.normalize();
-      this.velocity.add(forward.multiplyScalar(this.moveSpeed));
+      movement.add(forward.multiplyScalar(this.moveSpeed));
     }
     if (this.moveBackward) {
       const backward = new THREE.Vector3();
       camera.getWorldDirection(backward);
       backward.y = 0;
       backward.normalize();
-      this.velocity.add(backward.multiplyScalar(-this.moveSpeed));
+      movement.add(backward.multiplyScalar(-this.moveSpeed));
     }
 
     // Rotation gauche/droite
@@ -113,24 +114,12 @@ export default class Controls {
       camera.rotation.y -= delta;
     }
 
-    camera.position.add(this.velocity);
+    // Appliquer le mouvement directement
+    // La correction de collision se fait automatiquement par le système AABB
+    if (movement.length() > 0) {
+      camera.position.add(movement);
+    }
+    
     this.lastTime = time;
-  }
-
-  preventForwardMotion() {
-    const forward = new THREE.Vector3();
-    this.instance.getDirection(forward);
-    forward.y = 0;
-    forward.normalize();
-
-    this.velocity.add(forward.multiplyScalar(-this.moveSpeed));
-  }
-
-  getMoveDirection() {
-    const direction = new THREE.Vector3();
-    this.instance.getDirection(direction);
-    direction.y = 0;
-    direction.normalize();
-    return direction;
   }
 }
