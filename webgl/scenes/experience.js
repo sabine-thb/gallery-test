@@ -66,6 +66,7 @@ export default class Experience {
         });
 
         this.camera.instance.position.set(36.92, 1.7, -4.72);
+        this.camera.instance.rotation.y = -Math.PI / 2; // Rotation de 90° vers la droite
     }
 
 
@@ -95,6 +96,11 @@ export default class Experience {
             const sound = new THREE.PositionalAudio(this.listener);
             audioSphere.add(sound);
             sound.setVolume(0);
+            
+            // Configurer les paramètres de distance pour une meilleure spatialisation
+            sound.setRefDistance(0.05); // Distance de référence très petite
+            sound.setMaxDistance(20); // Distance maximale pour entendre le son
+            sound.setDistanceModel('exponential'); // Modèle de distance exponentiel
 
             this.audioSources.push({
                 sphere: audioSphere,
@@ -122,14 +128,14 @@ export default class Experience {
 
             loader.load(audioFiles[i], (buffer) => {
                 source.sound.setBuffer(buffer);
-                source.sound.setRefDistance(0.16);
+                source.sound.setRefDistance(0.05); // Distance de référence réduite pour entendre moins loin
                 source.sound.setLoop(true);
                 source.loaded = true;
                 this.audioLoaded[i] = true;
 
                 // Jouer si conditions remplies
                 if (!this.isVideoPlaying && !this.isMutedFromButton) {
-                    source.sound.setVolume(5);
+                    source.sound.setVolume(8); // Volume augmenté pour les musiques
                     source.sound.play();
                 } else {
                     source.sound.setVolume(0);
@@ -161,7 +167,7 @@ export default class Experience {
                     if (source.sound.isPlaying) source.sound.pause();
                 } else {
                     if (!this.isVideoPlaying) {
-                        source.sound.setVolume(1);
+                        source.sound.setVolume(3); // Volume augmenté pour les musiques
                         if (!source.sound.isPlaying) source.sound.play();
                     } else {
                         source.sound.setVolume(0);
@@ -174,6 +180,15 @@ export default class Experience {
         // Contrôler aussi la vidéo de projection
         if (this.projectionVideo) {
             this.projectionVideo.muted = isMuted;
+        }
+        
+        // Contrôler l'audio spatialisé de la vidéo de projection
+        if (this.Couloir && this.Couloir.videoAudio) {
+            if (isMuted) {
+                this.Couloir.videoAudio.setVolume(0);
+            } else {
+                this.Couloir.videoAudio.setVolume(0.005); // Volume très réduit pour la vidéo
+            }
         }
     }
 
@@ -191,7 +206,7 @@ export default class Experience {
                     if (!source.loaded) {
                         this.loadAudio();
                     } else if (source.sound) {
-                        source.sound.setVolume(1);
+                        source.sound.setVolume(3); // Volume augmenté pour les musiques
                         if (!source.sound.isPlaying) source.sound.play();
                     }
                 } else {
@@ -213,6 +228,17 @@ export default class Experience {
                 }
             }
         }
+        
+        // Contrôler l'audio spatialisé de la vidéo de projection
+        if (this.Couloir && this.Couloir.videoAudio) {
+            if (isVideoActive) {
+                this.Couloir.videoAudio.setVolume(0);
+            } else {
+                if (!this.isMutedFromButton) {
+                    this.Couloir.videoAudio.setVolume(0.5); // Volume très réduit pour la vidéo
+                }
+            }
+        }
     }
 
     resize() {
@@ -228,6 +254,11 @@ export default class Experience {
         window.addEventListener('startExperience', () => {
             this.startProjectionVideo();
         });
+        
+        // Enregistrer aussi la référence au couloir pour l'audio spatialisé
+        if (this.Couloir && this.Couloir.videoAudio) {
+            this.projectionVideoAudio = this.Couloir.videoAudio;
+        }
     }
 
     startProjectionVideo() {
@@ -337,7 +368,7 @@ export default class Experience {
             
             // Attendre que tous les modèles soient positionnés, puis initialiser les collisions
             setTimeout(() => {
-                this.initializeCollisions();
+                this.initializeCollisions(); // RÉACTIVÉ - Collisions réactivées
             }, 500);
             
             this.collectTableaux().then(async () => {

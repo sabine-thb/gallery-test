@@ -8,12 +8,11 @@ export default class CouloirMusee {
         this.experience = experience;
         this.onAssetLoaded = onAssetLoaded;
         this.position = new THREE.Vector3(x, y, z);
-        this.video = null; // Stockage de la vidéo
+        this.video = null;
         
         this.loader = new GLTFLoader();
         this.textureLoader = new THREE.TextureLoader();
         
-        // Initialiser DRACOLoader
         const dracoLoader = new DRACOLoader();
         dracoLoader.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.5.7/');
         this.loader.setDRACOLoader(dracoLoader);
@@ -22,13 +21,11 @@ export default class CouloirMusee {
     }
 
     loadTextures() {
-        // Chargement des textures avec les chemins corrects
         const textureAccueil = this.textureLoader.load('/textures/Couloir/AcceuilBC.png');
         const textureCouloirs = this.textureLoader.load('/textures/Couloir/CouloirsBC.png');
         const textureLamps = this.textureLoader.load('/textures/Couloir/CouloirsLampsBC.png');
         const textureLampAccueil = this.textureLoader.load('/textures/Couloir/LampAcceuilBC.png');
 
-        // Liste de toutes les textures pour configuration
         const textures = [
             textureAccueil,
             textureCouloirs,
@@ -36,7 +33,6 @@ export default class CouloirMusee {
             textureLampAccueil
         ];
 
-        // Configuration commune pour toutes les textures
         textures.forEach(tex => {
             tex.flipY = false;
             tex.colorSpace = THREE.SRGBColorSpace;
@@ -55,10 +51,8 @@ export default class CouloirMusee {
             gltf.scene.position.copy(this.position);
             this.scene.add(gltf.scene);
             
-            // Charger et configurer les textures
             const textures = this.loadTextures();
             
-            // Application des matériaux avec les nouvelles textures
             gltf.scene.traverse((child) => {
                 if (!child.isMesh) return;
                 
@@ -67,41 +61,33 @@ export default class CouloirMusee {
                         map: textures.textureAccueil 
                     });
                 }
-                
+
                 if (['CouloirD', 'CouloirG', 'CouloirM'].includes(child.name)) {
                     child.material = new THREE.MeshStandardMaterial({ 
                         map: textures.textureCouloirs 
                     });
                 }
-                
+
                 if (['eclairageM', 'eclairageD', 'eclairageG'].includes(child.name)) {
                     child.material = new THREE.MeshStandardMaterial({ 
                         map: textures.textureLamps,
                         emissive: 0xffffff,
                         emissiveIntensity: 5.5,
-                        //emissiveMap: textures.textureLamps
                     });
                 }
-                
+
                 if (child.name === 'LampAcceuil01') {
                     child.material = new THREE.MeshStandardMaterial({ 
                         map: textures.textureLampAccueil,
                         emissive: 0xffffff,
                         emissiveIntensity: 5.5,
-                        //emissiveMap: textures.textureLampAccueil
                     });
-                }
-                
-                // Ajouter la vidéo sur l'écran de projection
-                if (child.name === 'ecranprojection') {
-                    console.log('Mesh ecranprojection trouvé:', child);
-                    console.log('Geometry:', child.geometry);
-                    console.log('Material original:', child.material);
-                    this.setupProjectionScreen(child);
                 }
             });
             
-            // Ajouter les objets aux collisions
+            // Créer un écran de projection personnalisé
+            this.createProjectionScreen();
+            
             if (this.experience?.addCollisionObjects) {
                 const collisionMeshes = [];
                 gltf.scene.traverse(child => {
@@ -109,7 +95,7 @@ export default class CouloirMusee {
                 });
                 this.experience.addCollisionObjects(collisionMeshes);
             }
-            
+
             this.onAssetLoaded();
         }, undefined, (error) => {
             console.error('Erreur chargement CouloirMusee:', error);
@@ -118,60 +104,143 @@ export default class CouloirMusee {
     }
 
     setupProjectionScreen(screenMesh) {
-        // Créer l'élément vidéo
         this.video = document.createElement('video');
         this.video.src = '/video/teaser-sentiers.mp4';
         this.video.loop = true;
-        this.video.muted = false; // Pas muté par défaut
-        this.video.volume = 1.0; // Volume maximum (HTML5 max = 1.0)
-        this.video.autoplay = false; // Ne pas démarrer automatiquement
+        this.video.muted = false;
+        this.video.volume = 1.0;
+        this.video.autoplay = false;
         this.video.playsInline = true;
         this.video.setAttribute('webkit-playsinline', '');
         this.video.setAttribute('playsinline', '');
 
-        // Créer la texture vidéo
         const videoTexture = new THREE.VideoTexture(this.video);
         videoTexture.colorSpace = THREE.SRGBColorSpace;
         videoTexture.minFilter = THREE.LinearFilter;
         videoTexture.magFilter = THREE.LinearFilter;
         videoTexture.flipY = false;
-        
-        // Pivoter la texture de 90°
-        videoTexture.center.set(0.5, 0.5);
-        videoTexture.rotation = Math.PI / 2; // 90° en radians
-        
-        // Configuration pour voir la vidéo entière
+
+        // Pas de répétition + cadrage exact
         videoTexture.wrapS = THREE.ClampToEdgeWrapping;
         videoTexture.wrapT = THREE.ClampToEdgeWrapping;
-        
-        // Adapter la vidéo pour qu'elle soit entièrement visible (fit)
         videoTexture.repeat.set(1, 1);
         videoTexture.offset.set(0, 0);
 
-        // Appliquer le matériau avec la vidéo
+        // Rotation de 90 degrés
+        videoTexture.center.set(0.5, 0.5);
+        videoTexture.rotation = Math.PI / 2; // 90 degrés en radians
+
+        // Appliquer uniquement sur la face visible (avant)
         screenMesh.material = new THREE.MeshStandardMaterial({
             map: videoTexture,
             emissive: new THREE.Color(0x222222),
             emissiveIntensity: 0.1,
-            side: THREE.FrontSide // Afficher seulement sur la face avant
+            side: THREE.FrontSide
         });
 
-        // Enregistrer cette vidéo auprès de l'experience pour le contrôle du son
+        if (this.experience && this.experience.registerProjectionVideo) {
+            this.experience.registerProjectionVideo(this.video);
+        }
+   }
+
+    createProjectionScreen() {
+        // Créer la géométrie du plan avec des dimensions un peu plus grandes
+        const planeGeometry = new THREE.PlaneGeometry(6.7, 4.7); // Largeur: 6, Hauteur: 4 (un peu plus grand)
+        
+        // Créer la vidéo
+        this.video = document.createElement('video');
+        this.video.src = '/video/teaser-sentiers.mp4';
+        this.video.loop = true;
+        this.video.muted = false;
+        this.video.volume = 1.0;
+        this.video.autoplay = false;
+        this.video.playsInline = true;
+        this.video.setAttribute('webkit-playsinline', '');
+        this.video.setAttribute('playsinline', '');
+
+        const videoTexture = new THREE.VideoTexture(this.video);
+        videoTexture.colorSpace = THREE.SRGBColorSpace;
+        videoTexture.minFilter = THREE.LinearFilter;
+        videoTexture.magFilter = THREE.LinearFilter;
+        videoTexture.flipY = false;
+
+        videoTexture.wrapS = THREE.ClampToEdgeWrapping;
+        videoTexture.wrapT = THREE.ClampToEdgeWrapping;
+        videoTexture.repeat.set(-1, 1); // Inverser horizontalement pour corriger l'effet miroir
+        videoTexture.offset.set(0, 0);
+
+        // Rotation de 180 degrés pour la vidéo
+        videoTexture.center.set(0.5, 0.5);
+        videoTexture.rotation = Math.PI; // 180° rotation complète
+
+        // Matériau avec vidéo, uniquement sur le front
+        const screenMaterial = new THREE.MeshStandardMaterial({
+            map: videoTexture,
+            emissive: new THREE.Color(0x222222),
+            emissiveIntensity: 0.1,
+            side: THREE.FrontSide
+        });
+
+        // Créer le mesh et le positionner à la position de spawn de la caméra
+        const screenMesh = new THREE.Mesh(planeGeometry, screenMaterial);
+        // Placer le plan à une distance confortable devant la position de spawn de la caméra
+        screenMesh.position.set(42.6, 2.5, -5); // 7 unités devant la caméra pour voir le plan entier
+        
+        // Orienter le plan avec une rotation de 90° sur l'axe Y
+        screenMesh.rotation.y = -Math.PI / 2; // Rotation de 90° autour de l'axe Y
+        
+        // Ajouter à la scène
+        this.scene.add(screenMesh);
+        
+        console.log('Plane geometry créé à la position de spawn:', screenMesh.position);
+        console.log('Dimensions du plan:', planeGeometry.parameters);
+
+        // Ajouter l'audio spatialisé pour la vidéo
+        this.setupVideoAudio(screenMesh);
+
         if (this.experience && this.experience.registerProjectionVideo) {
             this.experience.registerProjectionVideo(this.video);
         }
     }
 
-    // Méthodes pour contrôler le son de la vidéo
-    muteVideo() {
-        if (this.video) {
-            this.video.muted = true;
+    setupVideoAudio(screenMesh) {
+        if (!this.experience || !this.experience.listener) {
+            console.warn('Listener audio non disponible pour la vidéo');
+            return;
         }
+
+        // Créer une sphère invisible pour l'audio positionnel
+        const audioGeometry = new THREE.SphereGeometry(0.1, 8, 8);
+        const audioMaterial = new THREE.MeshBasicMaterial({ 
+            transparent: true, 
+            opacity: 0 
+        });
+        
+        this.audioSphere = new THREE.Mesh(audioGeometry, audioMaterial);
+        this.audioSphere.position.copy(screenMesh.position);
+        this.scene.add(this.audioSphere);
+
+        // Créer l'audio positionnel
+        this.videoAudio = new THREE.PositionalAudio(this.experience.listener);
+        this.audioSphere.add(this.videoAudio);
+        
+        // Configurer l'audio positionnel
+        this.videoAudio.setMediaElementSource(this.video);
+        this.videoAudio.setRefDistance(3); // Distance de référence réduite pour entendre moins loin
+        this.videoAudio.setMaxDistance(8); // Distance maximale réduite
+        this.videoAudio.setDistanceModel('exponential');
+        this.videoAudio.setVolume(0.005); // Volume très réduit pour la vidéo
+
+        console.log('Audio spatialisé configuré pour la vidéo du couloir');
+    }
+
+    muteVideo() {
+        if (this.video) this.video.muted = true;
+        if (this.videoAudio) this.videoAudio.setVolume(0);
     }
 
     unmuteVideo() {
-        if (this.video) {
-            this.video.muted = false;
-        }
+        if (this.video) this.video.muted = false;
+        if (this.videoAudio) this.videoAudio.setVolume(0.005); // Volume très réduit pour la vidéo
     }
 }
