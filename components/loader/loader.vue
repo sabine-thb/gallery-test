@@ -7,12 +7,6 @@
           <img src="/icons/star-loader.svg" alt="Star">
         </div>
         <p class="loader-title">Chargement de <span>l'expérience...</span></p>
-        <div class="progress-info" v-if="progress.total > 0">
-          <p class="progress-text">{{ progress.loaded }} / {{ progress.total }} modèles chargés</p>
-          <div class="progress-bar">
-            <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
-          </div>
-        </div>
         <p class="loader-subtitle">Sentiers</p>
       </div>
       <img src="/icons/logo.svg" class="loader-logo" alt="Logo">
@@ -57,4 +51,3 @@ onBeforeUnmount(() => {
   }
 })
   </script>
-  
