@@ -68,7 +68,7 @@ export default class RoomBrigitte {
 
     loadRoom() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/BrigitteRoom04.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomBrigitte/BrigitteRoom04.glb', (gltf) => {
                 const grilleNames = ['Grille01', 'Grille02', 'Grille03']
                 const boisNames = ['Cube001', 'Cube003', 'Cube006']
 
@@ -112,7 +112,7 @@ export default class RoomBrigitte {
 
     loadArtSupport() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/ArtSupportBrigitte01.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomBrigitte/ArtSupportBrigitte01.glb', (gltf) => {
                 const chevaletMaterial = new THREE.MeshStandardMaterial({
                     map: this.bakeTextureChevalet
                 });
@@ -153,7 +153,7 @@ export default class RoomBrigitte {
 
     loadTree() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/Arbre03.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomBrigitte/Arbre03.glb', (gltf) => {
 
                 gltf.scene.traverse((child) => {
                     if (child.name === 'Tree001') {
@@ -195,7 +195,7 @@ export default class RoomBrigitte {
 
     loadProjectors() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/ProjecteursBrigitte.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomBrigitte/ProjecteursBrigitte.glb', (gltf) => {
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
                 
@@ -220,7 +220,7 @@ export default class RoomBrigitte {
 
     loadPaintings() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/TableauxBrigitte02.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomBrigitte/TableauxBrigitte02.glb', (gltf) => {
                 //console.log("Début du chargement des tableaux de Brigitte");
                 gltf.scene.traverse((child) => {
                     if (child.isMesh && /^FaceTableauBrigitte\d+$/.test(child.name)) {
@@ -266,7 +266,7 @@ export default class RoomBrigitte {
 
     loadBushes() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomBrigitte/Buisson01.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomBrigitte/Buisson01.glb', (gltf) => {
                 const bushMaterial = new THREE.MeshStandardMaterial({
                     map: this.bakedTextureFlower
                 });
