@@ -70,7 +70,7 @@ export default class RoomJCD {
 
     loadRoom() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomJCD/SalleJcd01.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomJCD/SalleJcd01.glb', (gltf) => {
                 gltf.scene.traverse((child) => {
                     if (child.isMesh) {
                         if (child.name === 'salleJCD') {
@@ -113,7 +113,7 @@ export default class RoomJCD {
 
     loadMiddleWalls() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomJCD/2mursJCD.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomJCD/2mursJCD.glb', (gltf) => {
                 const material = new THREE.MeshStandardMaterial({
                     map: this.bakedTextureMursJCD1
                 });
@@ -148,7 +148,7 @@ export default class RoomJCD {
 
     loadChandeliers() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomJCD/JcdChandeliers02.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomJCD/JcdChandeliers02.glb', (gltf) => {
                 gltf.scene.traverse((child) => {
                     if (child.isMesh) {
                         if (child.name.startsWith('Sphere')) {
@@ -188,7 +188,7 @@ export default class RoomJCD {
 
     loadLibrary() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomJCD/LibraryJCD02.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomJCD/LibraryJCD02.glb', (gltf) => {
                 const textureMap = {
                     'Album03': [this.bakedTextureAlbumLibrary01],
                     'Album04': [this.bakedTextureAlbumLibrary02],
@@ -232,7 +232,7 @@ export default class RoomJCD {
 
     loadAlbums() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomJCD/AlbumJCD02.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomJCD/AlbumJCD02.glb', (gltf) => {
                 gltf.scene.position.copy(this.position);
                 this.scene.add(gltf.scene);
                 
@@ -257,7 +257,7 @@ export default class RoomJCD {
 
     loadPaintings() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomJCD/TableauJCD03.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomJCD/TableauJCD03.glb', (gltf) => {
                 gltf.scene.traverse((child) => {
                     if (child.isMesh && /^FaceTableauJCD\d+$/.test(child.name)) {
                         child.userData.originalName = child.name;
