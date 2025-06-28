@@ -56,7 +56,7 @@ export default class RoomMartin {
 
     loadRoom() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/MartinRoom08.glb', (gltf) => {
+        this.loader.load('/3dModels/RoomMartin/MartinRoom08.glb', (gltf) => {
 
             const archeTextures = {
                 group1: ['arche01005', 'arche01007', 'arche01001'],
@@ -195,7 +195,7 @@ export default class RoomMartin {
 
     loadBolts() {
         return new Promise((resolve) => {
-            this.loader.load('3dModels/RoomMartin/BoulonsArches.glb', (gltf) => {
+            this.loader.load('/3dModels/RoomMartin/BoulonsArches.glb', (gltf) => {
                 const boulonMaterial = new THREE.MeshStandardMaterial({
                     map: this.bakedTextureBoulon,
                 });
@@ -234,7 +234,7 @@ export default class RoomMartin {
 
     loadPaintings() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/TableauMartin03.glb', (gltf) => {
+        this.loader.load('/3dModels/RoomMartin/TableauMartin03.glb', (gltf) => {
             gltf.scene.position.set(149.7, -19.7, 31);
             this.scene.add(gltf.scene);
 
@@ -266,7 +266,7 @@ export default class RoomMartin {
 
     loadAnimatedMartin() {
         return new Promise((resolve) => {
-        this.loader.load('3dModels/RoomMartin/testemartin3.glb', (gltf) => {
+        this.loader.load('/3dModels/RoomMartin/testemartin3.glb', (gltf) => {
             gltf.scene.position.set(150.5, -19.75, 50);
 
             const video = document.createElement('video');
