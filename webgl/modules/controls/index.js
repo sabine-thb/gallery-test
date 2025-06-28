@@ -1,10 +1,17 @@
 import * as THREE from 'three';
-//import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls';
 
 export default class Controls {
   constructor(camera, domElement, experience) {
     this.experience = experience;
-    this.instance = new PointerLockControls(camera, domElement);
+    this.instance = null;
+
+    // Import dynamique pour PointerLockControls côté client uniquement
+    if (typeof window !== 'undefined') {
+      import('three/examples/jsm/controls/PointerLockControls').then(module => {
+        const PointerLockControls = module.PointerLockControls;
+        this.instance = new PointerLockControls(camera, domElement);
+      });
+    }
 
     camera.position.y = 1.7;
 
