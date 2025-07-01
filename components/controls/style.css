@@ -1,0 +1,131 @@
+@import '../../utils/vars.css';
+
+.controls {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.controls-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #181b2c7d;
+    pointer-events: all;
+    z-index: 10;
+    /* backdrop-filter: blur(5px); */
+}
+
+.controls-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12.9rem;
+    width: 100%;
+    position: relative;
+    z-index: 100;
+}
+
+.controls-flex-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.controls-flex-img {
+    width: 25.6rem;
+    height: 15.5rem;
+}
+
+.controls-flex-item p {
+    color: #fff;
+    font-family: var(--futura);
+    font-size: 1.8rem;
+}
+
+.controls-flex-text {
+    font-family: var(--akira);
+    font-size: 6rem;
+    color: #fff;
+}
+
+
+.controls-close {
+    all: unset;
+    position: absolute;
+    top: 6rem;
+    right: 3rem;
+    cursor: pointer;
+    z-index: 100;
+    background-color: none;
+}
+
+.controls-close-indication {
+    font-family: var(--futura);
+    font-size: 1.8rem;
+    position: absolute;
+    bottom: 5rem;
+    color: #fff;
+    z-index: 100;
+    width: 100%;
+    text-align: center;
+
+
+}
+
+
+.joystick-info {
+    font-family: var(--futura);
+    font-size: 1.8rem;
+    color: #fff;
+    z-index: 100;
+    position: relative;
+    margin-top: 60px;
+}
+
+
+@media(max-width:800px) {
+
+    .controls-close-indication,
+    .controls-flex-item p {
+        font-size: 3rem;
+    }
+}
+
+
+@media(max-width:540px) {
+
+    /* .controls {
+        display: none;
+    } */
+
+    .controls-flex {
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    .controls-flex-img {
+        width: 15.6rem;
+        height: 9.5rem;
+    }
+
+    .controls-close-indication {
+        display: none;
+    }
+
+    .controls-flex-item p,
+    .joystick-info {
+        font-size: 1rem;
+    }
+
+    .joystick-info {
+        margin-top: 20px;
+    }
+}

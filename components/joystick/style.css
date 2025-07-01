@@ -1,0 +1,25 @@
+#joystick-container {
+  position: fixed;
+  bottom: 3rem;
+  right: 3rem;
+  width: 100px;
+  height: 100px;
+  z-index: 10;
+  /* display: none; */
+  display: block;
+}
+
+
+#joystick-container .back {
+  opacity: 1;
+}
+
+
+
+/* @media (max-width: 540px) {
+  #joystick-container {
+    display: block;
+    position: fixed;
+    z-index: 10;
+  }
+} */

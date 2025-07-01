@@ -1,0 +1,156 @@
+@import '../../utils/vars.css';
+
+.paint {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.paint-content {
+  display: flex;
+  gap: 11.6rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 10rem;
+}
+
+.paint-content-text {
+  max-width: 41.3rem;
+  padding: 20px;
+}
+
+.paint-content-text h1 {
+  font-family: var(--playfairNormal);
+  font-size: 4.5rem;
+  font-weight: 400;
+}
+
+.paint-content-text em {
+  font-family: var(--playfairItalic);
+}
+
+.paint-content-text p {
+  font-size: 1.5rem;
+  font-family: var(--satoshi);
+  letter-spacing: 0.1rem;
+  line-height: 2.2rem;
+}
+
+.paint-content-visual {
+  width: 48.4rem;
+  height: 57.9rem;
+  background: transparent;
+  position: relative;
+  /* Pour s'assurer que le canvas reste bien dedans */
+}
+
+
+.paint-content-visual canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+
+.paint-close {
+  all: unset;
+  position: absolute;
+  top: 6rem;
+  right: 3rem;
+  cursor: pointer;
+  z-index: 100;
+  background-color: none;
+}
+
+.paint-close-indication {
+  font-family: var(--futura);
+  font-size: 1.5rem;
+  position: absolute;
+  bottom: 5rem;
+  color: #fff;
+  z-index: 100;
+  width: 100%;
+  text-align: center;
+}
+
+
+.dg {
+  z-index: 9999 !important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+}
+
+
+@media(max-width:1050px) {
+  .paint-content-text h1 {
+    font-size: 5.5rem;
+  }
+
+  .paint-content-text {
+    max-width: 50rem;
+  }
+
+  .paint-content-text p {
+    font-size: 2.5rem;
+    line-height: 4rem;
+  }
+
+}
+
+
+@media(max-width: 540px) {
+
+  .paint-content {
+    flex-direction: column;
+    gap: 0;
+    margin-top: 0;
+  }
+
+
+  .paint-content {
+    max-width: 100%;
+    padding: 2rem;
+  }
+
+
+  .paint-content-text {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .paint-content-text h1 {
+    font-size: 2.5rem;
+  }
+
+  .paint-content-text p {
+    font-size: 1.5rem;
+    line-height: 2.2rem;
+  }
+
+  .paint-content-visual {
+    width: 100%;
+    height: 35rem;
+    display: block;
+    position: relative;
+    order: -1;
+  }
+
+  .paint-content-visual canvas {
+    margin: auto;
+    width: 100%;
+    height: 100%;
+  }
+
+  .paint-close-indication {
+    display: none;
+  }
+}

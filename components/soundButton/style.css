@@ -1,0 +1,148 @@
+@import '../../utils/vars.css';
+
+/* animation du bouton son  */
+.sound-button {
+  width: 6.5rem;
+  height: 6.5rem;
+  position: fixed;
+  bottom: 3rem;
+  left: 3rem;
+  border-radius: 50%;
+  border: white 1px solid;
+  z-index: 1000;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: 0;
+  background-color: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.sound-button.muted>.sound-button-line {
+  opacity: 0.5;
+  height: 0.4rem !important;
+  animation-play-state: paused;
+  animation: none;
+}
+
+.sound-button-line {
+  display: inline-block;
+  width: 0.2rem;
+  height: 0.1rem;
+  margin: 0 .15rem;
+  background-color: #fff;
+  transition: opacity 0.2s ease-out;
+  will-change: opacity;
+  animation-duration: 450ms;
+  animation-play-state: running;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.sound-button-line:nth-child(1) {
+  animation-name: danceHeight1;
+  animation-delay: 0ms;
+}
+
+.sound-button-line:nth-child(2) {
+  animation-name: danceHeight2;
+  animation-delay: 300ms;
+}
+
+.sound-button-line:nth-child(3) {
+  animation-name: danceHeight3;
+  animation-delay: 400ms;
+}
+
+.sound-button-line:nth-child(4) {
+  animation-name: danceHeight4;
+  animation-delay: 200ms;
+}
+
+.sound-button-line:nth-child(5) {
+  animation-name: danceHeight5;
+  animation-delay: 600ms;
+}
+
+
+
+@keyframes danceHeight1 {
+  from {
+    height: 0.3rem;
+  }
+
+  to {
+    height: 0.7rem;
+  }
+}
+
+@keyframes danceHeight2 {
+  from {
+    height: 0.5rem;
+  }
+
+  to {
+    height: 1.1rem;
+  }
+}
+
+@keyframes danceHeight3 {
+  from {
+    height: 1rem;
+  }
+
+  to {
+    height: 2rem;
+  }
+}
+
+@keyframes danceHeight4 {
+  from {
+    height: 0.8rem;
+  }
+
+  to {
+    height: 1.6rem;
+  }
+}
+
+@keyframes danceHeight5 {
+  from {
+    height: 0.4rem;
+  }
+
+  to {
+    height: 0.8rem;
+  }
+}
+
+@media(max-width:900px) {
+  .sound-button {
+    width: 10rem;
+    height: 10rem;
+
+  }
+
+  .sound-button-line {
+    width: 0.3rem;
+    height: 0.3rem;
+    margin: 0.3rem;
+  }
+}
+
+
+@media(max-width:540px) {
+  .sound-button {
+    width: 6rem;
+    height: 6rem;
+  }
+
+  .sound-button-line {
+    width: 0.2rem;
+    height: 0.2rem;
+    margin: 0 .2rem;
+  }
+}

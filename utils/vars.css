@@ -1,0 +1,54 @@
+@font-face {
+    font-family: 'Futura';
+    src: url('../assets/fonts/Futura\ Medium.woff2');
+}
+
+
+@font-face {
+    font-family: 'Public Sans';
+    src: url('../assets/fonts/PublicSans-Light.woff2');
+}
+
+@font-face {
+    font-family: 'Satoshi';
+    src: url('../assets/fonts/Satoshi-Variable.woff2');
+}
+
+
+@font-face {
+    font-family: 'Akira';
+    src: url('../assets/fonts/Akira.woff2');
+}
+
+
+@font-face {
+    font-family: 'PlayFair Display Normal';
+    src: url('../assets/fonts/PlayfairDisplay-VariableFont_wght.woff2');
+    font-style: normal;
+}
+
+
+@font-face {
+    font-family: 'PlayFair Display Italic';
+    src: url('../assets/fonts/PlayfairDisplay-Italic-VariableFont_wght.woff2');
+    font-style: italic;
+}
+
+:root {
+    --futura: 'Futura', sans-serif;
+    --satoshi: 'Satoshi', sans-serif;
+    --akira: 'Akira', sans-serif;
+    --playfairNormal: 'PlayFair Display Normal', sans-serif;
+    --playfairItalic: 'PlayFair Display Italic', sans-serif;
+
+    font-size: calc(100vw / 1920 * 10);
+
+
+    @media (max-width: 1440px) {
+        font-size: calc(100vw / 1440 * 10);
+    }
+
+    @media (max-width: 540px) {
+        font-size: calc(100vw / 390 * 10);
+    }
+}
