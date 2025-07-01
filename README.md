@@ -20,7 +20,7 @@ Une galerie d'art virtuelle interactive développée avec Nuxt.js et Three.js, o
 - **Vidéo de projection** : Écran de projection dans le couloir avec contrôle audio
 
 ### Données Centralisées
-- **Configuration JSON** : Toutes les métadonnées des œuvres dans `oeuvres.json`
+- **Configuration données JavaScript** : Toutes les métadonnées des œuvres dans `oeuvres.js`
 - **Gestion des assets** : Organisation structurée des modèles 3D, textures et audio
 
 ## 🚀 Installation
