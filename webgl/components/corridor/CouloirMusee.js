@@ -21,10 +21,10 @@ export default class CouloirMusee {
     }
 
     loadTextures() {
-        const textureAccueil = this.textureLoader.load('/textures/Couloir/AcceuilBC.png');
-        const textureCouloirs = this.textureLoader.load('/textures/Couloir/CouloirsBC.png');
-        const textureLamps = this.textureLoader.load('/textures/Couloir/CouloirsLampsBC.png');
-        const textureLampAccueil = this.textureLoader.load('/textures/Couloir/LampAcceuilBC.png');
+        const textureAccueil = this.textureLoader.load('textures/Couloir/AcceuilBC.png');
+        const textureCouloirs = this.textureLoader.load('textures/Couloir/CouloirsBC.png');
+        const textureLamps = this.textureLoader.load('textures/Couloir/CouloirsLampsBC.png');
+        const textureLampAccueil = this.textureLoader.load('textures/Couloir/LampAcceuilBC.png');
 
         const textures = [
             textureAccueil,
@@ -47,7 +47,7 @@ export default class CouloirMusee {
     }
 
     loadModel() {
-        this.loader.load('/3dModels/Couloir/CouloirMusee05.glb', (gltf) => {
+        this.loader.load('3dModels/Couloir/CouloirMusee05.glb', (gltf) => {
             gltf.scene.position.copy(this.position);
             this.scene.add(gltf.scene);
             
@@ -110,10 +110,10 @@ export default class CouloirMusee {
 
     setupProjectionScreen(screenMesh) {
         this.video = document.createElement('video');
-        this.video.src = '/video/teaser-sentiers.mp4';
+        this.video.src = 'video/teaser-sentiers.mp4';
         this.video.loop = true;
         this.video.muted = false;
-        this.video.volume = 1.0;
+        this.video.volume = 0.8; // Volume équilibré avec les musiques
         this.video.autoplay = false;
         this.video.playsInline = true;
         this.video.setAttribute('webkit-playsinline', '');
@@ -154,10 +154,10 @@ export default class CouloirMusee {
         
         // Créer la vidéo
         this.video = document.createElement('video');
-        this.video.src = '/video/teaser-sentiers.mp4';
+        this.video.src = 'video/teaser-sentiers.mp4';
         this.video.loop = true;
         this.video.muted = false;
-        this.video.volume = 1.0;
+        this.video.volume = 0.8; // Volume équilibré avec les musiques
         this.video.autoplay = false;
         this.video.playsInline = true;
         this.video.setAttribute('webkit-playsinline', '');
@@ -234,7 +234,7 @@ export default class CouloirMusee {
         this.videoAudio.setRefDistance(3); // Distance de référence réduite pour entendre moins loin
         this.videoAudio.setMaxDistance(8); // Distance maximale réduite
         this.videoAudio.setDistanceModel('exponential');
-        this.videoAudio.setVolume(0.005); // Volume très réduit pour la vidéo
+        this.videoAudio.setVolume(0.8); // Volume équilibré avec les musiques
 
         console.log('Audio spatialisé configuré pour la vidéo du couloir');
     }
@@ -246,6 +246,6 @@ export default class CouloirMusee {
 
     unmuteVideo() {
         if (this.video) this.video.muted = false;
-        if (this.videoAudio) this.videoAudio.setVolume(0.005); // Volume très réduit pour la vidéo
+        if (this.videoAudio) this.videoAudio.setVolume(2); // Volume équilibré
     }
 }
