@@ -74,47 +74,47 @@ export default class Experience {
         this.listener = new THREE.AudioListener();
         this.camera.instance.add(this.listener);
 
-        const audioPositions = [
-            new THREE.Vector3(36.88, 3, 29.16),  // Position pour Albumblatter-JCD
-            new THREE.Vector3(6.39, 3, -5.66),   // Position pour Ravel-Martin
-            new THREE.Vector3(36.14, 3, -34.86)  // Position pour Ladiaba-Brigitte
-        ];
+        // Définir les zones géographiques pour chaque pièce
+        this.roomZones = {
+            jcd: {
+                min: { x: 20, z: 15 },
+                max: { x: 55, z: 45 }
+            },
+            martin: {
+                min: { x: -10, z: -10 },
+                max: { x: 20, z: 5 }
+            },
+            brigitte: {
+                min: { x: 20, z: -50 },
+                max: { x: 55, z: -15 }
+            },
+            couloir: {
+                min: { x: 20, z: -15 },
+                max: { x: 45, z: 15 }
+            }
+        };
 
+        this.currentRoom = null;
         this.audioSources = []; // Réinitialiser les sources audio
 
+        // Créer des sources audio non-spatiales (Audio simple au lieu de PositionalAudio)
         for (let i = 0; i < 3; i++) {
-            const geometry = new THREE.SphereGeometry(0.25, 32, 32);
-            const invisibleMaterial = new THREE.MeshBasicMaterial({ 
-                transparent: true, 
-                opacity: 0 
-            });
-            
-            const audioSphere = new THREE.Mesh(geometry, invisibleMaterial);
-            audioSphere.position.copy(audioPositions[i]);
-            this.scene.add(audioSphere);
-
-            const sound = new THREE.PositionalAudio(this.listener);
-            audioSphere.add(sound);
+            const sound = new THREE.Audio(this.listener);
             sound.setVolume(0);
-            
-            // Configurer les paramètres de distance pour une meilleure spatialisation
-            sound.setRefDistance(0.05); // Distance de référence très petite
-            sound.setMaxDistance(20); // Distance maximale pour entendre le son
-            sound.setDistanceModel('exponential'); // Modèle de distance exponentiel
 
             this.audioSources.push({
-                sphere: audioSphere,
                 sound: sound,
-                loaded: false
+                loaded: false,
+                room: ['jcd', 'martin', 'brigitte'][i] // Associer chaque son à sa pièce
             });
         }
     }
 
     loadAudio() {
         const audioFiles = [
-            '/audio/Albumblatter-JCD.wav',
-            '/audio/Ravel-Martin.wav',
-            '/audio/Ladiaba-Brigitte.wav'
+            'audio/Albumblatter-JCD.wav',
+            'audio/Ravel-Martin.wav',
+            'audio/Ladiaba-Brigitte.wav'
         ];
 
         const loader = new THREE.AudioLoader();
@@ -128,18 +128,12 @@ export default class Experience {
 
             loader.load(audioFiles[i], (buffer) => {
                 source.sound.setBuffer(buffer);
-                source.sound.setRefDistance(0.05); // Distance de référence réduite pour entendre moins loin
                 source.sound.setLoop(true);
                 source.loaded = true;
                 this.audioLoaded[i] = true;
 
-                // Jouer si conditions remplies
-                if (!this.isVideoPlaying && !this.isMutedFromButton) {
-                    source.sound.setVolume(8); // Volume augmenté pour les musiques
-                    source.sound.play();
-                } else {
-                    source.sound.setVolume(0);
-                }
+                // Démarrer en pause, sera activé par checkRoomAudio
+                source.sound.setVolume(0);
 
                 source.sound.onError = (error) => {
                     console.error(`Erreur de lecture audio ${i}:`, error);
@@ -163,15 +157,14 @@ export default class Experience {
                 this.loadAudio();
             } else if (source.loaded) {
                 if (isMuted) {
-                    source.sound.setVolume(0);
-                    if (source.sound.isPlaying) source.sound.pause();
+                    this.fadeOutAudio(source.sound);
                 } else {
-                    if (!this.isVideoPlaying) {
-                        source.sound.setVolume(3); // Volume augmenté pour les musiques
-                        if (!source.sound.isPlaying) source.sound.play();
+                    // Vérifier si on est dans la bonne pièce pour ce son
+                    const currentRoom = this.getCurrentRoom();
+                    if (currentRoom === source.room && !this.isVideoPlaying) {
+                        this.fadeInAudio(source.sound, 0.8);
                     } else {
-                        source.sound.setVolume(0);
-                        if (source.sound.isPlaying) source.sound.pause();
+                        this.fadeOutAudio(source.sound);
                     }
                 }
             }
@@ -180,14 +173,21 @@ export default class Experience {
         // Contrôler aussi la vidéo de projection
         if (this.projectionVideo) {
             this.projectionVideo.muted = isMuted;
+            if (!isMuted && this.getCurrentRoom() === 'couloir' && !this.isVideoPlaying) {
+                this.projectionVideo.volume = 0.8; // Volume équilibré
+            } else {
+                this.projectionVideo.volume = 0;
+            }
         }
         
         // Contrôler l'audio spatialisé de la vidéo de projection
         if (this.Couloir && this.Couloir.videoAudio) {
             if (isMuted) {
                 this.Couloir.videoAudio.setVolume(0);
+            } else if (this.getCurrentRoom() === 'couloir' && !this.isVideoPlaying) {
+                this.Couloir.videoAudio.setVolume(0.8); // Volume équilibré
             } else {
-                this.Couloir.videoAudio.setVolume(0.005); // Volume très réduit pour la vidéo
+                this.Couloir.videoAudio.setVolume(0);
             }
         }
     }
@@ -198,21 +198,22 @@ export default class Experience {
         this.audioSources.forEach((source, index) => {
             if (isVideoActive) {
                 if (source.sound && source.sound.isPlaying) {
-                    source.sound.setVolume(0);
-                    source.sound.pause();
+                    this.fadeOutAudio(source.sound);
                 }
             } else {
                 if (!this.isMutedFromButton) {
                     if (!source.loaded) {
                         this.loadAudio();
                     } else if (source.sound) {
-                        source.sound.setVolume(3); // Volume augmenté pour les musiques
-                        if (!source.sound.isPlaying) source.sound.play();
+                        // Vérifier si on est dans la bonne pièce pour ce son
+                        const currentRoom = this.getCurrentRoom();
+                        if (currentRoom === source.room) {
+                            this.fadeInAudio(source.sound, 0.8);
+                        }
                     }
                 } else {
                     if (source.sound && source.sound.isPlaying) {
-                        source.sound.setVolume(0);
-                        source.sound.pause();
+                        this.fadeOutAudio(source.sound);
                     }
                 }
             }
@@ -223,8 +224,9 @@ export default class Experience {
             if (isVideoActive) {
                 this.projectionVideo.pause();
             } else {
-                if (!this.isMutedFromButton) {
+                if (!this.isMutedFromButton && this.getCurrentRoom() === 'couloir') {
                     this.projectionVideo.play();
+                    this.projectionVideo.volume = 0.8; // Volume équilibré
                 }
             }
         }
@@ -234,8 +236,8 @@ export default class Experience {
             if (isVideoActive) {
                 this.Couloir.videoAudio.setVolume(0);
             } else {
-                if (!this.isMutedFromButton) {
-                    this.Couloir.videoAudio.setVolume(0.5); // Volume très réduit pour la vidéo
+                if (!this.isMutedFromButton && this.getCurrentRoom() === 'couloir') {
+                    this.Couloir.videoAudio.setVolume(0.8); // Volume équilibré
                 }
             }
         }
@@ -589,6 +591,125 @@ export default class Experience {
         this.renderer.instance.dispose();
     }
 
+    // Méthode pour détecter dans quelle pièce se trouve la caméra
+    getCurrentRoom() {
+        const position = this.camera.instance.position;
+        
+        for (const [roomName, zone] of Object.entries(this.roomZones)) {
+            if (position.x >= zone.min.x && position.x <= zone.max.x &&
+                position.z >= zone.min.z && position.z <= zone.max.z) {
+                return roomName;
+            }
+        }
+        
+        return null; // En dehors de toutes les pièces
+    }
+
+    // Méthode pour contrôler l'audio basé sur la pièce actuelle
+    checkRoomAudio() {
+        const newRoom = this.getCurrentRoom();
+        
+        // Si on change de pièce
+        if (newRoom !== this.currentRoom) {
+            const oldRoom = this.currentRoom;
+            this.currentRoom = newRoom;
+            
+            // Fade out tous les sons actuels
+            this.audioSources.forEach(source => {
+                if (source.sound && source.sound.isPlaying) {
+                    this.fadeOutAudio(source.sound);
+                }
+            });
+
+            // Contrôler la vidéo du couloir
+            if (this.projectionVideo) {
+                if (newRoom === 'couloir') {
+                    // On entre dans le couloir, activer la vidéo
+                    if (!this.isMutedFromButton && !this.isVideoPlaying) {
+                        this.projectionVideo.muted = false;
+                        this.projectionVideo.volume = 0.8; // Volume équilibré avec les musiques
+                    }
+                } else {
+                    // On sort du couloir, désactiver la vidéo
+                    this.projectionVideo.muted = true;
+                    this.projectionVideo.volume = 0;
+                }
+            }
+
+            // Contrôler l'audio spatialisé de la vidéo du couloir
+            if (this.Couloir && this.Couloir.videoAudio) {
+                if (newRoom === 'couloir') {
+                    if (!this.isMutedFromButton && !this.isVideoPlaying) {
+                        this.Couloir.videoAudio.setVolume(0.8); // Volume équilibré
+                    }
+                } else {
+                    this.Couloir.videoAudio.setVolume(0);
+                }
+            }
+            
+            // Démarrer le son de la nouvelle pièce si conditions remplies
+            setTimeout(() => {
+                if (newRoom && newRoom !== 'couloir' && !this.isVideoPlaying && !this.isMutedFromButton) {
+                    const roomSource = this.audioSources.find(source => source.room === newRoom);
+                    if (roomSource && roomSource.loaded) {
+                        this.fadeInAudio(roomSource.sound, 0.8);
+                    } else if (roomSource && !roomSource.loaded) {
+                        this.loadAudio(); // Charger l'audio si pas encore fait
+                    }
+                }
+            }, 500); // Attendre la fin du fade out
+        }
+    }
+
+    // Méthode pour faire un fade in de l'audio
+    fadeInAudio(sound, targetVolume) {
+        if (!sound) return;
+        
+        sound.setVolume(0);
+        if (!sound.isPlaying) {
+            sound.play();
+        }
+        
+        const fadeSteps = 20;
+        const stepDuration = 50; // ms
+        const volumeStep = targetVolume / fadeSteps;
+        
+        let currentStep = 0;
+        const fadeInterval = setInterval(() => {
+            currentStep++;
+            const newVolume = volumeStep * currentStep;
+            sound.setVolume(newVolume);
+            
+            if (currentStep >= fadeSteps) {
+                clearInterval(fadeInterval);
+                sound.setVolume(targetVolume);
+            }
+        }, stepDuration);
+    }
+
+    // Méthode pour faire un fade out de l'audio
+    fadeOutAudio(sound) {
+        if (!sound || !sound.isPlaying) return;
+        
+        const currentVolume = sound.getVolume();
+        const fadeSteps = 20;
+        const stepDuration = 25; // ms, plus rapide pour le fade out
+        const volumeStep = currentVolume / fadeSteps;
+        
+        let currentStep = 0;
+        const fadeInterval = setInterval(() => {
+            currentStep++;
+            const newVolume = currentVolume - (volumeStep * currentStep);
+            sound.setVolume(Math.max(0, newVolume));
+            
+            if (currentStep >= fadeSteps || newVolume <= 0) {
+                clearInterval(fadeInterval);
+                sound.setVolume(0);
+                sound.pause();
+            }
+        }, stepDuration);
+    }
+
     animate = () => {
         requestAnimationFrame(this.animate);
         
@@ -598,12 +719,15 @@ export default class Experience {
         // Vérifier les collisions APRÈS le mouvement pour corriger si nécessaire
         this.checkCameraCollisions();
 
+        // Vérifier l'audio par pièce
+        this.checkRoomAudio();
+
         // Debug position toutes les 60 frames (environ 1 seconde)
         if (!this.frameCount) this.frameCount = 0;
         this.frameCount++;
         if (this.frameCount % 60 === 0) {
             const pos = this.camera.instance.position;
-            //console.log(`Position: x=${pos.x.toFixed(2)}, y=${pos.y.toFixed(2)}, z=${pos.z.toFixed(2)}`);
+            const currentRoom = this.getCurrentRoom();
         }
 
         const delta = this.clock.getDelta();
